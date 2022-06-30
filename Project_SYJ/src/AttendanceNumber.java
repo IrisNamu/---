@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -6,12 +5,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import java.awt.Toolkit;
 
+@SuppressWarnings("serial")
 public class AttendanceNumber extends JFrame {
 
 	private JPanel contentPane;
@@ -38,10 +37,12 @@ public class AttendanceNumber extends JFrame {
 	 * Create the frame.
 	 */
 	public AttendanceNumber() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AttendanceNumber.class.getResource("/img/\uC571\uC544\uC774\uCF58.png")));
+		setTitle("\uC624! \uCD9C\uC11D - \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(68, 85, 143));
+		contentPane.setBackground(new Color(176, 196, 222));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -134,6 +135,16 @@ public class AttendanceNumber extends JFrame {
 		textField.setBounds(22, 305, 404, 34);
 		contentPane.add(textField);
 		textField.setColumns(10);
+		
+		JPanel date_panel = new JPanel();
+		date_panel.setBounds(22, 61, 404, 151);
+		contentPane.add(date_panel);
+		
+		JButton backBtn = new JButton("<");
+		backBtn.setForeground(Color.WHITE);
+		backBtn.setFont(new Font("배달의민족 주아", Font.BOLD, 17));
+		backBtn.setBackground(new Color(204, 204, 255));
+		backBtn.setBounds(394, 0, 56, 34);
+		contentPane.add(backBtn);
 	}
-
 }

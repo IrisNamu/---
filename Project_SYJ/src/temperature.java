@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,12 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.JLabel;
-import javax.swing.JComboBox;
+import java.awt.Toolkit;
 
+@SuppressWarnings("serial")
 public class temperature extends JFrame {
 
 	private JPanel contentPane;
@@ -39,10 +38,15 @@ public class temperature extends JFrame {
 	 * Create the frame.
 	 */
 	public temperature() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(temperature.class.getResource("/img/\uC571\uC544\uC774\uCF58.png")));
+		setTitle("\uC624! \uCD9C\uC11D - \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
+		setLocationRelativeTo(null);
+		setResizable(false);
+
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(68,85,143));
+		contentPane.setBackground(new Color(176, 196, 222));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -77,6 +81,7 @@ public class temperature extends JFrame {
 		contentPane.add(separator);
 		
 		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(new Color(100, 149, 237));
 		separator_1.setBounds(0, 195, 450, 2);
 		contentPane.add(separator_1);
 		
@@ -93,5 +98,19 @@ public class temperature extends JFrame {
 		currentStatus.setBackground(new Color(255, 255, 240));
 		currentStatus.setBounds(0, 219, 450, 89);
 		contentPane.add(currentStatus);
+		
+		JButton backBtn = new JButton("<");
+		backBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				 Main main =	new Main(); //메인화면 호출
+					main.setVisible(true);
+			}
+		});
+		backBtn.setForeground(Color.WHITE);
+		backBtn.setFont(new Font("배달의민족 주아", Font.BOLD, 17));
+		backBtn.setBackground(new Color(204, 204, 255));
+		backBtn.setBounds(394, 0, 56, 36);
+		contentPane.add(backBtn);
 	}
 }
