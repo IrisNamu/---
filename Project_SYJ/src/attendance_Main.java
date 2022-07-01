@@ -1,5 +1,7 @@
 import java.awt.EventQueue;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ColorUIResource;
+
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -17,7 +19,7 @@ public class attendance_Main extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -90,7 +92,7 @@ public class attendance_Main extends JFrame {
 				dispose();
 				calendar_Main cal = new calendar_Main();
 				cal.setVisible(true);
-				
+
 			}
 		});
 		calendar_Menu
@@ -162,13 +164,13 @@ public class attendance_Main extends JFrame {
 		separator_1.setBounds(0, 145, 454, 33);
 		chooseDateCheck.add(separator_1);
 		separator_1.setBackground(new Color(255, 204, 204));
-		
+
 		JPanel cal_panel = new JPanel();
 		cal_panel.setBackground(new Color(255, 224, 172));
 		cal_panel.setBounds(12, 10, 430, 61);
 		chooseDateCheck.add(cal_panel);
 		cal_panel.setLayout(null);
-		
+
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setBackground(new Color(255, 255, 204));
 		dateChooser.getCalendarButton().setBackground(new Color(104, 134, 197));
@@ -247,17 +249,42 @@ public class attendance_Main extends JFrame {
 		class_menubar.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
 		class_menubar.setBackground(new Color(255, 255, 204));
 		menuBar.add(class_menubar);
-		
+
 		JScrollBar scrollBar = new JScrollBar();
 		scrollBar.setBackground(new Color(255, 255, 255));
 		scrollBar.setForeground(new Color(255, 204, 102));
 		scrollBar.setBounds(427, 257, 23, 456);
 		who_early_leave.add(scrollBar);
-		
+
 		JPanel panel_who_attendance = new JPanel();
 		panel_who_attendance.setBounds(0, 257, 454, 456);
 		who_early_leave.add(panel_who_attendance);
+		panel_who_attendance.setLayout(null);
 
+		JButton add_student_btn = new JButton("+");
+		add_student_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				//
+//				UIManager UI=new UIManager();
+//				 UI.put("OptionPane.background",new ColorUIResource(255,0,0));
+//				 UI.put("Panel.background",new ColorUIResource(255,0,0));
+				
+				int result = JOptionPane.showConfirmDialog(null, "학생 정보를 추가하시겠습니까?", "오!출석 - 학생 추가하기", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.CLOSED_OPTION) {
+
+				} else if (result == JOptionPane.YES_OPTION) {
+					addStudentPage addstudent = new addStudentPage(); // 홈화면 호출
+					addstudent.setVisible(true);
+				} else {
+				}
+			}
+		});
+		add_student_btn.setBounds(317, 391, 106, 55);
+		panel_who_attendance.add(add_student_btn);
+		add_student_btn.setBackground(new Color(102, 153, 204));
+		add_student_btn.setForeground(Color.WHITE);
+		add_student_btn.setFont(new Font("굴림", Font.BOLD, 40));
 
 	}
 }

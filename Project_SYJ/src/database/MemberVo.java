@@ -8,7 +8,6 @@ public class MemberVo {
 
 	// 회원가입
 	private String user_name;
-	private String password_check;
 	private String mail;
 
 	public MemberVo() {
@@ -23,14 +22,16 @@ public class MemberVo {
 	}
 
 //회원가입
-	public MemberVo(String id, String password, String password_check, String mail) {
-
+	public MemberVo(String user_name, String id, String password, String mail) {
+		this.user_name = user_name;
 		this.id = id;
 		this.password = password;
-
-		this.password_check = password_check;
 		this.mail = mail;
 
+	}
+
+	public String getUser_name() {
+		return user_name;
 	}
 
 	public String getId() {
@@ -41,14 +42,10 @@ public class MemberVo {
 		return password;
 	}
 
-	public String getPassword_check() {
-		return password_check;
-	}
-
 	public String getMail() {
 		return mail;
 	}
-	
+
 	//
 
 }

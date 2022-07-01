@@ -42,22 +42,22 @@ public class MemberDAO {
 		return false;
 	}
 
-	//아이디 중복 확인 //메서드
-	public boolean IDCheck(String id) { //회원정보 id를 받기 
+	// 아이디 중복 확인 //메서드
+	public boolean IDCheck(String id) { // 회원정보 id를 받기
 		try {
-			connDB(); //디비랑 연결을 해준다.
-			
-			//SELECT * FROM LOGIN
-			//WHERE id='a';
-			
-			String query = "SELECT * FROM login WHERE id='" + id +  "'"; 
+			connDB(); // 디비랑 연결을 해준다.
+
+			// SELECT * FROM LOGIN
+			// WHERE id='a';
+
+			String query = "SELECT * FROM login WHERE id='" + id + "'";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
 			rs.last();
-			System.out.println("rs.getRow() : " + rs.getRow()); //getRow 열과번호. a가 몇번재? 4번으로 출력
-			//검색안되면 0이된다. 번호가 1부터 시작 ....
+			System.out.println("rs.getRow() : " + rs.getRow()); // getRow 열과번호. a가 몇번재? 4번으로 출력
+			// 검색안되면 0이된다. 번호가 1부터 시작 ....
 			if (rs.getRow() == 0) {
-				System.out.println("0 row selected..."); //0이면 없는걸로 취급돼서 
+				System.out.println("0 row selected..."); // 0이면 없는걸로 취급돼서
 			} else {
 				return true;
 			}
@@ -74,11 +74,10 @@ public class MemberDAO {
 		try {
 			connDB();
 
-			String query = "INSERT INTO login(id,password,password_check,mail) "+"values('" + p.getId() + "','" + p.getPassword()
-					+ "','" + p.getPassword_check() + "','" + p.getMail() + "')";
+			String query = "INSERT INTO login(user_name, id, password, mail) " + "values('" + p.getUser_name() + "','"
+					+ p.getId() + "','" + p.getPassword() + "','" + p.getMail() + "')";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
-
 			System.out.println("rs.getRow() : " + rs.getRow());
 
 			if (rs.getRow() == 0) {

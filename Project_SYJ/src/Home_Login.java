@@ -19,6 +19,7 @@ import database.MemberDAO;
 import database.MemberVo;
 
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class Home_Login extends JFrame {
@@ -28,13 +29,12 @@ public class Home_Login extends JFrame {
 	private JButton Login_btn;
 	private JButton joinBtn;
 	private JButton moreBtn;
-	private JTextField textField;
-	private JLabel backgroud;
 	private JPasswordField password_Field;
+	private JTextField tfMsg;
+	private JTextField ID_field;
+	private JLabel backgroud;
 	private JPanel more_Aboutme;
 	private JLabel more_aboutMe_img;
-	private JTextField ID_field;
-	private JTextField tfMsg;
 
 	private final String correct_id = "green";
 	private final String correct_pwd = "green1234";
@@ -64,7 +64,7 @@ public class Home_Login extends JFrame {
 		dao = new MemberDAO();
 
 		setFont(new Font("배달의민족 주아", Font.PLAIN, 12));
-		setTitle("\uC624! \uCD9C\uC11D - \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C ");
+		setTitle("오! 출석 - 학생관리시스템 ");
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(Home_Login.class.getResource("/img/\uC571\uC544\uC774\uCF58.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,24 +95,16 @@ public class Home_Login extends JFrame {
 		moreBtn = new JButton("\uC790\uC138\uD788...");
 		moreBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				more_Aboutme.setVisible(true); // 자세히 페이지 안보이게
-				Main_home.setVisible(false);
+				dispose();
+				 
 
 			}
 		});
 
 		moreBtn.setFont(new Font("휴먼둥근헤드라인", Font.PLAIN, 12));
 		moreBtn.setBackground(new Color(204, 204, 255));
-		moreBtn.setBounds(354, 682, 84, 23);
+		moreBtn.setBounds(354, 684, 84, 23);
 		Main_home.add(moreBtn);
-
-		textField = new JTextField();
-		textField.setText("  Copyright 2022.\uC1A1\uC720\uC9C4 All rights reserved.");
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setColumns(10);
-		textField.setBackground(new Color(204, 204, 255));
-		textField.setBounds(0, 678, 450, 31);
-		Main_home.add(textField);
 
 		// 아이디입력
 		ID_field = new JTextField(10); // 10글자 제한
@@ -131,7 +123,6 @@ public class Home_Login extends JFrame {
 		Main_home.add(password_Field);
 
 		Login_btn = new JButton("\uB85C \uADF8 \uC778");
-
 		Login_btn.addActionListener(new ActionListener() {
 
 			// 아이디 입력했는지? 비밀번호 입력했는지? 확인하는 문구
@@ -146,30 +137,30 @@ public class Home_Login extends JFrame {
 					System.out.println(password_Field);
 
 					MemberVo vo = new MemberVo(ID_field.getText(), password_Field.getText());
-					
-					//로그인에 성공하면 화면으로 넘어가고 아니라면 다시 입력하라고하기
+
+					// 로그인에 성공하면 화면으로 넘어가고 아니라면 다시 입력하라고하기
 					boolean b = dao.list(vo);
-					if(b==true) {
+					if (b == true) {
 						tfMsg.setText("로그인 성공");
 						dispose();
-						attendance_Main attendance = new attendance_Main(); //홈화면 호출
+						attendance_Main attendance = new attendance_Main(); // 홈화면 호출
 						attendance.setVisible(true);
-						
-					}else if(b==false) {
+
+					} else if (b == false) {
 						tfMsg.setText("아이디/비밀번호가 틀렸습니다.");
-						
+
 					}
 				}
 			}
-			
-		});
 
+		});
 		Login_btn.setForeground(Color.BLACK);
 		Login_btn.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 		Login_btn.setBackground(new Color(216, 191, 216));
 		Login_btn.setBounds(303, 530, 97, 52);
 		Main_home.add(Login_btn);
 
+		// 로그인 비밀번호 맞는지 문구 띄워주는 필드
 		tfMsg = new JTextField(40);
 		tfMsg.setForeground(new Color(255, 0, 0));
 		tfMsg.setBackground(new Color(250, 250, 210));
@@ -179,6 +170,14 @@ public class Home_Login extends JFrame {
 		tfMsg.setColumns(10);
 		tfMsg.setEditable(false);
 		tfMsg.setFocusable(false);
+
+		// 저작권 라벨
+		JLabel copyright_SYG_Label = new JLabel("  Copyright 2022.송유진 All rights reserved.");
+		copyright_SYG_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		copyright_SYG_Label.setOpaque(true); // Opaque값을 true로 미리 설정해 주어야 배경색이 적용된다.
+		copyright_SYG_Label.setBackground(new Color(204, 204, 255));
+		copyright_SYG_Label.setBounds(0, 682, 450, 27);
+		Main_home.add(copyright_SYG_Label);
 
 		backgroud = new JLabel("");
 		backgroud.setIcon(new ImageIcon(Home_Login.class.getResource("/img/\uB85C\uADF8\uC778\uD654\uBA74_.png")));
