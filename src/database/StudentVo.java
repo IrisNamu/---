@@ -12,7 +12,7 @@ public class StudentVo {
 	private String grade; // 몇 학년
 	private String className; // 반이름
 	private String birth; // 생년월일
-	private String[] when_day; // 등원하는 요일
+	private String when_day; // 등원하는 요일
 	private String address; // 주소
 	private String enter_date; // 학원 등록 날짜
 	private String student_call; // 학생전화번호
@@ -22,10 +22,32 @@ public class StudentVo {
 	private String guardian2_call; // 보호자 1 이름, 전화번호
 	private String stu_memo;// 학생 특이사항 메모
 	private String pic;// 사진 경로
+	
+	//출석 관련
+	//등원
+	//미등원
+	//결석
+	
+	
+	
+	//출석 정보 관리
+	//버튼에 나타날 정보 
+	public StudentVo(String pic, String stuNumber, String stuName, String age, String school, String grade,
+			String className, String when_day) {
+		this.pic=pic;
+		this.stuNumber=stuNumber;
+		this.stuName=stuName;
+		this.age=age;
+		this.school=school;
+		this.grade=grade;
+		this.className=className;
+		this.when_day=when_day;
+}
 
+	
 	// 학생추가
 	public StudentVo(String stuNumber, String stuName, String sex, String age, String school, String grade,
-			String className, String birth, String[] days, String address, String enter_date, String student_call,
+			String className, String birth, String days, String address, String enter_date, String student_call,
 			String guardian1, String guardian1_call, String guardian2, String guardian2_call, String stu_memo,
 			String pic) {
 
@@ -33,7 +55,7 @@ public class StudentVo {
 		this.stuName = stuName;
 		this.sex = sex;
 		this.age = age;
-		this.school = school;
+		this.school = school; 
 		this.grade = grade;
 		this.className = className;
 		this.birth = birth;
@@ -84,7 +106,7 @@ public class StudentVo {
 		return birth;
 	}
 
-	public String[] getWhen_day() {
+	public String getWhen_day() {
 		return when_day;
 	}
 
@@ -123,5 +145,4 @@ public class StudentVo {
 	public String getPic() {
 		return pic;
 	}
-
 }

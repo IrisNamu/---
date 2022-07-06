@@ -50,7 +50,7 @@ public class AttendanceNumber extends JFrame {
 		InputNumber.setHorizontalAlignment(SwingConstants.CENTER);
 		InputNumber.setFont(new Font("배달의민족 주아", Font.PLAIN, 28));
 		InputNumber.setBackground(new Color(255, 228, 149));
-		InputNumber.setBounds(22, 222, 404, 72);
+		InputNumber.setBounds(22, 209, 404, 72);
 		contentPane.add(InputNumber);
 		InputNumber.setColumns(20);
 
@@ -128,15 +128,15 @@ public class AttendanceNumber extends JFrame {
 
 		textField = new JTextField();
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setText("");
+		textField.setText("출석번호 4자리를 입력해주세요^^");
 		textField.setBackground(new Color(255, 239, 213));
 		textField.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
-		textField.setBounds(22, 305, 404, 34);
+		textField.setBounds(22, 299, 404, 40);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JPanel date_panel = new JPanel();
-		date_panel.setBounds(22, 61, 404, 151);
+		date_panel.setBounds(22, 61, 404, 138);
 		contentPane.add(date_panel);
 		
 		JButton backBtn = new JButton("<");

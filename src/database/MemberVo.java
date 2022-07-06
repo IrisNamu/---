@@ -10,9 +10,6 @@ public class MemberVo {
 	private String user_name;
 	private String mail;
 
-	public MemberVo() {
-
-	}
 
 //로그인
 	public MemberVo(String id, String password) {

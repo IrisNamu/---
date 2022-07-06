@@ -71,6 +71,32 @@ public class StudentDAO {
 		return false;
 	}
 
+	// 출석버튼에 나타날 정보 String pic, String stuNumber, String stuName, String age, String
+	// school, String grade,
+	// String className, String when_day
+//	public boolean attendance_Info_btn(StudentDAO p) {
+//		try {
+//			connDB();
+//
+//			String query = "SELECT * FROM login WHERE id='" + p.getId() + "' AND password='" + p.getPassword() + "'";
+//			System.out.println("SQL : " + query);
+//			rs = stmt.executeQuery(query);
+//			rs.last();
+//			System.out.println("rs.getRow() : " + rs.getRow());
+//
+//			if (rs.getRow() == 0) {
+//				System.out.println("0 row selected...");
+//			} else {
+//				return true;
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		return false;
+//	}
+
 	public void connDB() {
 		try {
 			Class.forName(driver);

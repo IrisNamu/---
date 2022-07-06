@@ -16,6 +16,7 @@ import com.toedter.calendar.JDateChooser;
 public class attendance_Main extends JFrame {
 
 	private JPanel contentPane;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -134,36 +135,29 @@ public class attendance_Main extends JFrame {
 		});
 		all_student.setForeground(Color.WHITE);
 		all_student.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		all_student.setBounds(37, 85, 65, 38);
+		all_student.setBounds(76, 85, 65, 38);
 		chooseDateCheck.add(all_student);
 
 		JButton who_attendance = new JButton("\uB4F1\uC6D0");
 		who_attendance.setBackground(new Color(51, 153, 204));
 		who_attendance.setForeground(new Color(255, 255, 255));
 		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_attendance.setBounds(111, 85, 65, 38);
+		who_attendance.setBounds(153, 85, 65, 38);
 		chooseDateCheck.add(who_attendance);
 
 		JButton who_absent = new JButton("\uACB0\uC11D");
 		who_absent.setBackground(new Color(255, 0, 0));
 		who_absent.setForeground(new Color(255, 255, 255));
 		who_absent.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
-		who_absent.setBounds(342, 84, 65, 38);
+		who_absent.setBounds(307, 84, 65, 38);
 		chooseDateCheck.add(who_absent);
 
 		JButton who_Did_Not_attend = new JButton("\uBBF8\uB4F1");
 		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
 		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
 		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_Did_Not_attend.setBounds(188, 85, 65, 38);
+		who_Did_Not_attend.setBounds(230, 85, 65, 38);
 		chooseDateCheck.add(who_Did_Not_attend);
-
-		JButton btnNewButton_3_1 = new JButton("\uC870\uD1F4");
-		btnNewButton_3_1.setForeground(Color.WHITE);
-		btnNewButton_3_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		btnNewButton_3_1.setBackground(new Color(255, 102, 0));
-		btnNewButton_3_1.setBounds(265, 85, 65, 38);
-		chooseDateCheck.add(btnNewButton_3_1);
 
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(0, 145, 454, 33);
@@ -173,10 +167,10 @@ public class attendance_Main extends JFrame {
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.getCalendarButton().setForeground(new Color(255, 250, 250));
 		dateChooser.getCalendarButton().setFont(new Font("굴림", Font.BOLD, 13));
-		dateChooser.getCalendarButton().setText("날짜 선택");
+		dateChooser.getCalendarButton().setText("날짜");
 		dateChooser.getCalendarButton().setBackground(new Color(105, 105, 105));
 		dateChooser.setDateFormatString("M월 d일 a h시 mm분 (y년)");
-		dateChooser.setBounds(91, 25, 275, 46);
+		dateChooser.setBounds(76, 25, 295, 46);
 		chooseDateCheck.add(dateChooser);
 
 		JPanel date_panel = new JPanel();
@@ -245,15 +239,20 @@ public class attendance_Main extends JFrame {
 		sat.setBackground(Color.WHITE);
 		day_menubar.add(sat);
 
-		JRadioButtonMenuItem special_lecture = new JRadioButtonMenuItem("\uD2B9\uAC15");
+		JRadioButtonMenuItem special_lecture = new JRadioButtonMenuItem("일요일");
 		special_lecture.setBackground(Color.WHITE);
 		day_menubar.add(special_lecture);
-
-		JMenu class_menubar = new JMenu("  반전체     ∨  ");
-		class_menubar.setHorizontalAlignment(SwingConstants.CENTER);
-		class_menubar.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-		class_menubar.setBackground(new Color(255, 255, 204));
-		menuBar.add(class_menubar);
+		
+		textField = new JTextField();
+		menuBar.add(textField);
+		textField.setFont(new Font("굴림", Font.BOLD, 15));
+		textField.setForeground(Color.WHITE);
+		textField.setBackground(Color.LIGHT_GRAY);
+		textField.setText("직접 검색");
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("검색");
+		menuBar.add(btnNewButton);
 
 		JScrollBar scrollBar = new JScrollBar();
 		scrollBar.setBackground(new Color(255, 255, 255));
