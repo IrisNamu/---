@@ -94,8 +94,6 @@ public class Home_Login extends JFrame {
 		moreBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				 
-
 			}
 		});
 

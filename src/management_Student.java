@@ -3,12 +3,21 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import database.StudentDAO;
+import database.StudentVo;
+
 import java.awt.Toolkit;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class management_Student extends JFrame {
@@ -19,6 +28,11 @@ public class management_Student extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+
+		StudentDAO dao = new StudentDAO(); // 로드와 연결
+
+		// 이름", "출석번호", "나이", "생년월일", "학교", "학년", "반"
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -44,24 +58,24 @@ public class management_Student extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JPanel attendance_menu = new JPanel();
 		attendance_menu.setBounds(0, 0, 466, 713);
 		contentPane.add(attendance_menu);
 		attendance_menu.setLayout(null);
-		
+
 		JPanel Menubar = new JPanel();
 		Menubar.setBackground(new Color(19, 25, 53));
 		Menubar.setBounds(0, 0, 454, 64);
 		attendance_menu.add(Menubar);
 		Menubar.setLayout(null);
-		
+
 		JButton attendanceMenu = new JButton("");
 		attendanceMenu.setIcon(new ImageIcon(management_Student.class.getResource("/img/attendance_menu.png")));
 		attendanceMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				attendance_Main attendance = new attendance_Main(); //È¨È­¸é È£Ãâ
+				attendance_Main attendance = new attendance_Main();
 				attendance.setVisible(true);
 			}
 		});
@@ -74,27 +88,32 @@ public class management_Student extends JFrame {
 		manageStudent_Menu.setBackground(new Color(19, 25, 53));
 		manageStudent_Menu.setBounds(85, 0, 87, 64);
 		Menubar.add(manageStudent_Menu);
-		
-		
+
 		JButton statistics_Menu = new JButton("");
 		statistics_Menu.setBackground(new Color(19, 25, 53));
 		statistics_Menu.setBounds(256, 0, 87, 64);
 		Menubar.add(statistics_Menu);
-		
+
 		JButton birthday_Menu = new JButton("");
 		birthday_Menu.setBackground(new Color(19, 25, 53));
 		birthday_Menu.setBounds(340, 0, 87, 64);
 		Menubar.add(birthday_Menu);
-		
+
 		JButton statistics_Menu_1 = new JButton("");
 		statistics_Menu_1.setIcon(new ImageIcon(management_Student.class.getResource("/img/cal_menu.png")));
 		statistics_Menu_1.setBackground(new Color(19, 25, 53));
 		statistics_Menu_1.setBounds(170, 0, 87, 64);
 		Menubar.add(statistics_Menu_1);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(129, 550, 149, -260);
+		attendance_menu.add(scrollPane);
+
+		/**
+		 * 테이블 생성
+		 */
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(10, 74, 10, 10);
-		attendance_menu.add(panel);
 		
+
 	}
 }

@@ -1,33 +1,50 @@
 import java.awt.EventQueue;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 
+import database.StudentDAO;
+import database.StudentVo;
+
+import java.awt.GridLayout;
+import java.awt.Scrollbar;
+import java.awt.FlowLayout;
+
 @SuppressWarnings("serial")
 public class attendance_Main extends JFrame {
-
+	private StudentDAO dao;
 	private JPanel contentPane;
 	private JTextField textField;
+	private JTable table_stuList;
+	private String day;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+
 		java.util.Date utilDate = new java.util.Date();
-	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-	    System.out.println("sqlDate:" + sqlDate);
-	    System.out.println("utilDate:" + utilDate);
-	    
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		System.out.println("sqlDate:" + sqlDate);
+		System.out.println("utilDate:" + utilDate);
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -40,12 +57,12 @@ public class attendance_Main extends JFrame {
 		});
 	}
 
-
-
 	/**
 	 * Create the frame.
 	 */
 	public attendance_Main() {
+		dao = new StudentDAO();
+
 		setTitle("\uC624! \uCD9C\uC11D \u2013 \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
@@ -58,7 +75,7 @@ public class attendance_Main extends JFrame {
 
 		JPanel who_early_leave = new JPanel();
 		who_early_leave.setBackground(Color.WHITE);
-		who_early_leave.setBounds(0, 0, 466, 713);
+		who_early_leave.setBounds(0, 0, 450, 257);
 		contentPane.add(who_early_leave);
 		who_early_leave.setLayout(null);
 
@@ -98,17 +115,17 @@ public class attendance_Main extends JFrame {
 		cak_Menu.setBackground(new Color(19, 25, 53));
 		cak_Menu.setBounds(152, 0, 75, 64);
 		Menubar.add(cak_Menu);
-		
+
 		JButton statistics_Menu_1 = new JButton("");
 		statistics_Menu_1.setBackground(new Color(19, 25, 53));
 		statistics_Menu_1.setBounds(227, 0, 75, 64);
 		Menubar.add(statistics_Menu_1);
-		
+
 		JButton statistics_Menu_2 = new JButton("");
 		statistics_Menu_2.setBackground(new Color(19, 25, 53));
 		statistics_Menu_2.setBounds(303, 0, 75, 64);
 		Menubar.add(statistics_Menu_2);
-		
+
 		JButton statistics_Menu_2_1 = new JButton("");
 		statistics_Menu_2_1.setBackground(new Color(19, 25, 53));
 		statistics_Menu_2_1.setBounds(379, 0, 75, 64);
@@ -119,59 +136,146 @@ public class attendance_Main extends JFrame {
 		chooseDateCheck.setBounds(0, 67, 454, 150);
 		who_early_leave.add(chooseDateCheck);
 		chooseDateCheck.setLayout(null);
-		
-		
-		java.util.Date utilDate = new java.util.Date();
-	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-	    System.out.println("sqlDate:" + sqlDate);
-	    System.out.println("utilDate:" + utilDate);
-	    
+
+		// 요일구하기
+		Calendar cal = Calendar.getInstance();
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		String day = "";
+		switch (dayOfWeek) {
+		case 1:
+			day = "일";
+			break;
+		case 2:
+			day = "월";
+			break;
+		case 3:
+			day = "화";
+			break;
+		case 4:
+			day = "수";
+			break;
+		case 5:
+			day = "목";
+			break;
+		case 6:
+			day = "금";
+			break;
+		case 7:
+			day = "토";
+			break;
+		}
+
+		// 패널에 부착될 시간.
+		Date d = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy년 MM월 dd일");
+		SimpleDateFormat time = new SimpleDateFormat("HH시 mm분");
+
+		// 날짜 시간 요일
+		JLabel dateLab = new JLabel("date");
+		dateLab.setBackground(Color.ORANGE);
+		dateLab.setFont(new Font("배달의민족 주아", Font.PLAIN, 30));
+		dateLab.setBounds(0, 22, 454, 45);
+		chooseDateCheck.add(dateLab);
+		dateLab.setHorizontalAlignment(SwingConstants.CENTER);
+		dateLab.setText(date.format(d) + " " + day + "   " + time.format(d));
 
 		JButton all_student = new JButton("\uC804\uCCB4");
-		all_student.setBackground(Color.DARK_GRAY);
 		all_student.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// 검색하면 테이블에 해당 검색결과 나타내기
+				DefaultTableModel model = (DefaultTableModel) table_stuList.getModel(); 
+				model.setRowCount(0);
+
+				// 요일구하기
+				Calendar cal = Calendar.getInstance();
+				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+				String day = "";
+				switch (dayOfWeek) {
+				case 1:
+					day = "일";
+					break;
+				case 2:
+					day = "월";
+					break;
+				case 3:
+					day = "화";
+					break;
+				case 4:
+					day = "수";
+					break;
+				case 5:
+					day = "목";
+					break;
+				case 6:
+					day = "금";
+					break;
+				case 7:
+					day = "토";
+					break;
+				}
+				
+				StudentDAO dao = new StudentDAO();
+				ArrayList<StudentVo> list = dao.who_come(day);
+
+				for (StudentVo vo : list) {
+					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge(), vo.getAttendance_info() };
+					
+					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
+				}
+
+				table_stuList.setModel(model);
 			}
 		});
+		all_student.setBackground(Color.DARK_GRAY);
 		all_student.setForeground(Color.WHITE);
 		all_student.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		all_student.setBounds(76, 85, 65, 38);
+		all_student.setBounds(62, 85, 65, 38);
 		chooseDateCheck.add(all_student);
 
 		JButton who_attendance = new JButton("\uB4F1\uC6D0");
 		who_attendance.setBackground(new Color(51, 153, 204));
 		who_attendance.setForeground(new Color(255, 255, 255));
 		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_attendance.setBounds(153, 85, 65, 38);
+		who_attendance.setBounds(139, 85, 65, 38);
 		chooseDateCheck.add(who_attendance);
 
 		JButton who_absent = new JButton("\uACB0\uC11D");
 		who_absent.setBackground(new Color(255, 0, 0));
 		who_absent.setForeground(new Color(255, 255, 255));
 		who_absent.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
-		who_absent.setBounds(307, 84, 65, 38);
+		who_absent.setBounds(293, 84, 65, 38);
 		chooseDateCheck.add(who_absent);
 
 		JButton who_Did_Not_attend = new JButton("\uBBF8\uB4F1");
 		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
 		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
 		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_Did_Not_attend.setBounds(230, 85, 65, 38);
+		who_Did_Not_attend.setBounds(216, 85, 65, 38);
 		chooseDateCheck.add(who_Did_Not_attend);
 
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(0, 145, 454, 33);
 		chooseDateCheck.add(separator_1);
 		separator_1.setBackground(new Color(255, 204, 204));
-		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.getCalendarButton().setForeground(new Color(255, 250, 250));
-		dateChooser.getCalendarButton().setFont(new Font("굴림", Font.BOLD, 13));
-		dateChooser.getCalendarButton().setText("날짜");
-		dateChooser.getCalendarButton().setBackground(new Color(105, 105, 105));
-		dateChooser.setDateFormatString("M월 d일 a h시 mm분 (y년)");
-		dateChooser.setBounds(76, 25, 295, 46);
-		chooseDateCheck.add(dateChooser);
+		JButton add_student_btn = new JButton("+");
+		chooseDateCheck.add(add_student_btn);
+		add_student_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int result = JOptionPane.showConfirmDialog(null, "학생 정보를 추가하시겠습니까?", "오!출석 - 학생 추가하기",
+						JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.CLOSED_OPTION) {
+
+				} else if (result == JOptionPane.YES_OPTION) {
+					addStudentPage addstudent = new addStudentPage(); // 홈화면 호출
+					addstudent.setVisible(true);
+				}
+			}
+		});
+		add_student_btn.setBounds(383, 77, 59, 55);
+		add_student_btn.setBackground(new Color(102, 153, 204));
+		add_student_btn.setForeground(Color.WHITE);
+		add_student_btn.setFont(new Font("굴림", Font.BOLD, 40));
 
 		JPanel date_panel = new JPanel();
 		date_panel.setBackground(new Color(255, 224, 172));
@@ -183,7 +287,7 @@ public class attendance_Main extends JFrame {
 		panel.setLayout(null);
 
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 478, 39);
+		menuBar.setBounds(0, 0, 232, 39);
 		menuBar.setBackground(Color.WHITE);
 		panel.add(menuBar);
 
@@ -242,49 +346,34 @@ public class attendance_Main extends JFrame {
 		JRadioButtonMenuItem special_lecture = new JRadioButtonMenuItem("일요일");
 		special_lecture.setBackground(Color.WHITE);
 		day_menubar.add(special_lecture);
-		
+
 		textField = new JTextField();
-		menuBar.add(textField);
+		textField.setBounds(232, 0, 167, 37);
+		panel.add(textField);
 		textField.setFont(new Font("굴림", Font.BOLD, 15));
 		textField.setForeground(Color.WHITE);
-		textField.setBackground(Color.LIGHT_GRAY);
+		textField.setBackground(new Color(248, 248, 255));
 		textField.setText("직접 검색");
 		textField.setColumns(10);
-		
 		JButton btnNewButton = new JButton("검색");
-		menuBar.add(btnNewButton);
+		btnNewButton.setBounds(397, 0, 57, 39);
+		panel.add(btnNewButton);
 
-		JScrollBar scrollBar = new JScrollBar();
-		scrollBar.setBackground(new Color(255, 255, 255));
-		scrollBar.setForeground(new Color(255, 204, 102));
-		scrollBar.setBounds(427, 257, 23, 456);
-		who_early_leave.add(scrollBar);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 717, 450, -460);
+		contentPane.add(scrollPane);
 
-		JPanel panel_who_attendance = new JPanel();
-		panel_who_attendance.setToolTipText("MM월 dd일 a H시 mm분 (yyyy년)");
-		panel_who_attendance.setBounds(0, 257, 454, 456);
-		who_early_leave.add(panel_who_attendance);
-		panel_who_attendance.setLayout(null);
+		table_stuList = new JTable();
+		table_stuList.setBounds(0, 706, 450, -451);
+		contentPane.add(table_stuList);
 
-		JButton add_student_btn = new JButton("+");
-		add_student_btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				int result = JOptionPane.showConfirmDialog(null, "학생 정보를 추가하시겠습니까?", "오!출석 - 학생 추가하기",
-						JOptionPane.YES_NO_OPTION);
-				if (result == JOptionPane.CLOSED_OPTION) {
-
-				} else if (result == JOptionPane.YES_OPTION) {
-					addStudentPage addstudent = new addStudentPage(); // 홈화면 호출
-					addstudent.setVisible(true);
-				}
-			}
-		});
-		add_student_btn.setBounds(311, 391, 106, 55);
-		panel_who_attendance.add(add_student_btn);
-		add_student_btn.setBackground(new Color(102, 153, 204));
-		add_student_btn.setForeground(Color.WHITE);
-		add_student_btn.setFont(new Font("굴림", Font.BOLD, 40));
+		// DB연동 수강생 리스트 불러오기
+		String[] header = new String[] { "출석번호", "이름", "나이", "등원여부" };
+		String[][] data = dao.getStudent();
+//		table_stuList = new JTable(data, header); // 배열 이용해서 테이블
+		table_stuList = new JTable();
+		table_stuList.setModel(new DefaultTableModel(data, header));
+		scrollPane.setViewportView(table_stuList);
 
 	}
 }

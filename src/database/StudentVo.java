@@ -1,5 +1,7 @@
 package database;
 
+import java.sql.Date;
+
 public class StudentVo {
 
 	// 학생 정보 추가
@@ -22,29 +24,45 @@ public class StudentVo {
 	private String guardian2_call; // 보호자 1 이름, 전화번호
 	private String stu_memo;// 학생 특이사항 메모
 	private String pic;// 사진 경로
-	
-	//출석 관련
-	//등원
-	//미등원
-	//결석
-	
-	
-	
-	//출석 정보 관리
-	//버튼에 나타날 정보 
+
+	// 출석 관련 정보 attendance_info
+	private String attendance_info; // 결석인지 등원인지 미등원인지
+	private String today; // 오늘 요일
+	private String attendance_time; // 출석누른시간
+
+	// 결석 사유
+	private String Reason_for_absence; // 결석사유
+
+	// 결제 수납관련 (달마다 보여줄 것임)
+	private String payment_date;
+	private String payment_amount;
+
+	// 출석 정보 관리
+	public StudentVo(String pic, String stuNumber, String stuName, String age, String school, String grade,
+			String className, String when_day, String attendance_info) {
+		this.pic = pic;
+		this.stuNumber = stuNumber;
+		this.stuName = stuName;
+		this.age = age;
+		this.school = school;
+		this.grade = grade;
+		this.className = className;
+		this.when_day = when_day;
+	}
+
+	// 버튼에 나타날 정보
 	public StudentVo(String pic, String stuNumber, String stuName, String age, String school, String grade,
 			String className, String when_day) {
-		this.pic=pic;
-		this.stuNumber=stuNumber;
-		this.stuName=stuName;
-		this.age=age;
-		this.school=school;
-		this.grade=grade;
-		this.className=className;
-		this.when_day=when_day;
-}
+		this.pic = pic;
+		this.stuNumber = stuNumber;
+		this.stuName = stuName;
+		this.age = age;
+		this.school = school;
+		this.grade = grade;
+		this.className = className;
+		this.when_day = when_day;
+	}
 
-	
 	// 학생추가
 	public StudentVo(String stuNumber, String stuName, String sex, String age, String school, String grade,
 			String className, String birth, String days, String address, String enter_date, String student_call,
@@ -55,7 +73,7 @@ public class StudentVo {
 		this.stuName = stuName;
 		this.sex = sex;
 		this.age = age;
-		this.school = school; 
+		this.school = school;
 		this.grade = grade;
 		this.className = className;
 		this.birth = birth;
@@ -72,7 +90,17 @@ public class StudentVo {
 
 	}
 
-	// 학생정보
+	// 학생 출석관련 정보
+	public StudentVo(String stuNumber, String attendance_info, String today, String attendance_time) {
+		this.stuNumber = stuNumber;
+		this.attendance_info = attendance_info;
+		this.today = today;
+		this.attendance_time = attendance_time;
+	}
+
+	public StudentVo() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getStuNumber() {
 		return stuNumber;
@@ -145,4 +173,133 @@ public class StudentVo {
 	public String getPic() {
 		return pic;
 	}
+
+	public String getAttendance_info() {
+		return attendance_info;
+	}
+
+	public String getToday() {
+		return today;
+	}
+
+	public String getAttendance_time() {
+		return attendance_time;
+	}
+
+	public String getReason_for_absence() {
+		return Reason_for_absence;
+	}
+
+	public String getPayment_date() {
+		return payment_date;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setEnter_date(String enter_date) {
+		this.enter_date = enter_date;
+	}
+
+	public void setStudent_call(String student_call) {
+		this.student_call = student_call;
+	}
+
+	public void setGuardian1(String guardian1) {
+		this.guardian1 = guardian1;
+	}
+
+	public void setGuardian1_call(String guardian1_call) {
+		this.guardian1_call = guardian1_call;
+	}
+
+	public void setGuardian2(String guardian2) {
+		this.guardian2 = guardian2;
+	}
+
+	public void setGuardian2_call(String guardian2_call) {
+		this.guardian2_call = guardian2_call;
+	}
+
+	public void setStu_memo(String stu_memo) {
+		this.stu_memo = stu_memo;
+	}
+
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
+
+	public void setAttendance_info(String attendance_info) {
+		this.attendance_info = attendance_info;
+	}
+
+	public void setToday(String today) {
+		this.today = today;
+	}
+
+	public void setAttendance_time(String attendance_time) {
+		this.attendance_time = attendance_time;
+	}
+
+	public void setReason_for_absence(String reason_for_absence) {
+		Reason_for_absence = reason_for_absence;
+	}
+
+	public void setPayment_date(String payment_date) {
+		this.payment_date = payment_date;
+	}
+
+	public void setPayment_amount(String payment_amount) {
+		this.payment_amount = payment_amount;
+	}
+
+	public String getPayment_amount() {
+		return payment_amount;
+	}
+
+
+	public void setStuNumber(String stuNumber) {
+		this.stuNumber = stuNumber;
+	}
+
+	public void setStuName(String stuName) {
+		this.stuName = stuName;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public void setWhen_day(String when_day) {
+		this.when_day = when_day;
+	}
+
+	public void print (){
+System.out.println(getStuName());
+		
+	}
+//	  public String getDong() {
+//	        return word;
+//	    }
 }

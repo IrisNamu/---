@@ -41,7 +41,7 @@ public class calendar_page extends JFrame {
 		contentPane.setLayout(null);
 		
 		JCalendar calendar = new JCalendar();
-		calendar.setBounds(12, 107, 438, 551);
+		calendar.setBounds(0, 100, 450, 558);
 		contentPane.add(calendar);
 	}
 }

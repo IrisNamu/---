@@ -687,17 +687,23 @@ public class addStudentPage extends JFrame {
 						+ "세";
 
 				// 생년월일 셋팅
-				String birth = (birth_dateChooser.getJCalendar().getYearChooser().getYear() + "/"
-						+ birth_dateChooser.getJCalendar().getMonthChooser().getMonth() + "/"
+				String birth = (birth_dateChooser.getJCalendar().getYearChooser().getYear() + "-"
+						+ birth_dateChooser.getJCalendar().getMonthChooser().getMonth() + "-"
 						+ birth_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(birth);
+				if (birth.length() < 2) {
+					birth = "0" + birth;
+				}
 
 				// 등록일 셋팅
 
-				String enter_date = (enter_dateChooser.getJCalendar().getYearChooser().getYear() + "/"
-						+ enter_dateChooser.getJCalendar().getMonthChooser().getMonth() + "/"
+				String enter_date = (enter_dateChooser.getJCalendar().getYearChooser().getYear() + "-"
+						+ enter_dateChooser.getJCalendar().getMonthChooser().getMonth() + "-"
 						+ enter_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(enter_date);
+				if (enter_date.length() < 2) {
+					enter_date = "0" + birth;
+				}
 
 				String grade = s_grade.getText() + "학년";
 
@@ -740,7 +746,7 @@ public class addStudentPage extends JFrame {
 				}
 
 				if (s_mon.isSelected() == true) {
-					when_daycome += "뤟 ";
+					when_daycome += "월 ";
 				}
 
 				if (s_tue.isSelected() == true) {
