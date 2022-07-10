@@ -240,15 +240,14 @@ public class AttendanceNumber extends JFrame {
 					InputNumber.setText("");
 				} else if (user == true) {
 
-					
-					//온도체크
+					// 온도체크
 					temperature tem = new temperature();
 					tem.setVisible(true);
 
 					String attendance_stuatus = "출석";
 
-					
-					StudentVo vo = new StudentVo(InputNumber.getText(), attendance_stuatus, dateLab.getText(), timeLab.getText());
+					StudentVo vo = new StudentVo(InputNumber.getText(), attendance_stuatus, dateLab.getText(),
+							timeLab.getText());
 
 					boolean b = dao.Insert_attendance_Info(vo);
 					// 회원가입 성공했다는 알림 띄우기

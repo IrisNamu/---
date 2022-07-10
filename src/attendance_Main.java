@@ -73,9 +73,23 @@ public class attendance_Main extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+
+		// [메인화면 출석] DB연동 수강생 리스트 불러오기
+		String[] header = new String[] { "출석번호", "이름", "나이", "등원여부", "출석시간" };
+		String[][] data = dao.att_stulList();
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 250, 450, 460);
+		contentPane.add(scrollPane);
+		table_stuList = new JTable();
+		table_stuList.setFont(new Font("굴림", Font.PLAIN, 16));
+		table_stuList.setModel(new DefaultTableModel(data, header));
+		scrollPane.setViewportView(table_stuList);
+
+		
 		JPanel who_early_leave = new JPanel();
-		who_early_leave.setBackground(Color.WHITE);
 		who_early_leave.setBounds(0, 0, 450, 257);
+		who_early_leave.setBackground(Color.WHITE);
 		contentPane.add(who_early_leave);
 		who_early_leave.setLayout(null);
 
@@ -183,9 +197,8 @@ public class attendance_Main extends JFrame {
 		all_student.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// 검색하면 테이블에 해당 검색결과 나타내기
-				DefaultTableModel model = (DefaultTableModel) table_stuList.getModel(); 
+				DefaultTableModel model = (DefaultTableModel) table_stuList.getModel();
 				model.setRowCount(0);
-
 				// 요일구하기
 				Calendar cal = Calendar.getInstance();
 				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
@@ -213,13 +226,13 @@ public class attendance_Main extends JFrame {
 					day = "토";
 					break;
 				}
-				
+
 				StudentDAO dao = new StudentDAO();
 				ArrayList<StudentVo> list = dao.who_come(day);
 
 				for (StudentVo vo : list) {
 					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge(), vo.getAttendance_info() };
-					
+
 					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
 				}
 
@@ -232,7 +245,55 @@ public class attendance_Main extends JFrame {
 		all_student.setBounds(62, 85, 65, 38);
 		chooseDateCheck.add(all_student);
 
+		// [출석버튼]누르면 나오는 테이블
 		JButton who_attendance = new JButton("\uB4F1\uC6D0");
+		who_attendance.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				DefaultTableModel model = (DefaultTableModel) table_stuList.getModel();
+//				model.setRowCount(0);
+//				// 요일구하기
+//				Calendar cal = Calendar.getInstance();
+//				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+//				String day = "";
+//				switch (dayOfWeek) {
+//				case 1:
+//					day = "일";
+//					break;
+//				case 2:
+//					day = "월";
+//					break;
+//				case 3:
+//					day = "화";
+//					break;
+//				case 4:
+//					day = "수";
+//					break;
+//				case 5:
+//					day = "목";
+//					break;
+//				case 6:
+//					day = "금";
+//					break;
+//				case 7:
+//					day = "토";
+//					break;
+//				}
+//				Date d = new Date();
+//				SimpleDateFormat datee = new SimpleDateFormat("yyyy년 MM월 dd일");
+//				dateLab.setText(date.format(d));
+//				String date = dateLab.getText();
+//				StudentDAO dao = new StudentDAO();
+//				ArrayList<StudentVo> list = dao.attendance_student(day, date);
+//				
+//				for (StudentVo vo : list) {
+//					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge(), vo.getAttendance_info() };
+//
+//					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
+//				}
+//
+//				table_stuList.setModel(model);
+			}
+		});
 		who_attendance.setBackground(new Color(51, 153, 204));
 		who_attendance.setForeground(new Color(255, 255, 255));
 		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
@@ -359,21 +420,19 @@ public class attendance_Main extends JFrame {
 		btnNewButton.setBounds(397, 0, 57, 39);
 		panel.add(btnNewButton);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 717, 450, -460);
-		contentPane.add(scrollPane);
-
-		table_stuList = new JTable();
-		table_stuList.setBounds(0, 706, 450, -451);
-		contentPane.add(table_stuList);
-
-		// DB연동 수강생 리스트 불러오기
-		String[] header = new String[] { "출석번호", "이름", "나이", "등원여부" };
-		String[][] data = dao.getStudent();
-//		table_stuList = new JTable(data, header); // 배열 이용해서 테이블
-		table_stuList = new JTable();
-		table_stuList.setModel(new DefaultTableModel(data, header));
-		scrollPane.setViewportView(table_stuList);
+//		// DB연동 수강생 리스트 불러오기
+//		DefaultTableModel model = (DefaultTableModel) table_stuList.getModel();
+//		model.setRowCount(0);
+//		StudentDAO dao = new StudentDAO();
+//		ArrayList<StudentVo> list = dao.who_come(day);
+//
+//		for (StudentVo vo : list) {
+//			String[] data1 = { vo.getStuNumber(), vo.getStuName(), vo.getAge(), vo.getAttendance_info() };
+//
+//			model.addRow(data1);// 이걸 적어줘야 테이블에 추가가 된다.
+//		}
+//
+//		table_stuList.setModel(model);
 
 	}
 }
