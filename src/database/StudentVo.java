@@ -33,10 +33,6 @@ public class StudentVo {
 	// 결석 사유
 	private String Reason_for_absence; // 결석사유
 
-	// 결제 수납관련 (달마다 보여줄 것임)
-	private String payment_date;
-	private String payment_amount;
-
 	// 출석 정보 관리
 	public StudentVo(String pic, String stuNumber, String stuName, String age, String school, String grade,
 			String className, String when_day, String attendance_info) {
@@ -190,10 +186,6 @@ public class StudentVo {
 		return Reason_for_absence;
 	}
 
-	public String getPayment_date() {
-		return payment_date;
-	}
-
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
@@ -258,19 +250,6 @@ public class StudentVo {
 		Reason_for_absence = reason_for_absence;
 	}
 
-	public void setPayment_date(String payment_date) {
-		this.payment_date = payment_date;
-	}
-
-	public void setPayment_amount(String payment_amount) {
-		this.payment_amount = payment_amount;
-	}
-
-	public String getPayment_amount() {
-		return payment_amount;
-	}
-
-
 	public void setStuNumber(String stuNumber) {
 		this.stuNumber = stuNumber;
 	}
@@ -295,11 +274,9 @@ public class StudentVo {
 		this.when_day = when_day;
 	}
 
-	public void print (){
-System.out.println(getStuName());
-		
+	public void print() {
+		System.out.println(getStuName());
+
 	}
-//	  public String getDong() {
-//	        return word;
-//	    }
+
 }

@@ -102,7 +102,7 @@ public class StudentDAO {
 		return false;
 	}
 
-	// [원생관리]수강생 리스트 보여주는 테이블
+	// [원생관리]수강생 리스트 보여주는 테이블(이름순)
 	public String[][] getStudent() {
 
 //		rs.last();
@@ -111,20 +111,28 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT * FROM STUDENT";
+			String query = "SELECT * FROM STUDENT ORDER BY stuname";
 
-			PreparedStatement statement = con
-					.prepareStatement("stuNumber, age, stuName, school, grade, className, when_day FROM student");
+			PreparedStatement statement = con.prepareStatement(
+					"stuNumber, stuName, sex, age, school, grade, className, Birth, when_day, ADDRESS, ENTER_DATE, student_call, "
+							+ "guardian1, guardian1_call, guardian2, guardian2_call, stu_memo FROM student");
 			ResultSet results = statement.executeQuery(query); // 쿼리 실행 결과를 받아야하기때문에 데이터베이스에 접속, 그걸
 
 			ArrayList<String[]> list = new ArrayList<String[]>();
 			while (results.next()) {
-				list.add(new String[] { results.getString("stuNumber"), results.getString("age"),
-						results.getString("stuName"), results.getString("school"), results.getString("grade"),
-						results.getString("className"), results.getString("when_day"), });
+				list.add(new String[] { results.getString("stuNumber"), results.getString("stuName"),
+						results.getString("sex"), results.getString("age"), results.getString("school"),
+						results.getString("grade"), results.getString("className"), results.getString("Birth"),
+						results.getString("when_day"), results.getString("ADDRESS"), results.getString("ENTER_DATE"),
+						results.getString("student_call"), results.getString("guardian1"),
+						results.getString("guardian1_call"), results.getString("guardian1"),
+						results.getString("guardian2"), results.getString("guardian2_call"),
+						results.getString("stu_memo")
+
+				});
 			}
 			System.out.println("The data has been fetched");
-			String[][] arr = new String[list.size()][7];
+			String[][] arr = new String[list.size()][17];
 			return list.toArray(arr);
 
 		} catch (Exception e) {
@@ -133,13 +141,13 @@ public class StudentDAO {
 		}
 	}
 
-	// [출석화면] 출석할 수강생 리스트 보여주는 테이블
+	// [출석화면] 출석할 수강생 리스트 보여주는 테이블(이름순)
 	public String[][] att_stulList() {
 
 		try {
 			connDB();
 
-			String query = "SELECT * FROM STUDENT";
+			String query = "SELECT * FROM STUDENT ORDER BY stuname";
 
 			PreparedStatement statement = con.prepareStatement(
 					"s.stuNumber, s.stuName, a.attendance_info, a.attendance_time FROM student s, attendance a");
@@ -162,22 +170,28 @@ public class StudentDAO {
 		}
 	}
 
-	// [출석화면] [전체 버튼 ]아이들의 출석 정보를 보여주는 테이블
-	public String[][] attendance_table_all(String day) {
+	// [출석화면] [전체 버튼 ]아이들의 출석 정보를 보여주는 테이블(이름순)
+	public String[][] attendance_table_all(String day, String date) {
 
 		try {
 			connDB();
 
-			String query = "SELECT s.stunumber, s.stuname, s.age, a.attendance_info" + " FROM STUDENT s" + " LEFT OUTER"
-					+ " JOIN ATTENDANCE a" + " ON s.STUNUMBER =a.STUNUMBER" + " WHERE WHEN_DAY LIKE '%" + day + "%'";
+			String query = "SELECT s.stunumber, s.stuname, s.age, a.attendance_info, a.attendance_time, a.TODAY,s.WHEN_DAY"
+					+ " FROM STUDENT s" + " LEFT OUTER JOIN ATTENDANCE a" + " ON" + " s.STUNUMBER = a.STUNUMBER"
+					+ " WHERE" + " WHEN_DAY LIKE '%" + day + "%'" + " AND today LIKE '%" + date + "%'" + " UNION"
+					+ " SELECT s.stunumber, s.stuname, s.age, a.attendance_info, a.attendance_time, a.TODAY,s.WHEN_DAY"
+					+ " FROM STUDENT s" + " LEFT OUTER JOIN ATTENDANCE a" + " ON" + " s.STUNUMBER = a.STUNUMBER"
+					+ " WHERE" + " a.today IS NULL";
 
-			PreparedStatement statement = con.prepareStatement("stuNumber, stuName, age, attendance_info");
+			PreparedStatement statement = con
+					.prepareStatement("stuNumber, stuName, age, attendance_info, attendance_time");
 			ResultSet results = statement.executeQuery(query);
 
 			ArrayList<String[]> list = new ArrayList<String[]>();
 			while (results.next()) {
 				list.add(new String[] { results.getString("stuNumber"), results.getString("stuname"),
-						results.getString("age"), results.getString("attendance_info") });
+						results.getString("age"), results.getString("attendance_info"),
+						results.getString("attendance_time") });
 			}
 			System.out.println("메인화면 출석정보 테이블 잘나와요~");
 			String[][] arr = new String[list.size()][4];
@@ -189,26 +203,127 @@ public class StudentDAO {
 		}
 	}
 
-	// [출석화면][등원버튼]등원한 친구들 테이블
+	// [출석화면][등원버튼]등원한 친구들 테이블(이름순)
 	public String[][] attendance_student(String day, String date) {
 
 		try {
 			connDB();
 
-			String query = "SELECT s.stunumber, s.stuname, s.age, a.attendance_info" + " FROM STUDENT s" + " LEFT OUTER"
-					+ " JOIN ATTENDANCE a" + " ON s.STUNUMBER =a.STUNUMBER" + " WHERE WHEN_DAY LIKE '%" + day
-					+ "%' AND TODAY LIKE '%" + date + "%'";
+			String query = "SELECT s.stunumber, s.stuname, s.age, a.attendance_info, a.attendance_time"
+					+ " FROM STUDENT s" + " LEFT OUTER" + " JOIN ATTENDANCE a" + " ON s.STUNUMBER =a.STUNUMBER"
+					+ " WHERE WHEN_DAY LIKE '%" + day + "%' AND TODAY LIKE '%" + date
+					+ "%' AND attendance_info LIKE '%출석%' ORDER BY stuname";
 
-			PreparedStatement statement = con.prepareStatement("stuNumber, stuName, age, attendance_info");
+			PreparedStatement statement = con
+					.prepareStatement("stuNumber, stuName, age, attendance_info, attendance_time");
 			ResultSet results = statement.executeQuery(query);
 
 			ArrayList<String[]> list = new ArrayList<String[]>();
 			while (results.next()) {
 				list.add(new String[] { results.getString("stuNumber"), results.getString("stuname"),
-						results.getString("age"), results.getString("attendance_info") });
+						results.getString("age"), results.getString("attendance_info"),
+						results.getString("attendance_time") });
 			}
-			System.out.println("메인화면 출석정보 테이블 잘나와요~");
+			System.out.println("등원버튼 출석정보 테이블 잘나와요~");
 			String[][] arr = new String[list.size()][4];
+			// System.out.println(list.size());
+			return list.toArray(arr);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	// [출석화면] [검색버튼] 이름 찾기(이름순)
+	public ArrayList<StudentVo> search(String word) {
+		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
+		try {
+			// 연결
+			connDB();
+			// SQL 문장 전송
+			String sql = "SELECT * FROM STUDENT" + " WHERE" + "	STUNUMBER LIKE '%" + word + "%'"
+					+ "	OR STUNAME LIKE '%" + word + "%'" + "	OR age LIKE '%" + word + "%'" + " ORDER BY STUNAME";
+			System.out.println(sql);
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				StudentVo vo = new StudentVo();
+				vo.setStuNumber(rs.getString("stuNumber"));
+				vo.setStuName(rs.getString("STUNAME"));
+				vo.setAge(rs.getString("AGE"));
+
+				list.add(vo);
+
+//				System.out.println(list);
+				vo.print();
+			}
+			;
+
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.getStackTrace();
+		} finally {
+			dbClose();
+		}
+		return list;
+	}
+
+//	// [출석화면][미등원버튼] 미등원한 친구들 테이블(이름순)
+//	public String[][] will_come(String day) {
+//
+//		try {
+//			connDB();
+//
+//			String query = " SELECT s.stunumber, s.stuname, s.age, a.attendance_info, a.attendance_time" + " FROM"
+//					+ " STUDENT s" + " LEFT OUTER JOIN ATTENDANCE a" + " ON" + " s.STUNUMBER = a.STUNUMBER" + " WHERE"
+//					+ " WHEN_DAY LIKE '%" + day + "%'" + " a.today IS NULL";
+//
+//			PreparedStatement statement = con
+//					.prepareStatement("stuNumber, stuName, age, attendance_info, attendance_time");
+//			ResultSet results = statement.executeQuery(query);
+//
+//			ArrayList<String[]> list = new ArrayList<String[]>();
+//			while (results.next()) {
+//				list.add(new String[] { results.getString("stuNumber"), results.getString("stuname"),
+//						results.getString("age"), results.getString("attendance_info"),
+//						results.getString("attendance_time") });
+//			}
+//			System.out.println("미등원 출석정보 테이블 잘나와요~");
+//			String[][] arr = new String[list.size()][4];
+//			// System.out.println(list.size());
+//			return list.toArray(arr);
+//
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//			return null;
+//		}
+//	}
+
+	// [결석버튼]결석친구들
+	public String[][] absence_stu(String day, String date) {
+
+		try {
+			connDB();
+
+			String query = "SELECT s.stunumber, s.stuname, s.age, a.attendance_info, a.Reason_for_absence " + " FROM"
+					+ " STUDENT s" + " LEFT OUTER JOIN ATTENDANCE a" + " ON" + " s.STUNUMBER = a.STUNUMBER" + " WHERE"
+					+ " WHEN_DAY LIKE '%" + day + "%'" + " AND TODAY LIKE '%" + date + "%'"
+					+ " and attendance_info LIKE '%결석%'" + " order by stuname";
+
+			PreparedStatement statement = con
+					.prepareStatement("stuNumber, stuName, age, attendance_info, Reason_for_absence");
+			ResultSet results = statement.executeQuery(query);
+
+			ArrayList<String[]> list = new ArrayList<String[]>();
+			while (results.next()) {
+				list.add(new String[] { results.getString("stuNumber"), results.getString("stuname"),
+						results.getString("age"), results.getString("Reason_for_absence"),
+						results.getString("attendance_time") });
+			}
+			System.out.println("결석버튼 출석정보 테이블 잘나와요~");
+			String[][] arr = new String[list.size()][4];
+			// System.out.println(list.size());
 			return list.toArray(arr);
 
 		} catch (Exception e) {
@@ -257,26 +372,44 @@ public class StudentDAO {
 		return list;
 	}
 
-	// 전체검색
+	// [원생관리]전체검색
 	public ArrayList<StudentVo> search_Info(String word) {
 		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
 		try {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT * FROM STUDENT WHERE STUNAME LIKE '%" + word + "%'";
+			String sql = "SELECT * FROM STUDENT WHERE stuNumber LIKE '%" + word + "%'" + " or stuName LIKE '%" + word
+					+ "%'" + " or sex LIKE '%" + word + "%'" + " or age LIKE '%" + word + "%'" + " or school LIKE '%"
+					+ word + "%'" + " or grade LIKE '%" + word + "%'" + " or className LIKE '%" + word + "%'"
+					+ " or birth LIKE '%" + word + "%'" + " or when_day LIKE '%" + word + "%'" + " or address LIKE '%"
+					+ word + "%'" + " or enter_date LIKE '%" + word + "%'" + " or student_call LIKE '%" + word + "%'"
+					+ " or guardian1 LIKE '%" + word + "%'" + " or guardian1_call LIKE '%" + word + "%'"
+					+ " or guardian2 LIKE '%" + word + "%'" + " or guardian2_call LIKE '%" + word + "%'"
+					+ " or stu_memo LIKE '%" + word + "%'";
+
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
 				StudentVo vo = new StudentVo();
 				vo.setStuNumber(rs.getString("stuNumber"));
+				vo.setStuName(rs.getString("stuName"));
+				vo.setSex(rs.getString("sex"));
 				vo.setAge(rs.getString("AGE"));
-				vo.setStuName(rs.getString("STUNAME"));
-				vo.setSchool(rs.getString("SCHOOL"));
-				vo.setGrade(rs.getString("GRADE"));
-				vo.setClassName(rs.getString("CLASSNAME"));
-				vo.setWhen_day(rs.getString("WHEN_DAY"));
+				vo.setSchool(rs.getString("school"));
+				vo.setGrade(rs.getString("grade"));
+				vo.setClassName(rs.getString("className"));
+				vo.setBirth(rs.getString("birth"));
+				vo.setWhen_day(rs.getString("when_day"));
+				vo.setAddress(rs.getString("address"));
+				vo.setEnter_date(rs.getString("enter_date"));
+				vo.setStudent_call(rs.getString("student_call"));
+				vo.setGuardian1(rs.getString("guardian1"));
+				vo.setGuardian1_call(rs.getString("guardian1_call"));
+				vo.setGuardian2(rs.getString("guardian2"));
+				vo.setGuardian2_call(rs.getString("guardian2_call"));
+				vo.setStu_memo(rs.getString("stu_memo"));
 
 				list.add(vo);
 
@@ -317,9 +450,7 @@ public class StudentDAO {
 		}
 	}// userSelectAll()
 
-	/**
-	 * ID에 해당하는 레코드 삭제하기
-	 */
+	// [원생관리] 원생 정보 삭제
 	public int userDelete(String id) {
 		int result = 0;
 		try {
@@ -336,12 +467,10 @@ public class StudentDAO {
 		return result;
 	}// userDelete()
 
-	/**
-	 * ID에 해당하는 레코드 수정하기
-	 */
+//	// [원생관리] 원생 정보 수정
 //	public int userUpdate() {
 //		int result = 0;
-//		String sql = "UPDATE TB_USERLIST SET NAME=?, age=? , addr=? WHERE id=?";
+//		String sql = "UPDATE student SET NAME=?, age=? , addr=? WHERE id=?";
 //
 //		try {
 //			ps = con.prepareStatement(sql);
@@ -363,36 +492,6 @@ public class StudentDAO {
 //		return result;
 //	}// userUpdate()
 
-	/**
-	 * 검색단어에 해당하는 레코드 검색하기 (like연산자를 사용하여 _, %를 사용할때는 PreparedStatemnet안된다. 반드시
-	 * Statement객체를 이용함)
-	 */
-	public void getUserSearch(DefaultTableModel dt, String fieldName, String word) {
-		String sql = "SELECT * FROM TB_USERLIST WHERE " + fieldName.trim() + " LIKE '%" + word.trim() + "%'";
-
-		try {
-			st = con.createStatement();
-			rs = st.executeQuery(sql);
-
-			// DefaultTableModel에 있는 기존 데이터 지우기
-			for (int i = 0; i < dt.getRowCount();) {
-				dt.removeRow(0);
-			}
-
-			while (rs.next()) {
-				Object data[] = { rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4) };
-
-				dt.addRow(data);
-			}
-
-		} catch (SQLException e) {
-			System.out.println(e + "=> getUserSearch fail");
-		} finally {
-			dbClose();
-		}
-
-	}// getUserSearch()
-
 	// 연결
 	public void connDB() {
 		try {
@@ -407,6 +506,7 @@ public class StudentDAO {
 		}
 	}
 
+	
 	/**
 	 * DB닫기 기능 메소드
 	 */

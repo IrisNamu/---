@@ -45,7 +45,7 @@ public class temperature extends JFrame {
 		setBounds(100, 100, 466, 368);
 		setLocationRelativeTo(null);
 		setResizable(false);
-
+ 
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(176, 196, 222));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
