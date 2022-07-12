@@ -384,81 +384,81 @@ public class attendance_Main extends JFrame {
 		/*
 		 * 미등원버튼 //
 		 */
-//		new StudentDAO().will_come(day);
-//		String[][] num_will = new StudentDAO().will_come(day);
-//		System.out.println(num_will.length);
-//
-//		JButton who_Did_Not_attend = new JButton("\uBBF8\uB4F1");
-//		who_Did_Not_attend.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//
-//				// 요일구하기
-//				Calendar cal = Calendar.getInstance();
-//				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-//				String day = "";
-//				switch (dayOfWeek) {
-//				case 1:
-//					day = "일";
-//					break;
-//				case 2:
-//					day = "월";
-//					break;
-//				case 3:
-//					day = "화";
-//					break;
-//				case 4:
-//					day = "수";
-//					break;
-//				case 5:
-//					day = "목";
-//					break;
-//				case 6:
-//					day = "금";
-//					break;
-//				case 7:
-//					day = "토";
-//					break;
-//				}
-//
-//				// DB연동 수강생 리스트 불러오기
-//				String[] header = new String[] { "출석번호", "나이", "이름", "등원여부", "등원시간", };
-//				String[][] data = dao.will_come(day);
-//
-//				JScrollPane scrollPane = new JScrollPane();
-//				scrollPane.setBounds(0, 250, 450, 460);
-//				contentPane.add(scrollPane);
-//				table_stuList = new JTable();
-//				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
-//				table_stuList.setModel(new DefaultTableModel(data, header));
-//				table_stuList.repaint();
-//				scrollPane.setViewportView(table_stuList);
-//
-//				table_stuList.setRowHeight(80);
-//				table_stuList.getColumn("등원시간").setPreferredWidth(200);
-//				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
-//				table_stuList.setEnabled(false); // 수정불가능
-//				table_stuList.getTableHeader().setReorderingAllowed(false);
-//				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
-//				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
-//
-//				TableColumnModel tcm = table_stuList.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
-//
-//				// 전체 열에 지정
-//				for (int i = 0; i < tcm.getColumnCount(); i++) {
-//					tcm.getColumn(i).setCellRenderer(dtcr);
-//					// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
-//					// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
-//				}
-		// }
-		// });
-//		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
-//		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
-//		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-//		who_Did_Not_attend.setBounds(229, 85, 89, 38);
-//		chooseDateCheck.add(who_Did_Not_attend);
+
+		new StudentDAO().will_come(day, date1.getText());
+		String[][] num_will = new StudentDAO().will_come(day, date1.getText());
+		System.out.println(num_will.length);
+
+		JButton who_Did_Not_attend = new JButton("미등 " + num_will.length);
+		who_Did_Not_attend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// 요일구하기
+				Calendar cal = Calendar.getInstance();
+				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+				String day = "";
+				switch (dayOfWeek) {
+				case 1:
+					day = "일";
+					break;
+				case 2:
+					day = "월";
+					break;
+				case 3:
+					day = "화";
+					break;
+				case 4:
+					day = "수";
+					break;
+				case 5:
+					day = "목";
+					break;
+				case 6:
+					day = "금";
+					break;
+				case 7:
+					day = "토";
+					break;
+				}
+
+				// DB연동 수강생 리스트 불러오기
+				String[] header = new String[] { "출석번호", "나이", "이름" };
+				String[][] data = dao.will_come(day, date1.getText());
+
+				JScrollPane scrollPane = new JScrollPane();
+				scrollPane.setBounds(0, 250, 450, 460);
+				contentPane.add(scrollPane);
+				table_stuList = new JTable();
+				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
+				table_stuList.setModel(new DefaultTableModel(data, header));
+				table_stuList.repaint();
+				scrollPane.setViewportView(table_stuList);
+
+				table_stuList.setRowHeight(80);
+				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
+				table_stuList.setEnabled(false); // 수정불가능
+				table_stuList.getTableHeader().setReorderingAllowed(false);
+				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
+				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+
+				TableColumnModel tcm = table_stuList.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+
+				// 전체 열에 지정
+				for (int i = 0; i < tcm.getColumnCount(); i++) {
+					tcm.getColumn(i).setCellRenderer(dtcr);
+					// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
+					// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
+				}
+			}
+		});
+		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
+		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
+		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
+		who_Did_Not_attend.setBounds(229, 85, 89, 38);
+		chooseDateCheck.add(who_Did_Not_attend);
 
 		new StudentDAO().absence_stu(day, date1.getText());
-		String[][] num_abs = new StudentDAO().attendance_student(day, date1.getText());
+		String[][] num_abs = new StudentDAO().absence_stu(day, date1.getText());
 		System.out.println("결석" + num_abs.length);
 
 		JButton who_absent = new JButton("결석 " + num_abs.length);
@@ -627,20 +627,6 @@ public class attendance_Main extends JFrame {
 		search_field.setBackground(new Color(255, 250, 250));
 		search_field.setText(" 검색어를 입력해주세요.");
 		search_field.setColumns(10);
-
-//		// DB연동 수강생 리스트 불러오기
-//		DefaultTableModel model = (DefaultTableModel) table_stuList.getModel();
-//		model.setRowCount(0);
-//		StudentDAO dao = new StudentDAO();
-//		ArrayList<StudentVo> list = dao.who_come(day);
-//
-//		for (StudentVo vo : list) {
-//			String[] data1 = { vo.getStuNumber(), vo.getStuName(), vo.getAge(), vo.getAttendance_info() };
-//
-//			model.addRow(data1);// 이걸 적어줘야 테이블에 추가가 된다.
-//		}
-//
-//		table_stuList.setModel(model);
 
 	}
 }

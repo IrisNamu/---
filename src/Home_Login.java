@@ -137,7 +137,7 @@ public class Home_Login extends JFrame {
 					// 로그인에 성공하면 화면으로 넘어가고 아니라면 다시 입력하라고하기
 					boolean b = dao.list(vo);
 					if (b == true) {
-						tfMsg.setText("로그인 성공");
+						tfMsg.setText("로그인 되었습니다.");
 						dispose();
 						attendance_Main attendance = new attendance_Main(); // 홈화면 호출
 						attendance.setVisible(true);

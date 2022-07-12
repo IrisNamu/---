@@ -48,7 +48,7 @@ public class addStudentPage extends JFrame {
 	private JTextField stu_num;
 	private JTextField s_guardian1_call;
 	private JTextField s_guardian2_call;
-	private JTextField s_guardian2_call_1;
+	private JTextField s_guardian2_call_;
 	private JTextField s_school;
 	private JTextField s_grade;
 	private JTextField s_class;
@@ -508,31 +508,30 @@ public class addStudentPage extends JFrame {
 		contentPane.add(s_guardian1_call);
 
 		// 보호자2 전화번호
-		s_guardian2_call = new JTextField();
-		s_guardian2_call_1 = new JTextField();
-		s_guardian2_call_1.setForeground(new Color(112, 128, 144));
-		s_guardian2_call_1.addFocusListener(new FocusAdapter() {
+		s_guardian2_call_ = new JTextField();
+		s_guardian2_call_.setForeground(new Color(112, 128, 144));
+		s_guardian2_call_.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_guardian2_call.getText().equals(" * phone 예)010-0000-0000")) {
-					s_guardian2_call.setText("");
-					s_guardian2_call.setForeground(new Color(153, 153, 153));
+				if (s_guardian2_call_.getText().equals(" * phone 예)010-0000-0000")) {
+					s_guardian2_call_.setText("");
+					s_guardian2_call_.setForeground(new Color(153, 153, 153));
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (s_guardian2_call.getText().equals("")) {
-					s_guardian2_call.setText(" * phone 예)010-0000-0000");
-					s_guardian2_call.setForeground(new Color(153, 153, 153));
+				if (s_guardian2_call_.getText().equals("")) {
+					s_guardian2_call_.setText(" * phone 예)010-0000-0000");
+					s_guardian2_call_.setForeground(new Color(153, 153, 153));
 				}
 			}
 		});
-		s_guardian2_call_1.setFont(new Font("굴림", Font.PLAIN, 13));
-		s_guardian2_call_1.setText(" * phone 예)010-0000-0000");
-		s_guardian2_call_1.setColumns(10);
-		s_guardian2_call_1.setBounds(257, 649, 177, 29);
-		contentPane.add(s_guardian2_call_1);
+		s_guardian2_call_.setFont(new Font("굴림", Font.PLAIN, 13));
+		s_guardian2_call_.setText(" * phone 예)010-0000-0000");
+		s_guardian2_call_.setColumns(10);
+		s_guardian2_call_.setBounds(257, 649, 177, 29);
+		contentPane.add(s_guardian2_call_);
 
 		// 맨 위 라벨
 		JLabel copyright_SYG_Label = new JLabel("오! 출석 - 학생 정보 추가");
@@ -691,9 +690,6 @@ public class addStudentPage extends JFrame {
 						+ birth_dateChooser.getJCalendar().getMonthChooser().getMonth() + "-"
 						+ birth_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(birth);
-				if (birth.length() < 2) {
-					birth = "0" + birth;
-				}
 
 				// 등록일 셋팅
 
@@ -701,9 +697,6 @@ public class addStudentPage extends JFrame {
 						+ enter_dateChooser.getJCalendar().getMonthChooser().getMonth() + "-"
 						+ enter_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(enter_date);
-				if (enter_date.length() < 2) {
-					enter_date = "0" + birth;
-				}
 
 				String grade = s_grade.getText() + "학년";
 

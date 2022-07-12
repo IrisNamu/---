@@ -22,13 +22,12 @@ public class PayDAO {
 	private PreparedStatement ps;
 	private Statement st;
 
-	//[pay] 결제 정보 넘겨주기
-	public boolean Insert_attendance_Info(StudentVo s) {
+	// [pay] 결제 정보 넘겨주기
+	public boolean pay(PayVo p) {
 		try {
 			connDB();
-			String query = "INSERT INTO attendance(stuNumber, attendance_info, today, attendance_time) " + "values('"
-					+ s.getStuNumber() + "','" + s.getAttendance_info() + "','" + s.getToday() + "','"
-					+ s.getAttendance_time() + "')";
+			String query = "INSERT INTO PAYMENT(stuNumber, payment_date, payment_amount) " + "values('"
+					+ p.getStuNumber() + "','" + p.getPayment_date() + "','" + p.getPayment_amount() + "')";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
 			System.out.println("rs.getRow() : " + rs.getRow());
@@ -46,6 +45,73 @@ public class PayDAO {
 		return false;
 	}
 
+	// [결제관리] 납부자 확인하기
+	public String[][] pay_stulList(String day) {
+
+		try {
+			connDB();
+
+			String query = "SELECT  s.stuNumber, s.stuname, s.AGE, p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL"
+					+ "	FROM STUDENT s" + "	LEFT OUTER JOIN  PAYMENT p" + "	ON s.STUNUMBER = p.STUNUMBER"
+					+ " WHERE payment_date LIKE '%" + day + "%' ORDER BY STUNAME";
+
+			PreparedStatement statement = con.prepareStatement(
+					"s.stuNumber, s.stuName, s.AGE,p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL FROM student s, PAYMENT p");
+			ResultSet results = statement.executeQuery(query); // 쿼리 실행 결과를 받아야하기때문에 데이터베이스에 접속, 그걸
+
+			ArrayList<String[]> list = new ArrayList<String[]>();
+			while (results.next()) {
+				list.add(new String[] { results.getString("stuNumber"), results.getString("stuName"),
+						results.getString("age"), results.getString("payment_date"),
+						results.getString("payment_amount"), results.getString("address"),
+						results.getString("GUARDIAN1"), results.getString("GUARDIAN1_CALL") });
+			}
+			System.out.println("The data has been fetched");
+			String[][] arr = new String[list.size()][9];
+			return list.toArray(arr);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("pay_stulList 실패");
+			return null;
+		}
+	}
+
+	// [결제관리] [미납자] 확인하기
+	public String[][] did_not_pay(String day) {
+
+		try {
+			connDB();
+
+			String query = "SELECT stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
+					+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P" + " USING(STUNUMBER)" + " MINUS"
+					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
+					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
+					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'";
+
+			PreparedStatement statement = con.prepareStatement(
+					"stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
+							+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P");
+			ResultSet results = statement.executeQuery(query); // 쿼리 실행 결과를 받아야하기때문에 데이터베이스에 접속, 그걸
+
+			ArrayList<String[]> list = new ArrayList<String[]>();
+			while (results.next()) {
+				list.add(new String[] { results.getString("stuNumber"), results.getString("stuName"),
+						results.getString("age"), results.getString("payment_date"),
+						results.getString("payment_amount"), results.getString("address"),
+						results.getString("GUARDIAN1"), results.getString("GUARDIAN1_CALL") });
+			}
+			System.out.println("미납자 성공~");
+			String[][] arr = new String[list.size()][9];
+			return list.toArray(arr);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("did_not_pay 실패");
+			return null;
+		}
+	}
+
 	public void connDB() {
 		try {
 			Class.forName(driver);
@@ -58,6 +124,8 @@ public class PayDAO {
 			e.printStackTrace();
 		}
 	}
+
+	// [출석화면] [수납자] 이번달 수납한 수강생들 리스트
 
 	/**
 	 * DB닫기 기능 메소드
@@ -78,6 +146,7 @@ public class PayDAO {
 	public static void main(String[] args) {
 		StudentDAO sdao = new StudentDAO();
 		sdao.search_Info(null);
+
 	}
 
 }
