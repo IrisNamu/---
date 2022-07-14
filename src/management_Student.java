@@ -29,6 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import javax.swing.JSeparator;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class management_Student extends JFrame {
@@ -44,8 +46,6 @@ public class management_Student extends JFrame {
 	public static void main(String[] args) {
 
 		StudentDAO dao = new StudentDAO(); // 로드와 연결
-
-		// 이름", "출석번호", "나이", "생년월일", "학교", "학년", "반"
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -168,10 +168,13 @@ public class management_Student extends JFrame {
 					return;
 				}
 				StudentDAO dao = new StudentDAO();
-				ArrayList<StudentVo> list = dao.search(word);
+				ArrayList<StudentVo> list = dao.search_Info(word);
 
 				for (StudentVo vo : list) {
-					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge() };
+					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getSex(), vo.getAge(), vo.getSchool(),
+							vo.getGrade(), vo.getClassName(), vo.getBirth(), vo.getWhen_day(), vo.getAddress(),
+							vo.getEnter_date(), vo.getStudent_call(), vo.getGuardian1(), vo.getGuardian1_call(),
+							vo.getGuardian2(), vo.getGuardian2_call(), vo.getStu_memo() };
 					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
 				}
 
@@ -192,7 +195,7 @@ public class management_Student extends JFrame {
 
 				big_manage big = new big_manage();
 				big.setVisible(true);
-				
+
 			}
 		});
 		bigger_btn.setBounds(158, 668, 117, 35);
@@ -206,12 +209,20 @@ public class management_Student extends JFrame {
 		String[] header = new String[] { "출석번호", "이름", "성별", "나이", "학교명", "학년", "반", "생년월일", "등원요일", "주소", "등록일",
 				"학생 전화번호", "보호자1 성함", "보호자1 전화번호", "보호자2 성함", "보호자2 전화번호", "특이사항" };
 		String[][] data = dao.getStudent();
+		
+		
 		table_stuList = new JTable();
+		table_stuList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
 		table_stuList.setFont(new Font("굴림", Font.PLAIN, 13));
 		table_stuList.setModel(new DefaultTableModel(data, header));
 		scrollPane.setViewportView(table_stuList);
 		table_stuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
+		table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		
 		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(30);
 		table_stuList.getColumn("출석번호").setPreferredWidth(60);
@@ -231,23 +242,27 @@ public class management_Student extends JFrame {
 		table_stuList.getColumn("특이사항").setPreferredWidth(250);
 		table_stuList.setEnabled(false);
 
-		JButton bigger_btn_1 = new JButton("정보 수정");
-		bigger_btn_1.addActionListener(new ActionListener() {
+		JButton revise = new JButton("정보 수정");
+		revise.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		bigger_btn_1.setForeground(new Color(255, 250, 250));
-		bigger_btn_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 15));
-		bigger_btn_1.setBackground(new Color(119, 136, 153));
-		bigger_btn_1.setBounds(251, 194, 94, 34);
-		attendance_menu.add(bigger_btn_1);
+		revise.setForeground(new Color(255, 250, 250));
+		revise.setFont(new Font("배달의민족 주아", Font.PLAIN, 15));
+		revise.setBackground(new Color(119, 136, 153));
+		revise.setBounds(251, 194, 94, 34);
+		attendance_menu.add(revise);
 
-		JButton bigger_btn_1_1 = new JButton("원생 삭제");
-		bigger_btn_1_1.setForeground(new Color(255, 250, 250));
-		bigger_btn_1_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 15));
-		bigger_btn_1_1.setBackground(new Color(119, 136, 153));
-		bigger_btn_1_1.setBounds(347, 194, 94, 34);
-		attendance_menu.add(bigger_btn_1_1);
+		JButton delete = new JButton("원생 삭제");
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		delete.setForeground(new Color(255, 250, 250));
+		delete.setFont(new Font("배달의민족 주아", Font.PLAIN, 15));
+		delete.setBackground(new Color(119, 136, 153));
+		delete.setBounds(347, 194, 94, 34);
+		attendance_menu.add(delete);
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 250, 250));

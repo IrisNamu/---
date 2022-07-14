@@ -79,29 +79,30 @@ public class big_manage extends JFrame {
 		contentPane.add(scrollPane);
 
 		String[] header = new String[] { "출석번호", "이름", "성별", "나이", "학교명", "학년", "반", "생년월일", "등원요일", "주소", "등록일",
-				"학생 전화번호", "보호자1 성함", "보호자1 전화번호", "보호자2 성함", "보호자2 전화번호", "특이사항" };
+				"학생 전화번호", "보호자1", "보호자1 전화번호", "보호자2", "보호자2 전화번호", "특이사항" };
 		String[][] data = dao.getStudent();
 		table_stuList = new JTable();
 		table_stuList.setFont(new Font("굴림", Font.PLAIN, 15));
 		table_stuList.setModel(new DefaultTableModel(data, header));
 		scrollPane.setViewportView(table_stuList);
 		table_stuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
+		table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
+		
 		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(30);
-		table_stuList.getColumn("출석번호").setPreferredWidth(60);
-		table_stuList.getColumn("성별").setPreferredWidth(50);
-		table_stuList.getColumn("나이").setPreferredWidth(50);
-		table_stuList.getColumn("학년").setPreferredWidth(60);
+		table_stuList.getColumn("출석번호").setPreferredWidth(80);
+		table_stuList.getColumn("성별").setPreferredWidth(60);
+		table_stuList.getColumn("나이").setPreferredWidth(70);
+		table_stuList.getColumn("학년").setPreferredWidth(70);
 		table_stuList.getColumn("반").setPreferredWidth(90);
 		table_stuList.getColumn("생년월일").setPreferredWidth(100);
 		table_stuList.getColumn("등원요일").setPreferredWidth(100);
 		table_stuList.getColumn("주소").setPreferredWidth(180);
 		table_stuList.getColumn("등록일").setPreferredWidth(100);
 		table_stuList.getColumn("학생 전화번호").setPreferredWidth(150);
-		table_stuList.getColumn("보호자1 성함").setPreferredWidth(90);
+		table_stuList.getColumn("보호자1").setPreferredWidth(90);
 		table_stuList.getColumn("보호자1 전화번호").setPreferredWidth(150);
-		table_stuList.getColumn("보호자2 성함").setPreferredWidth(90);
+		table_stuList.getColumn("보호자2").setPreferredWidth(90);
 		table_stuList.getColumn("보호자2 전화번호").setPreferredWidth(150);
 		table_stuList.getColumn("특이사항").setPreferredWidth(250);
 		table_stuList.setEnabled(false);
@@ -149,10 +150,13 @@ public class big_manage extends JFrame {
 					return;
 				}
 				StudentDAO dao = new StudentDAO();
-				ArrayList<StudentVo> list = dao.search(word);
+				ArrayList<StudentVo> list = dao.search_Info(word);
 
 				for (StudentVo vo : list) {
-					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge() };
+					String[] data = {  vo.getStuNumber(), vo.getStuName(), vo.getSex(), vo.getAge(), vo.getSchool(),
+							vo.getGrade(), vo.getClassName(), vo.getBirth(), vo.getWhen_day(), vo.getAddress(),
+							vo.getEnter_date(), vo.getStudent_call(), vo.getGuardian1(), vo.getGuardian1_call(),
+							vo.getGuardian2(), vo.getGuardian2_call(), vo.getStu_memo() };
 					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
 				}
 

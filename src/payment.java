@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -77,65 +78,10 @@ public class payment extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBackground(new Color(255, 250, 250));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		search_field = new JTextField();
-		search_field.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (search_field.getText().equals(" 검색어를 입력하세요.")) {
-					search_field.setText("");
-					search_field.setForeground(new Color(153, 153, 153));
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (search_field.getText().equals("")) {
-					search_field.setText(" 검색어를 입력하세요.");
-					search_field.setForeground(new Color(153, 153, 153));
-				}
-			}
-		});
-
-		search_field.setText(" 검색어를 입력하세요.");
-		search_field.setForeground(Color.GRAY);
-		search_field.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
-		search_field.setColumns(10);
-		search_field.setBounds(109, 108, 180, 34);
-		contentPane.add(search_field);
-
-		JButton search = new JButton("검색");
-		search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				// 검색하면 테이블에 해당 검색결과 나타내기
-				DefaultTableModel model = (DefaultTableModel) table_stuList.getModel();
-				model.setRowCount(0);
-
-				String word = search_field.getText();
-				System.out.println(word);
-				if (word.length() < 1) {
-					return;
-				}
-				StudentDAO dao = new StudentDAO();
-				ArrayList<StudentVo> list = dao.search(word);
-
-				for (StudentVo vo : list) {
-					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge() };
-					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
-				}
-
-				table_stuList.setModel(model);
-			}
-		});
-		search.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
-		search.setBackground(new Color(176, 196, 222));
-		search.setBounds(301, 108, 66, 34);
-		contentPane.add(search);
 
 		pay_input = new JTextField();
 		pay_input.setFont(new Font("배달의민족 주아", Font.PLAIN, 31));
@@ -148,6 +94,7 @@ public class payment extends JFrame {
 		stuNum = new JTextField();
 		stuNum.setHorizontalAlignment(SwingConstants.CENTER);
 		stuNum.addFocusListener(new FocusAdapter() {
+
 			@Override
 			public void focusGained(FocusEvent e) {
 				if (stuNum.getText().equals("출석번호를 입력하세요.")) {
@@ -234,11 +181,71 @@ public class payment extends JFrame {
 		table_stuList.getColumn("특이사항").setPreferredWidth(250);
 		table_stuList.setEnabled(false);
 
+		// 검색
+
+		search_field = new JTextField();
+		search_field.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (search_field.getText().equals(" 검색어를 입력하세요.")) {
+					search_field.setText("");
+					search_field.setForeground(new Color(153, 153, 153));
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (search_field.getText().equals("")) {
+					search_field.setText(" 검색어를 입력하세요.");
+					search_field.setForeground(new Color(153, 153, 153));
+				}
+			}
+		});
+
+		search_field.setText(" 검색어를 입력하세요.");
+		search_field.setForeground(Color.GRAY);
+		search_field.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		search_field.setColumns(10);
+		search_field.setBounds(109, 108, 180, 34);
+		contentPane.add(search_field);
+
+		JButton search = new JButton("검색");
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// 검색하면 테이블에 해당 검색결과 나타내기
+				DefaultTableModel model = (DefaultTableModel) table_stuList.getModel();
+				model.setRowCount(0);
+
+				String word = search_field.getText();
+				System.out.println(word);
+				if (word.length() < 1) {
+					return;
+				}
+				StudentDAO dao = new StudentDAO();
+				ArrayList<StudentVo> list = dao.search_Info(word);
+
+				for (StudentVo vo : list) {
+					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getSex(), vo.getAge(), vo.getSchool(),
+							vo.getGrade(), vo.getClassName(), vo.getBirth(), vo.getWhen_day(), vo.getAddress(),
+							vo.getEnter_date(), vo.getStudent_call(), vo.getGuardian1(), vo.getGuardian1_call(),
+							vo.getGuardian2(), vo.getGuardian2_call(), vo.getStu_memo() };
+					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
+				}
+
+				table_stuList.setModel(model);
+			}
+		});
+		search.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+		search.setBackground(new Color(176, 196, 222));
+		search.setBounds(301, 108, 66, 34);
+		contentPane.add(search);
+
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 255, 255));
-		panel.setBounds(0, 523, 450, 80);
+		panel.setBackground(new Color(255, 250, 250));
+		panel.setBounds(0, 523, 450, 103);
 		contentPane.add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
 		hundred_thousand = new JButton("10만원");
 		hundred_thousand.setBackground(new Color(255, 255, 255));
@@ -344,6 +351,9 @@ public class payment extends JFrame {
 
 					// 디비값넣기
 
+					StudentDAO dao = new StudentDAO();
+					ArrayList<StudentVo> list = dao.number_name(stuNum.getText());
+
 					String str = pay_input.getText();
 
 					str = str.replaceAll("[원]", "");
@@ -354,18 +364,24 @@ public class payment extends JFrame {
 					PayVo vo = new PayVo(stuNum.getText(), pay_when, pay_amount);
 					boolean b = pay_dao.pay(vo);
 
-					int r = JOptionPane.showConfirmDialog(null, "님" + pay_amount + "원 납부처리 하시겠습니까?", "수강 납부 확인 메세지",
-							JOptionPane.YES_NO_OPTION);
+					for (StudentVo vo1 : list) {
+						String[] name = { vo1.getStuName() };
+						System.out.println(Arrays.toString(name));
 
-					if (r == JOptionPane.YES_OPTION) {
-						JOptionPane.showMessageDialog(null, "님 수강납부 완료되었습니다.");
-						payment pay = new payment();
-						pay.setVisible(true);
-						dispose();
-						pay_input.setText("0원");
+						int r = JOptionPane.showConfirmDialog(null,
+								Arrays.toString(name) + "님 " + pay_amount + "원 납부처리 하시겠습니까?", "수강 납부 확인 메세지",
+								JOptionPane.YES_NO_OPTION);
 
-					} else {
-						JOptionPane.showMessageDialog(null, "취소되었습니다.");
+						if (r == JOptionPane.YES_OPTION) {
+							JOptionPane.showMessageDialog(null, Arrays.toString(name) + "님 수강납부 완료되었습니다.");
+							payment pay = new payment();
+							pay.setVisible(true);
+							dispose();
+							pay_input.setText("0원");
+
+						} else {
+							JOptionPane.showMessageDialog(null, "취소되었습니다.");
+						}
 					}
 				}
 			}

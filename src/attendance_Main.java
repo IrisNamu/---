@@ -1,6 +1,7 @@
 import java.awt.EventQueue;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -15,6 +16,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.EventHandler;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,14 +33,19 @@ import database.StudentVo;
 import java.awt.GridLayout;
 import java.awt.Scrollbar;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
 
 @SuppressWarnings("serial")
-public class attendance_Main extends JFrame {
+public class attendance_Main extends JFrame implements MouseListener {
 	private StudentDAO dao;
 	private JPanel contentPane;
 	private JTextField search_field;
 	private JTable table_stuList;
 	private String day;
+	private int values;
+	private JLabel name;
+	private JLabel num;
+	private JLabel age;
 
 	/**
 	 * Launch the application.
@@ -47,8 +54,6 @@ public class attendance_Main extends JFrame {
 
 		java.util.Date utilDate = new java.util.Date();
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		System.out.println("sqlDate:" + sqlDate);
-		System.out.println("utilDate:" + utilDate);
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -135,25 +140,47 @@ public class attendance_Main extends JFrame {
 		JLabel date1 = new JLabel();
 		date1.setText(date.format(d));
 
+		num = new JLabel();
+		name = new JLabel();
+		age = new JLabel();
+
 		/**
-		 * [메인화면 출석] DB연동 수강생 리스트 불러오기(이름순)
+		 * [메인화면 출석] DB연동 수강생 리스트 불러오기(이름순)(전체)
 		 */
-		String[] header = new String[] { "출석번호", "나이", "이름", "등원여부", "등원시간", };
-		String[][] data = dao.attendance_table_all(day, date1.getText());
+		String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
+		String[][] data = dao.attendance_table_all(day);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 254, 450, 461);
 		contentPane.add(scrollPane);
 		table_stuList = new JTable();
+		table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table_stuList.addMouseListener(this);
+		table_stuList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				int row = table_stuList.getSelectedRow();
+				int col = table_stuList.getSelectedColumn();
+				for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+				}
+				num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+				name.setText((String) table_stuList.getModel().getValueAt(row, 1));
+				age.setText((String) table_stuList.getModel().getValueAt(row, 2));
+
+				attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(), age.getText());
+				a.setVisible(true);
+			}
+		});
 		table_stuList.setShowVerticalLines(false);
 		table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 		table_stuList.setModel(new DefaultTableModel(data, header));
 		table_stuList.repaint();
 		scrollPane.setViewportView(table_stuList);
-
+		table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(80);
-		table_stuList.getColumn("등원시간").setPreferredWidth(200);
+		table_stuList.getColumn("등원요일").setPreferredWidth(200);
 		table_stuList.getTableHeader().setReorderingAllowed(false); // 테이블 컬럼의 이동을 방지한다. 이거 안쓰면 마우스로 드로그 앤 드롭으로 엉망진창이 될수
 																	// 있다.
 
@@ -226,10 +253,9 @@ public class attendance_Main extends JFrame {
 		 * 전체버튼 누르면 나오는 테이블
 		 * 
 		 */
-		new StudentDAO().attendance_student(day, date1.getText());
-		String[][] num_all = new StudentDAO().attendance_table_all(day, date1.getText());
-		System.out.println(num_all.length);
 
+		new StudentDAO().attendance_student(day, date1.getText());
+		String[][] num_all = new StudentDAO().attendance_table_all(day);
 		JButton all_student = new JButton("전체 " + num_all.length);
 		all_student.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -262,23 +288,67 @@ public class attendance_Main extends JFrame {
 					break;
 				}
 
-				String[] header = new String[] { "출석번호", "나이", "이름", "등원여부", "등원시간", };
-				String[][] data = dao.attendance_table_all(day, date1.getText());
+				String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
+				String[][] data = dao.attendance_table_all(day);
 
-				JScrollPane scrollPane = new JScrollPane();
-				scrollPane.setBounds(0, 254, 450, 461);
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();
+
+				table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				table_stuList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+
+						int row = table_stuList.getSelectedRow();
+						int col = table_stuList.getSelectedColumn();
+						for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+						}
+						num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+						name.setText((String) table_stuList.getModel().getValueAt(row, 1));
+						age.setText((String) table_stuList.getModel().getValueAt(row, 2));
+
+						attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(),
+								age.getText());
+						a.setVisible(true);
+
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+				});
+
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
-
+				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 				// 테이블 높이 넓이 조정해주기
 				table_stuList.setRowHeight(80);
-				table_stuList.getColumn("등원시간").setPreferredWidth(200);
+				table_stuList.getColumn("등원요일").setPreferredWidth(200);
 				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
-				table_stuList.setEnabled(false); // 수정불가능
+				// table_stuList.setEnabled(false); // 수정불가능
 				table_stuList.getTableHeader().setReorderingAllowed(false); // 테이블 컬럼의 이동을 방지한다. 이거 안쓰면 마우스로 드로그 앤 드롭으로
 																			// 엉망진창이 될수
 																			// 있다.
@@ -299,7 +369,7 @@ public class attendance_Main extends JFrame {
 		all_student.setBackground(Color.DARK_GRAY);
 		all_student.setForeground(Color.WHITE);
 		all_student.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		all_student.setBounds(30, 86, 89, 37);
+		all_student.setBounds(30, 86, 89, 38);
 		chooseDateCheck.add(all_student);
 
 		/*
@@ -308,8 +378,6 @@ public class attendance_Main extends JFrame {
 		 */
 		new StudentDAO().attendance_student(day, date1.getText());
 		String[][] num_att = new StudentDAO().attendance_student(day, date1.getText());
-		System.out.println(num_att.length);
-
 		JButton who_attendance = new JButton("등원 " + num_att.length);
 		who_attendance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -345,20 +413,41 @@ public class attendance_Main extends JFrame {
 				// DB연동 수강생 리스트 불러오기
 				String[] header = new String[] { "출석번호", "나이", "이름", "등원여부", "등원시간", };
 				String[][] data = dao.attendance_student(day, date1.getText());
-
-				JScrollPane scrollPane = new JScrollPane();
 				scrollPane.setBounds(0, 255, 450, 460);
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();
+//				
+//				table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//				table_stuList.addMouseListener(this);
+//				table_stuList.addMouseListener(new MouseAdapter() {
+//					@Override
+//					public void mouseClicked(MouseEvent e) {
+
+//						int row = table_stuList.getSelectedRow();
+//						int col = table_stuList.getSelectedColumn();
+//						for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+//						}
+//						num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+//						name.setText((String) table_stuList.getModel().getValueAt(row, 1));
+//						age.setText((String) table_stuList.getModel().getValueAt(row, 2));
+//
+//						attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(), age.getText());
+//						a.setVisible(true);
+//
+//
+//						}
+//					}
+//				});
+//				
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
-
+				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 				table_stuList.setRowHeight(80);
 				table_stuList.getColumn("등원시간").setPreferredWidth(200);
 				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
-				table_stuList.setEnabled(false); // 수정불가능
+				// table_stuList.setEnabled(false); // 수정불가능
 				table_stuList.getTableHeader().setReorderingAllowed(false);
 				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -376,7 +465,7 @@ public class attendance_Main extends JFrame {
 		who_attendance.setBackground(new Color(51, 153, 204));
 		who_attendance.setForeground(new Color(255, 255, 255));
 		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_attendance.setBounds(131, 86, 89, 37);
+		who_attendance.setBounds(131, 86, 89, 38);
 		chooseDateCheck.add(who_attendance);
 
 //absence_stu
@@ -387,8 +476,6 @@ public class attendance_Main extends JFrame {
 
 		new StudentDAO().will_come(day, date1.getText());
 		String[][] num_will = new StudentDAO().will_come(day, date1.getText());
-		System.out.println(num_will.length);
-
 		JButton who_Did_Not_attend = new JButton("미등 " + num_will.length);
 		who_Did_Not_attend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -422,21 +509,64 @@ public class attendance_Main extends JFrame {
 				}
 
 				// DB연동 수강생 리스트 불러오기
-				String[] header = new String[] { "출석번호", "나이", "이름" };
+				String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
 				String[][] data = dao.will_come(day, date1.getText());
 
-				JScrollPane scrollPane = new JScrollPane();
-				scrollPane.setBounds(0, 250, 450, 460);
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();
+				table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				table_stuList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+
+						int row = table_stuList.getSelectedRow();
+						int col = table_stuList.getSelectedColumn();
+						for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+						}
+						num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+						name.setText((String) table_stuList.getModel().getValueAt(row, 1));
+						age.setText((String) table_stuList.getModel().getValueAt(row, 2));
+
+						attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(),
+								age.getText());
+						a.setVisible(true);
+
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+				});
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
-
+				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 				table_stuList.setRowHeight(80);
+				table_stuList.getColumn("등원요일").setPreferredWidth(200);
 				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
-				table_stuList.setEnabled(false); // 수정불가능
+				// table_stuList.setEnabled(false); // 수정불가능
 				table_stuList.getTableHeader().setReorderingAllowed(false);
 				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -454,13 +584,11 @@ public class attendance_Main extends JFrame {
 		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
 		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
 		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_Did_Not_attend.setBounds(229, 85, 89, 38);
+		who_Did_Not_attend.setBounds(232, 86, 89, 38);
 		chooseDateCheck.add(who_Did_Not_attend);
 
 		new StudentDAO().absence_stu(day, date1.getText());
 		String[][] num_abs = new StudentDAO().absence_stu(day, date1.getText());
-		System.out.println("결석" + num_abs.length);
-
 		JButton who_absent = new JButton("결석 " + num_abs.length);
 		who_absent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -494,10 +622,9 @@ public class attendance_Main extends JFrame {
 				}
 
 				// DB연동 수강생 리스트 불러오기
-				String[] header = new String[] { "출석번호", "나이", "이름", "등원여부", "결석사유", };
+				String[] header = new String[] { "출석번호", "이름", "나이", "결석날짜", "결석사유", };
 				String[][] data = dao.absence_stu(day, date1.getText());
 
-				JScrollPane scrollPane = new JScrollPane();
 				scrollPane.setBounds(0, 250, 450, 460);
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();
@@ -505,11 +632,12 @@ public class attendance_Main extends JFrame {
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
-
+				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 				table_stuList.setRowHeight(80);
+				table_stuList.getColumn("결석날짜").setPreferredWidth(150);
 				table_stuList.getColumn("결석사유").setPreferredWidth(200);
 				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
-				table_stuList.setEnabled(false); // 수정불가능
+				// table_stuList.setEnabled(false); // 수정불가능
 				table_stuList.getTableHeader().setReorderingAllowed(false);
 				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -528,7 +656,7 @@ public class attendance_Main extends JFrame {
 		who_absent.setBackground(new Color(255, 0, 0));
 		who_absent.setForeground(new Color(255, 255, 255));
 		who_absent.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
-		who_absent.setBounds(323, 86, 89, 36);
+		who_absent.setBounds(333, 85, 89, 38);
 		chooseDateCheck.add(who_absent);
 
 		JSeparator separator_1 = new JSeparator();
@@ -581,7 +709,6 @@ public class attendance_Main extends JFrame {
 				model.setRowCount(0);
 
 				String word = search_field.getText();
-				System.out.println(word);
 				if (word.length() < 1) {
 					return;
 				}
@@ -589,7 +716,7 @@ public class attendance_Main extends JFrame {
 				ArrayList<StudentVo> list = dao.search(word);
 
 				for (StudentVo vo : list) {
-					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge() };
+					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getAge(), vo.getWhen_day() };
 					model.addRow(data);// 이걸 적어줘야 테이블에 추가가 된다.
 				}
 
@@ -627,6 +754,36 @@ public class attendance_Main extends JFrame {
 		search_field.setBackground(new Color(255, 250, 250));
 		search_field.setText(" 검색어를 입력해주세요.");
 		search_field.setColumns(10);
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 }

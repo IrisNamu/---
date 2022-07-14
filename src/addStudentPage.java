@@ -97,8 +97,8 @@ public class addStudentPage extends JFrame {
 		backBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				attendance_Main attendance = new attendance_Main(); // 홈화면 호출
-				attendance.setVisible(true);
+				management_Student manage = new management_Student();
+				manage.setVisible(true);
 			}
 		});
 

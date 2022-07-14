@@ -28,9 +28,7 @@ public class PayDAO {
 			connDB();
 			String query = "INSERT INTO PAYMENT(stuNumber, payment_date, payment_amount) " + "values('"
 					+ p.getStuNumber() + "','" + p.getPayment_date() + "','" + p.getPayment_amount() + "')";
-			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
-			System.out.println("rs.getRow() : " + rs.getRow());
 
 			if (rs.getRow() == 0) {
 				System.out.println("0 row selected...");
@@ -66,7 +64,6 @@ public class PayDAO {
 						results.getString("payment_amount"), results.getString("address"),
 						results.getString("GUARDIAN1"), results.getString("GUARDIAN1_CALL") });
 			}
-			System.out.println("The data has been fetched");
 			String[][] arr = new String[list.size()][9];
 			return list.toArray(arr);
 
@@ -101,7 +98,6 @@ public class PayDAO {
 						results.getString("payment_amount"), results.getString("address"),
 						results.getString("GUARDIAN1"), results.getString("GUARDIAN1_CALL") });
 			}
-			System.out.println("미납자 성공~");
 			String[][] arr = new String[list.size()][9];
 			return list.toArray(arr);
 

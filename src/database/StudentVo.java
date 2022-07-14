@@ -86,12 +86,22 @@ public class StudentVo {
 
 	}
 
-	// 학생 출석관련 정보
-	public StudentVo(String stuNumber, String attendance_info, String today, String attendance_time) {
+	// 학생이 출석할때 출석관련 정보
+	public StudentVo(String stuNumber, String today, String attendance_info,  String attendance_time) {
 		this.stuNumber = stuNumber;
-		this.attendance_info = attendance_info;
 		this.today = today;
+		this.attendance_info = attendance_info;
 		this.attendance_time = attendance_time;
+	}
+	
+	// 선생님이 출석할때 출석관련 정보
+	public StudentVo(String stuNumber, String today, String attendance_info,  String attendance_time,
+			String Reason_for_absence) {
+		this.stuNumber = stuNumber;
+		this.today = today;
+		this.attendance_info = attendance_info;
+		this.attendance_time = attendance_time;
+		this.Reason_for_absence = Reason_for_absence;
 	}
 
 	public StudentVo() {
@@ -272,11 +282,6 @@ public class StudentVo {
 
 	public void setWhen_day(String when_day) {
 		this.when_day = when_day;
-	}
-
-	public void print() {
-		System.out.println(getStuName());
-
 	}
 
 }

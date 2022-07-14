@@ -22,6 +22,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.JLabel;
@@ -123,7 +125,7 @@ public class AttendanceNumber extends JFrame {
 		backBtn.setBorderPainted(false);
 		backBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				dispose();
 				attendance_Main attendance = new attendance_Main(); // 홈화면 호출
 				attendance.setVisible(true);
@@ -247,15 +249,26 @@ public class AttendanceNumber extends JFrame {
 
 					String attendance_stuatus = "출석";
 
-					StudentVo vo = new StudentVo(InputNumber.getText(), attendance_stuatus, dateLab.getText(),
+					StudentVo vo = new StudentVo(InputNumber.getText(), dateLab.getText(), attendance_stuatus,
 							timeLab.getText());
 
 					boolean b = dao.Insert_attendance_Info(vo);
-					// 회원가입 성공했다는 알림 띄우기
-					if (b == false) {
-						TFLabel.setText("님 출석되었습니다.");
-						TFLabel.setForeground(new Color(58, 76, 168));
-						InputNumber.setText("");
+
+					StudentDAO dao = new StudentDAO();
+					ArrayList<StudentVo> list = dao.number_name(InputNumber.getText());
+
+					for (StudentVo vo1 : list) {
+						String[] data = { vo1.getStuName() };
+						System.out.println(data);
+
+						if (b == false) {
+							TFLabel.setText(Arrays.toString(data) + "님 출석되었습니다.");
+							TFLabel.setForeground(new Color(58, 76, 168));
+							InputNumber.setText("");
+						}
+
+						// 회원가입 성공했다는 알림 띄우기
+
 					}
 				}
 			}
