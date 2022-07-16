@@ -108,6 +108,35 @@ public class PayDAO {
 		}
 	}
 
+	// 통계
+	// [출석번호로 학생이름 찾기]
+	public ArrayList<StudentVo> number_name(String month) {
+		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
+		try {
+			// 연결
+			connDB();
+			// SQL 문장 전송
+			String sql = "SELECT sum(PAYMENT_AMOUNT)" + "FROM PAYMENT p" + "WHERE PAYMENT_DATE like '%" + month + "%'";
+			System.out.println(sql);
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				StudentVo vo = new StudentVo();
+				vo.setStuName(rs.getString("PAYMENT_DATE"));
+				list.add(vo);
+
+			}
+			;
+
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.getStackTrace();
+		} finally {
+			dbClose();
+		}
+		return list;
+	}
+
 	public void connDB() {
 		try {
 			Class.forName(driver);
