@@ -12,6 +12,7 @@ import database.MemberDAO;
 import database.PayDAO;
 import database.StudentDAO;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
@@ -26,6 +27,8 @@ import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -38,6 +41,7 @@ public class pay_manage extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table_stuList;
+	private String last;
 
 	/**
 	 * Launch the application.
@@ -60,7 +64,8 @@ public class pay_manage extends JFrame {
 	 */
 	public pay_manage() {
 		dao = new PayDAO();
-
+		setTitle("오! 출석 - 학생관리시스템");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -72,35 +77,76 @@ public class pay_manage extends JFrame {
 		contentPane.setLayout(null);
 
 		JPanel Menubar = new JPanel();
-		Menubar.setLayout(null);
 		Menubar.setBackground(new Color(19, 25, 53));
-		Menubar.setBounds(0, 0, 454, 64);
+		Menubar.setBounds(0, 0, 450, 70);
 		contentPane.add(Menubar);
+		Menubar.setLayout(null);
 
 		JButton attendanceMenu = new JButton("");
-		attendanceMenu.setBackground(new Color(19, 25, 53));
-		attendanceMenu.setBounds(0, 0, 87, 64);
+		attendanceMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				attendance_Main att = new attendance_Main();
+				dispose();
+				att.setVisible(true);
+			}
+		});
+		attendanceMenu.setIcon(new ImageIcon(management_Student.class.getResource("/img/att_menu.png")));
+		attendanceMenu.setBounds(0, 1, 90, 70);
 		Menubar.add(attendanceMenu);
+		attendanceMenu.setBackground(new Color(19, 25, 53));
 
 		JButton manageStudent_Menu = new JButton("");
+		manageStudent_Menu.setIcon(new ImageIcon(pay_manage.class.getResource("/img/manage_menu.png")));
+		manageStudent_Menu.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				management_Student manage = new management_Student(); // 홈화면 호출
+				manage.setVisible(true);
+			}
+		});
 		manageStudent_Menu.setBackground(new Color(19, 25, 53));
-		manageStudent_Menu.setBounds(85, 0, 87, 64);
+		manageStudent_Menu.setBounds(91, 0, 90, 70);
 		Menubar.add(manageStudent_Menu);
 
-		JButton statistics_Menu = new JButton("");
-		statistics_Menu.setBackground(new Color(19, 25, 53));
-		statistics_Menu.setBounds(256, 0, 87, 64);
-		Menubar.add(statistics_Menu);
+		JButton directly_att = new JButton("");
+		directly_att.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				AttendanceNumber num = new AttendanceNumber();
+				num.setVisible(true);
+			}
+		});
+		directly_att.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/directly_att.png")));
+		directly_att.setBackground(new Color(19, 25, 53));
+		directly_att.setBounds(182, 0, 90, 70);
+		Menubar.add(directly_att);
 
-		JButton birthday_Menu = new JButton("");
-		birthday_Menu.setBackground(new Color(19, 25, 53));
-		birthday_Menu.setBounds(340, 0, 87, 64);
-		Menubar.add(birthday_Menu);
+		JButton pay_menubar = new JButton("");
+		pay_menubar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				pay_manage pay = new pay_manage();
+				pay.setVisible(true);
+			}
+		});
+		pay_menubar.setIcon(new ImageIcon(pay_manage.class.getResource("/img/click_pay_menu.png")));
+		pay_menubar.setBackground(new Color(19, 25, 53));
+		pay_menubar.setBounds(273, 0, 90, 70);
+		Menubar.add(pay_menubar);
 
-		JButton statistics_Menu_1 = new JButton("");
-		statistics_Menu_1.setBackground(new Color(19, 25, 53));
-		statistics_Menu_1.setBounds(170, 0, 87, 64);
-		Menubar.add(statistics_Menu_1);
+		JButton statistics_menubar = new JButton("");
+		statistics_menubar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Statistics_manage sta = new Statistics_manage();
+				dispose();
+				sta.setVisible(true);
+			}
+		});
+		statistics_menubar.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/statistics_menu.png")));
+		statistics_menubar.setBackground(new Color(19, 25, 53));
+		statistics_menubar.setBounds(360, 0, 90, 70);
+		Menubar.add(statistics_menubar);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(36, 245, 379, 445);
@@ -112,6 +158,13 @@ public class pay_manage extends JFrame {
 		dateLab.setText(date.format(d));
 		System.out.println(dateLab.getText());
 		String day = dateLab.getText();
+
+		Calendar cal = Calendar.getInstance();
+		String format = "yyyy-M";
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		cal.add(cal.MONTH, -1); // 날짜를 하루 뺀다.
+		last = sdf.format(cal.getTime());
+		System.out.println(last);
 
 		String[] header = new String[] { "출석번호", "이름", "나이", "수납일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
 		String[][] data = dao.pay_stulList(day);
@@ -155,7 +208,7 @@ public class pay_manage extends JFrame {
 				pay.setVisible(true);
 			}
 		});
-		add_pay_info.setBounds(0, 63, 454, 55);
+		add_pay_info.setBounds(0, 71, 454, 55);
 		contentPane.add(add_pay_info);
 
 		SimpleDateFormat date_ = new SimpleDateFormat("yyyy년 MM월");
@@ -178,7 +231,6 @@ public class pay_manage extends JFrame {
 		pay_O.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-		
 				String[] header = new String[] { "출석번호", "이름", "나이", "수납일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
 				String[][] data = dao.pay_stulList(day);
 
@@ -212,8 +264,8 @@ public class pay_manage extends JFrame {
 		pay_O.setBounds(99, 200, 117, 35);
 		contentPane.add(pay_O);
 
-		new PayDAO().did_not_pay(day);
-		String[][] did_not_pay = new PayDAO().did_not_pay(day);
+		new PayDAO().did_not_pay(day, last);
+		String[][] did_not_pay = new PayDAO().did_not_pay(day, last);
 		System.out.println(did_not_pay.length);
 
 		JButton Pay_X = new JButton("미납자 " + did_not_pay.length);
@@ -223,7 +275,7 @@ public class pay_manage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				String[] header = new String[] { "출석번호", "이름", "나이", "마지막 수납일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
-				String[][] data = dao.did_not_pay(day);
+				String[][] data = dao.did_not_pay(day, last);
 
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();

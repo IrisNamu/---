@@ -59,7 +59,7 @@ public class AttendanceNumber extends JFrame {
 	 */
 	public AttendanceNumber() {
 		dao = new StudentDAO();
-
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setTitle("");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
@@ -113,13 +113,6 @@ public class AttendanceNumber extends JFrame {
 		System.out.println(date);
 		SimpleDateFormat time = new SimpleDateFormat("a hh시 mm분");
 		timeLab.setText(time.format(d));
-
-//		//데이터베이스에 넣을 값 따로 설정하기
-//		Date d = new Date();
-//		SimpleDateFormat date = new SimpleDateFormat("yyyy년 dd월 MM일");
-//		dateLab.setText(date.format(d));
-//		SimpleDateFormat time = new SimpleDateFormat("a hh시 mm분");
-//		timeLab.setText(time.format(d));
 
 		JButton backBtn = new JButton("<");
 		backBtn.setBorderPainted(false);

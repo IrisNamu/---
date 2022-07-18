@@ -21,6 +21,7 @@ public class temperature extends JFrame {
 	private JPanel contentPane;
 
 	public temperature() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setTitle("\uC624! \uCD9C\uC11D - \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C ");
 		setBounds(100, 100, 466, 368);
 		setLocationRelativeTo(null);

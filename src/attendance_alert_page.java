@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
 import database.MemberVo;
@@ -20,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
@@ -32,7 +35,11 @@ public class attendance_alert_page extends JFrame {
 	 * Create the frame.
 	 */
 	public attendance_alert_page(String stunum, String stuname, String stuage) {
+
 		dao = new StudentDAO();
+		attendance_Main att = new attendance_Main();
+
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
 		setBackground(new Color(105, 105, 105));
 		setTitle("오! 출석 - 출석체크");
@@ -65,8 +72,11 @@ public class attendance_alert_page extends JFrame {
 				String reason = " ";
 				StudentVo vo = new StudentVo(stunum, dateLab.getText(), O, timeLab.getText(), reason);
 				boolean b = dao.att_btn(vo);
-
+	
+				dispose();
 				if (b == false) {
+					attendance_Main att = new attendance_Main();
+					att.setVisible(true);
 					dispose();
 				}
 			}
@@ -86,8 +96,11 @@ public class attendance_alert_page extends JFrame {
 
 				StudentVo vo = new StudentVo(stunum, dateLab.getText(), X, time, X_reson.getText());
 				boolean b = dao.att_btn(vo);
+				dispose();
 				if (b == false) {
 					dispose();
+					attendance_Main att = new attendance_Main();
+					att.setVisible(true);
 				}
 
 			}

@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Scrollbar;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,10 +24,13 @@ import javax.swing.table.TableColumnModel;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenu;
@@ -63,8 +67,7 @@ public class big_manage extends JFrame {
 	 */
 	public big_manage() {
 		dao = new StudentDAO();
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setBounds(100, 100, 1300, 820);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -87,7 +90,7 @@ public class big_manage extends JFrame {
 		scrollPane.setViewportView(table_stuList);
 		table_stuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
-		
+
 		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(30);
 		table_stuList.getColumn("출석번호").setPreferredWidth(80);
@@ -153,7 +156,7 @@ public class big_manage extends JFrame {
 				ArrayList<StudentVo> list = dao.search_Info(word);
 
 				for (StudentVo vo : list) {
-					String[] data = {  vo.getStuNumber(), vo.getStuName(), vo.getSex(), vo.getAge(), vo.getSchool(),
+					String[] data = { vo.getStuNumber(), vo.getStuName(), vo.getSex(), vo.getAge(), vo.getSchool(),
 							vo.getGrade(), vo.getClassName(), vo.getBirth(), vo.getWhen_day(), vo.getAddress(),
 							vo.getEnter_date(), vo.getStudent_call(), vo.getGuardian1(), vo.getGuardian1_call(),
 							vo.getGuardian2(), vo.getGuardian2_call(), vo.getStu_memo() };
@@ -200,7 +203,59 @@ public class big_manage extends JFrame {
 		add_student_btn.setBounds(781, 84, 153, 46);
 		contentPane.add(add_student_btn);
 
+		// 선택한 행에
+		JLabel num = new JLabel();
+		table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table_stuList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				int row = table_stuList.getSelectedRow();
+				int col = table_stuList.getSelectedColumn();
+				for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+				}
+				num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+				// System.out.println(num.getText());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+
 		JButton bigger_btn_1_1 = new JButton("원생 삭제");
+		bigger_btn_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Boolean b = true;
+				if (b == true) {
+					dao.student_Delete(num.getText());
+					dispose();
+					management_Student manage = new management_Student();
+					manage.setVisible(true);
+				}
+			}
+		});
 		bigger_btn_1_1.setForeground(new Color(255, 250, 250));
 		bigger_btn_1_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
 		bigger_btn_1_1.setBackground(new Color(119, 136, 153));

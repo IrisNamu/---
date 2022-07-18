@@ -29,6 +29,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -72,7 +74,7 @@ public class payment extends JFrame {
 	public payment() {
 		dao = new StudentDAO();
 		pay_dao = new PayDAO();
-
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -308,6 +310,7 @@ public class payment extends JFrame {
 		JButton reset = new JButton("리셋");
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				sum = 0;
 				pay_input.setText("0원");
 			}
 		});

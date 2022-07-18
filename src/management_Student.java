@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import database.MemberVo;
 import database.StudentDAO;
 import database.StudentVo;
 
@@ -26,6 +27,7 @@ import javax.swing.JTabbedPane;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import javax.swing.JSeparator;
@@ -64,7 +66,7 @@ public class management_Student extends JFrame {
 	 */
 	public management_Student() {
 		dao = new StudentDAO();
-
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setTitle("오!출석");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
@@ -75,57 +77,92 @@ public class management_Student extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JPanel attendance_menu = new JPanel();
-		attendance_menu.setBackground(SystemColor.inactiveCaption);
-		attendance_menu.setBounds(0, 0, 466, 713);
-		contentPane.add(attendance_menu);
-		attendance_menu.setLayout(null);
-
 		JPanel Menubar = new JPanel();
 		Menubar.setBackground(new Color(19, 25, 53));
-		Menubar.setBounds(0, 0, 454, 64);
-		attendance_menu.add(Menubar);
+		Menubar.setBounds(0, 0, 450, 70);
+		contentPane.add(Menubar);
 		Menubar.setLayout(null);
 
 		JButton attendanceMenu = new JButton("");
-		attendanceMenu.setIcon(new ImageIcon(management_Student.class.getResource("/img/attendance_menu.png")));
 		attendanceMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				attendance_Main att = new attendance_Main();
 				dispose();
-				attendance_Main attendance = new attendance_Main();
-				attendance.setVisible(true);
+				att.setVisible(true);
 			}
 		});
-		attendanceMenu.setBounds(0, 0, 87, 64);
+		attendanceMenu.setIcon(new ImageIcon(management_Student.class.getResource("/img/att_menu.png")));
+		attendanceMenu.setBounds(0, 1, 90, 70);
 		Menubar.add(attendanceMenu);
 		attendanceMenu.setBackground(new Color(19, 25, 53));
 
 		JButton manageStudent_Menu = new JButton("");
-		manageStudent_Menu.setIcon(new ImageIcon(management_Student.class.getResource("/img/click_stu_menu.png")));
+		manageStudent_Menu.setIcon(new ImageIcon(management_Student.class.getResource("/img/click_manage_.png")));
+		manageStudent_Menu.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				management_Student manage = new management_Student(); // 홈화면 호출
+				manage.setVisible(true);
+			}
+		});
 		manageStudent_Menu.setBackground(new Color(19, 25, 53));
-		manageStudent_Menu.setBounds(85, 0, 87, 64);
+		manageStudent_Menu.setBounds(91, 0, 90, 70);
 		Menubar.add(manageStudent_Menu);
 
-		JButton statistics_Menu = new JButton("");
-		statistics_Menu.setBackground(new Color(19, 25, 53));
-		statistics_Menu.setBounds(256, 0, 87, 64);
-		Menubar.add(statistics_Menu);
+		JButton directly_att = new JButton("");
+		directly_att.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				AttendanceNumber num = new AttendanceNumber();
+				num.setVisible(true);
+			}
+		});
+		directly_att.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/directly_att.png")));
+		directly_att.setBackground(new Color(19, 25, 53));
+		directly_att.setBounds(182, 0, 90, 70);
+		Menubar.add(directly_att);
 
-		JButton birthday_Menu = new JButton("");
-		birthday_Menu.setBackground(new Color(19, 25, 53));
-		birthday_Menu.setBounds(340, 0, 87, 64);
-		Menubar.add(birthday_Menu);
+		JButton pay_menubar = new JButton("");
+		pay_menubar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				pay_manage pay = new pay_manage();
+				pay.setVisible(true);
+			}
+		});
+		pay_menubar.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/pay_menu.png")));
+		pay_menubar.setBackground(new Color(19, 25, 53));
+		pay_menubar.setBounds(273, 0, 90, 70);
+		Menubar.add(pay_menubar);
 
-		JButton statistics_Menu_1 = new JButton("");
-		statistics_Menu_1.setIcon(new ImageIcon(management_Student.class.getResource("/img/cal_menu.png")));
-		statistics_Menu_1.setBackground(new Color(19, 25, 53));
-		statistics_Menu_1.setBounds(170, 0, 87, 64);
-		Menubar.add(statistics_Menu_1);
+		JButton statistics_menubar = new JButton("");
+		statistics_menubar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Statistics_manage sta = new Statistics_manage();
+				dispose();
+				sta.setVisible(true);
+			}
+		});
+		statistics_menubar.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/statistics_menu.png")));
+		statistics_menubar.setBackground(new Color(19, 25, 53));
+		statistics_menubar.setBounds(360, 0, 90, 70);
+		Menubar.add(statistics_menubar);
 
 		// [총 수강생 몇 명인지 알려주는]
 		new StudentDAO().getStudent();
 		String[][] all = new StudentDAO().getStudent();
 		System.out.println(all.length);
+
+		String[] header = new String[] { "출석번호", "이름", "성별", "나이", "학교명", "학년", "반", "생년월일", "등원요일", "주소", "등록일",
+				"학생 전화번호", "보호자1 성함", "보호자1 전화번호", "보호자2 성함", "보호자2 전화번호", "특이사항" };
+		String[][] data = dao.getStudent();
+
+		JPanel attendance_menu = new JPanel();
+		attendance_menu.setBackground(SystemColor.inactiveCaption);
+		attendance_menu.setBounds(0, 0, 466, 713);
+		contentPane.add(attendance_menu);
+		attendance_menu.setLayout(null);
 
 		search_field = new JTextField();
 		search_field.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
@@ -206,11 +243,6 @@ public class management_Student extends JFrame {
 		scrollPane.setBounds(12, 235, 429, 423);
 		attendance_menu.add(scrollPane);
 
-		String[] header = new String[] { "출석번호", "이름", "성별", "나이", "학교명", "학년", "반", "생년월일", "등원요일", "주소", "등록일",
-				"학생 전화번호", "보호자1 성함", "보호자1 전화번호", "보호자2 성함", "보호자2 전화번호", "특이사항" };
-		String[][] data = dao.getStudent();
-		
-		
 		table_stuList = new JTable();
 		table_stuList.addMouseListener(new MouseAdapter() {
 			@Override
@@ -222,7 +254,7 @@ public class management_Student extends JFrame {
 		scrollPane.setViewportView(table_stuList);
 		table_stuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
-		
+
 		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(30);
 		table_stuList.getColumn("출석번호").setPreferredWidth(60);
@@ -240,11 +272,90 @@ public class management_Student extends JFrame {
 		table_stuList.getColumn("보호자2 성함").setPreferredWidth(90);
 		table_stuList.getColumn("보호자2 전화번호").setPreferredWidth(150);
 		table_stuList.getColumn("특이사항").setPreferredWidth(250);
-		table_stuList.setEnabled(false);
+
+		// 수정할 수 있도록 하기
+		JLabel num = new JLabel();// 고정
+		JLabel name = new JLabel();// 고정
+		JLabel sex = new JLabel();// 고정
+		JLabel age = new JLabel();
+		JLabel school = new JLabel();
+		JLabel grade = new JLabel();
+		JLabel class_ = new JLabel();
+		JLabel birth = new JLabel();
+		JLabel when_come = new JLabel();
+		JLabel address = new JLabel();
+		JLabel enter_date = new JLabel();
+		JLabel stu_call = new JLabel();
+		JLabel G1 = new JLabel();
+		JLabel G1_call = new JLabel();
+		JLabel G2 = new JLabel();
+		JLabel G2_call = new JLabel();
+		JLabel memo = new JLabel();
+
+		table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table_stuList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				int row = table_stuList.getSelectedRow();
+				int col = table_stuList.getSelectedColumn();
+				for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+				}
+				num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+				name.setText((String) table_stuList.getModel().getValueAt(row, 1));
+				sex.setText((String) table_stuList.getModel().getValueAt(row, 2));
+				age.setText((String) table_stuList.getModel().getValueAt(row, 3));
+				school.setText((String) table_stuList.getModel().getValueAt(row, 4));
+				grade.setText((String) table_stuList.getModel().getValueAt(row, 5));
+				class_.setText((String) table_stuList.getModel().getValueAt(row, 6));
+				birth.setText((String) table_stuList.getModel().getValueAt(row, 7));
+				when_come.setText((String) table_stuList.getModel().getValueAt(row, 8));
+				address.setText((String) table_stuList.getModel().getValueAt(row, 9));
+				enter_date.setText((String) table_stuList.getModel().getValueAt(row, 10));
+				stu_call.setText((String) table_stuList.getModel().getValueAt(row, 11));
+				G1.setText((String) table_stuList.getModel().getValueAt(row, 12));
+				G1_call.setText((String) table_stuList.getModel().getValueAt(row, 13));
+				G2_call.setText((String) table_stuList.getModel().getValueAt(row, 14));
+				G2_call.setText((String) table_stuList.getModel().getValueAt(row, 15));
+				memo.setText((String) table_stuList.getModel().getValueAt(row, 16));
+				// System.out.println(num.getText());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 
 		JButton revise = new JButton("정보 수정");
 		revise.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Update_stuInfo up = new Update_stuInfo(num.getText(), name.getText(), sex.getText(), age.getText(),
+						school.getText(), grade.getText(), class_.getText(), birth.getText(), when_come.getText(),
+						address.getText(), enter_date.getText(), stu_call.getText(), G1.getText(), G1_call.getText(),
+						G2.getText(), G2_call.getText(), memo.getText());
+				up.setVisible(true);
+
 			}
 		});
 		revise.setForeground(new Color(255, 250, 250));
@@ -256,10 +367,17 @@ public class management_Student extends JFrame {
 		JButton delete = new JButton("원생 삭제");
 		delete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Boolean b = true;
+				if (b == true) {
+					dao.student_Delete(num.getText());
+					dispose();
+					management_Student manage = new management_Student();
+					manage.setVisible(true);
+				}
 			}
 		});
 		delete.setForeground(new Color(255, 250, 250));
-		delete.setFont(new Font("배달의민족 주아", Font.PLAIN, 15));
+		delete.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 		delete.setBackground(new Color(119, 136, 153));
 		delete.setBounds(347, 194, 94, 34);
 		attendance_menu.add(delete);
@@ -284,6 +402,7 @@ public class management_Student extends JFrame {
 		add_student_btn.setBounds(275, 32, 142, 34);
 		panel.add(add_student_btn);
 		add_student_btn.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 
 				int result = JOptionPane.showConfirmDialog(null, "학생 정보를 추가하시겠습니까?", "오!출석 - 학생 추가하기",
@@ -299,13 +418,13 @@ public class management_Student extends JFrame {
 		add_student_btn.setForeground(Color.WHITE);
 		add_student_btn.setFont(new Font("배달의민족 주아", Font.BOLD, 16));
 		add_student_btn.setBackground(new Color(102, 153, 204));
-		table_stuList.getTableHeader().setReorderingAllowed(false); // 테이블 컬럼의 이동을 방지한다. 이거 안쓰면 마우스로 드로그 앤 드롭으로 엉망진창이 될수
-																	// 있다.
+		table_stuList.getTableHeader().setReorderingAllowed(false);
+
+		TableColumnModel tcm = table_stuList.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+																// 있다.
 
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
-
-		TableColumnModel tcm = table_stuList.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
 
 		// 전체 열에 지정
 		for (int i = 0; i < tcm.getColumnCount(); i++) {

@@ -38,7 +38,8 @@ import java.awt.event.MouseAdapter;
 @SuppressWarnings("serial")
 public class attendance_Main extends JFrame implements MouseListener {
 	private StudentDAO dao;
-	private JPanel contentPane;
+
+	private JPanel contentPane_;
 	private JTextField search_field;
 	private JTable table_stuList;
 	private String day;
@@ -46,6 +47,9 @@ public class attendance_Main extends JFrame implements MouseListener {
 	private JLabel name;
 	private JLabel num;
 	private JLabel age;
+	private JButton who_absent;
+	private JButton who_attendance;
+	private JButton who_Did_Not_attend;
 
 	/**
 	 * Launch the application.
@@ -73,25 +77,27 @@ public class attendance_Main extends JFrame implements MouseListener {
 	public attendance_Main() {
 		dao = new StudentDAO();
 
-		setTitle("\uC624! \uCD9C\uC11D \u2013 \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
+
+		setTitle("오! 출석 - 학생관리시스템");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane_ = new JPanel();
+		contentPane_.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane_);
+		contentPane_.setLayout(null);
 
 		JPanel who_early_leave = new JPanel();
 		who_early_leave.setBounds(0, 0, 450, 257);
 		who_early_leave.setBackground(Color.WHITE);
-		contentPane.add(who_early_leave);
+		contentPane_.add(who_early_leave);
 		who_early_leave.setLayout(null);
 
 		JPanel chooseDateCheck = new JPanel();
 		chooseDateCheck.setBackground(new Color(255, 224, 172));
-		chooseDateCheck.setBounds(0, 67, 454, 150);
+		chooseDateCheck.setBounds(0, 71, 454, 150);
 		who_early_leave.add(chooseDateCheck);
 		chooseDateCheck.setLayout(null);
 
@@ -147,15 +153,15 @@ public class attendance_Main extends JFrame implements MouseListener {
 		/**
 		 * [메인화면 출석] DB연동 수강생 리스트 불러오기(이름순)(전체)
 		 */
-		String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
-		String[][] data = dao.attendance_table_all(day);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 254, 450, 461);
-		contentPane.add(scrollPane);
+		String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
+		String[][] data = dao.will_come(day, date1.getText());
+
+		contentPane_.add(scrollPane);
 		table_stuList = new JTable();
 		table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table_stuList.addMouseListener(this);
 		table_stuList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -170,20 +176,44 @@ public class attendance_Main extends JFrame implements MouseListener {
 
 				attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(), age.getText());
 				a.setVisible(true);
+
 			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
 		});
-		table_stuList.setShowVerticalLines(false);
 		table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 		table_stuList.setModel(new DefaultTableModel(data, header));
 		table_stuList.repaint();
 		scrollPane.setViewportView(table_stuList);
 		table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
-		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(80);
 		table_stuList.getColumn("등원요일").setPreferredWidth(200);
-		table_stuList.getTableHeader().setReorderingAllowed(false); // 테이블 컬럼의 이동을 방지한다. 이거 안쓰면 마우스로 드로그 앤 드롭으로 엉망진창이 될수
-																	// 있다.
-
+		table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
+		// table_stuList.setEnabled(false); // 수정불가능
+		table_stuList.getTableHeader().setReorderingAllowed(false);
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
 
@@ -202,52 +232,78 @@ public class attendance_Main extends JFrame implements MouseListener {
 		separator.setBounds(0, 200, 454, -5);
 		who_early_leave.add(separator);
 
+		// 상단메뉴바
 		JPanel Menubar = new JPanel();
 		Menubar.setBackground(new Color(19, 25, 53));
-		Menubar.setBounds(0, 0, 454, 64);
+		Menubar.setBounds(0, 0, 450, 70);
 		who_early_leave.add(Menubar);
 		Menubar.setLayout(null);
 
 		JButton attendanceMenu = new JButton("");
-		attendanceMenu.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/click_atten_menu.png")));
-		attendanceMenu.setBounds(0, 0, 75, 64);
+		attendanceMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				attendance_Main att = new attendance_Main();
+				dispose();
+				att.setVisible(true);
+			}
+		});
+		attendanceMenu.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/click_att_menu.png")));
+		attendanceMenu.setBounds(0, 1, 90, 70);
 		Menubar.add(attendanceMenu);
 		attendanceMenu.setBackground(new Color(19, 25, 53));
 
 		JButton manageStudent_Menu = new JButton("");
-		manageStudent_Menu.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/stu_menu.png")));
+		manageStudent_Menu.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/manage_menu.png")));
 		manageStudent_Menu.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				management_Student manage = new management_Student();
 				dispose();
-				management_Student manage = new management_Student(); // 홈화면 호출
 				manage.setVisible(true);
 			}
 		});
 		manageStudent_Menu.setBackground(new Color(19, 25, 53));
-		manageStudent_Menu.setBounds(76, 0, 75, 64);
+		manageStudent_Menu.setBounds(91, 0, 90, 70);
 		Menubar.add(manageStudent_Menu);
 
-		JButton cak_Menu = new JButton("");
-		cak_Menu.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/cal_menu.png")));
-		cak_Menu.setBackground(new Color(19, 25, 53));
-		cak_Menu.setBounds(152, 0, 75, 64);
-		Menubar.add(cak_Menu);
+		JButton directly_att = new JButton("");
+		directly_att.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				AttendanceNumber num = new AttendanceNumber();
+				num.setVisible(true);
+			}
+		});
+		directly_att.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/directly_att.png")));
+		directly_att.setBackground(new Color(19, 25, 53));
+		directly_att.setBounds(182, 0, 90, 70);
+		Menubar.add(directly_att);
 
-		JButton statistics_Menu_1 = new JButton("");
-		statistics_Menu_1.setBackground(new Color(19, 25, 53));
-		statistics_Menu_1.setBounds(227, 0, 75, 64);
-		Menubar.add(statistics_Menu_1);
+		JButton pay_menubar = new JButton("");
+		pay_menubar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				pay_manage pay = new pay_manage();
+				pay.setVisible(true);
+			}
+		});
+		pay_menubar.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/pay_menu.png")));
+		pay_menubar.setBackground(new Color(19, 25, 53));
+		pay_menubar.setBounds(273, 0, 90, 70);
+		Menubar.add(pay_menubar);
 
-		JButton statistics_Menu_2 = new JButton("");
-		statistics_Menu_2.setBackground(new Color(19, 25, 53));
-		statistics_Menu_2.setBounds(303, 0, 75, 64);
-		Menubar.add(statistics_Menu_2);
-
-		JButton statistics_Menu_2_1 = new JButton("");
-		statistics_Menu_2_1.setBackground(new Color(19, 25, 53));
-		statistics_Menu_2_1.setBounds(379, 0, 75, 64);
-		Menubar.add(statistics_Menu_2_1);
+		JButton statistics_menubar = new JButton("");
+		statistics_menubar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Statistics_manage sta = new Statistics_manage();
+				dispose();
+				sta.setVisible(true);
+			}
+		});
+		statistics_menubar.setIcon(new ImageIcon(attendance_Main.class.getResource("/img/statistics_menu.png")));
+		statistics_menubar.setBackground(new Color(19, 25, 53));
+		statistics_menubar.setBounds(360, 0, 90, 70);
+		Menubar.add(statistics_menubar);
 
 		/*
 		 * 전체버튼 누르면 나오는 테이블
@@ -259,7 +315,6 @@ public class attendance_Main extends JFrame implements MouseListener {
 		JButton all_student = new JButton("전체 " + num_all.length);
 		all_student.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				// 요일구하기
 				Calendar cal = Calendar.getInstance();
 				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
@@ -291,14 +346,12 @@ public class attendance_Main extends JFrame implements MouseListener {
 				String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
 				String[][] data = dao.attendance_table_all(day);
 
-				contentPane.add(scrollPane);
+				contentPane_.add(scrollPane);
 				table_stuList = new JTable();
-
 				table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				table_stuList.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-
 						int row = table_stuList.getSelectedRow();
 						int col = table_stuList.getSelectedColumn();
 						for (int i = 0; i < table_stuList.getColumnCount(); i++) {
@@ -310,6 +363,10 @@ public class attendance_Main extends JFrame implements MouseListener {
 						attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(),
 								age.getText());
 						a.setVisible(true);
+
+						who_attendance.repaint();
+						who_absent.repaint();
+						who_Did_Not_attend.repaint();
 
 					}
 
@@ -369,7 +426,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		all_student.setBackground(Color.DARK_GRAY);
 		all_student.setForeground(Color.WHITE);
 		all_student.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		all_student.setBounds(30, 86, 89, 38);
+		all_student.setBounds(332, 86, 89, 38);
 		chooseDateCheck.add(all_student);
 
 		/*
@@ -378,7 +435,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		 */
 		new StudentDAO().attendance_student(day, date1.getText());
 		String[][] num_att = new StudentDAO().attendance_student(day, date1.getText());
-		JButton who_attendance = new JButton("등원 " + num_att.length);
+		who_attendance = new JButton("등원 " + num_att.length);
 		who_attendance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -414,31 +471,9 @@ public class attendance_Main extends JFrame implements MouseListener {
 				String[] header = new String[] { "출석번호", "나이", "이름", "등원여부", "등원시간", };
 				String[][] data = dao.attendance_student(day, date1.getText());
 				scrollPane.setBounds(0, 255, 450, 460);
-				contentPane.add(scrollPane);
+				contentPane_.add(scrollPane);
 				table_stuList = new JTable();
-//				
-//				table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//				table_stuList.addMouseListener(this);
-//				table_stuList.addMouseListener(new MouseAdapter() {
-//					@Override
-//					public void mouseClicked(MouseEvent e) {
 
-//						int row = table_stuList.getSelectedRow();
-//						int col = table_stuList.getSelectedColumn();
-//						for (int i = 0; i < table_stuList.getColumnCount(); i++) {
-//						}
-//						num.setText((String) table_stuList.getModel().getValueAt(row, 0));
-//						name.setText((String) table_stuList.getModel().getValueAt(row, 1));
-//						age.setText((String) table_stuList.getModel().getValueAt(row, 2));
-//
-//						attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(), age.getText());
-//						a.setVisible(true);
-//
-//
-//						}
-//					}
-//				});
-//				
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
@@ -459,13 +494,16 @@ public class attendance_Main extends JFrame implements MouseListener {
 					tcm.getColumn(i).setCellRenderer(dtcr);
 					// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
 					// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
+
+					table_stuList.revalidate();
+					table_stuList.repaint();
 				}
 			}
 		});
 		who_attendance.setBackground(new Color(51, 153, 204));
 		who_attendance.setForeground(new Color(255, 255, 255));
 		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_attendance.setBounds(131, 86, 89, 38);
+		who_attendance.setBounds(130, 86, 89, 38);
 		chooseDateCheck.add(who_attendance);
 
 //absence_stu
@@ -476,7 +514,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 
 		new StudentDAO().will_come(day, date1.getText());
 		String[][] num_will = new StudentDAO().will_come(day, date1.getText());
-		JButton who_Did_Not_attend = new JButton("미등 " + num_will.length);
+		who_Did_Not_attend = new JButton("미등 " + num_will.length);
 		who_Did_Not_attend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -512,7 +550,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 				String[] header = new String[] { "출석번호", "이름", "나이", "등원요일" };
 				String[][] data = dao.will_come(day, date1.getText());
 
-				contentPane.add(scrollPane);
+				contentPane_.add(scrollPane);
 				table_stuList = new JTable();
 				table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				table_stuList.addMouseListener(new MouseAdapter() {
@@ -558,6 +596,8 @@ public class attendance_Main extends JFrame implements MouseListener {
 					}
 
 				});
+				table_stuList.revalidate();
+				table_stuList.repaint();
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
@@ -584,12 +624,12 @@ public class attendance_Main extends JFrame implements MouseListener {
 		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
 		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
 		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		who_Did_Not_attend.setBounds(232, 86, 89, 38);
+		who_Did_Not_attend.setBounds(29, 86, 89, 38);
 		chooseDateCheck.add(who_Did_Not_attend);
 
 		new StudentDAO().absence_stu(day, date1.getText());
 		String[][] num_abs = new StudentDAO().absence_stu(day, date1.getText());
-		JButton who_absent = new JButton("결석 " + num_abs.length);
+		who_absent = new JButton("결석 " + num_abs.length);
 		who_absent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -626,15 +666,16 @@ public class attendance_Main extends JFrame implements MouseListener {
 				String[][] data = dao.absence_stu(day, date1.getText());
 
 				scrollPane.setBounds(0, 250, 450, 460);
-				contentPane.add(scrollPane);
+				contentPane_.add(scrollPane);
 				table_stuList = new JTable();
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
-				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 				table_stuList.setRowHeight(80);
-				table_stuList.getColumn("결석날짜").setPreferredWidth(150);
+				table_stuList.getColumn("출석번호").setPreferredWidth(100);
+				table_stuList.getColumn("결석날짜").setPreferredWidth(240);
 				table_stuList.getColumn("결석사유").setPreferredWidth(200);
 				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
 				// table_stuList.setEnabled(false); // 수정불가능
@@ -649,14 +690,15 @@ public class attendance_Main extends JFrame implements MouseListener {
 					tcm.getColumn(i).setCellRenderer(dtcr);
 					// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
 					// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
-
+					table_stuList.revalidate();
+					table_stuList.repaint();
 				}
 			}
 		});
 		who_absent.setBackground(new Color(255, 0, 0));
 		who_absent.setForeground(new Color(255, 255, 255));
 		who_absent.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
-		who_absent.setBounds(333, 85, 89, 38);
+		who_absent.setBounds(231, 85, 89, 38);
 		chooseDateCheck.add(who_absent);
 
 		JSeparator separator_1 = new JSeparator();
@@ -674,7 +716,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		panel.setLayout(null);
 
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 129, 39);
+		menuBar.setBounds(0, 0, 129, 35);
 		menuBar.setBackground(Color.WHITE);
 		panel.add(menuBar);
 

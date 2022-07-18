@@ -75,7 +75,7 @@ public class PayDAO {
 	}
 
 	// [결제관리] [미납자] 확인하기
-	public String[][] did_not_pay(String day) {
+	public String[][] did_not_pay(String day, String last) {
 
 		try {
 			connDB();
@@ -84,7 +84,10 @@ public class PayDAO {
 					+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P" + " USING(STUNUMBER)" + " MINUS"
 					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
 					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
-					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'";
+					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'" + " MINUS"
+					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
+					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
+					+ " using(stuNumber) WHERE p.PAYMENT_DATE NOT LIKE '%" + last + "%'";
 
 			PreparedStatement statement = con.prepareStatement(
 					"stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
@@ -108,7 +111,6 @@ public class PayDAO {
 		}
 	}
 
-	// 통계
 	// [출석번호로 학생이름 찾기]
 	public ArrayList<StudentVo> number_name(String month) {
 		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
@@ -123,6 +125,34 @@ public class PayDAO {
 			while (rs.next()) {
 				StudentVo vo = new StudentVo();
 				vo.setStuName(rs.getString("PAYMENT_DATE"));
+				list.add(vo);
+
+			}
+			;
+
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.getStackTrace();
+		} finally {
+			dbClose();
+		}
+		return list;
+	}
+
+	// 월별 수입 통계
+	public ArrayList<StudentVo> INCOME(String month) {
+		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
+		try {
+			// 연결
+			connDB();
+			// SQL 문장 전송
+			String sql = "	SELECT sum(PAYMENT_AMOUNT)" + "	FROM PAYMENT p" + "	WHERE PAYMENT_DATE like '%" + month
+					+ "%'";
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				StudentVo vo = new StudentVo();
+				vo.setStuName(rs.getString("PAYMENT_AMOUNT"));
 				list.add(vo);
 
 			}

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -46,9 +47,8 @@ public class addStudentPage extends JFrame {
 	private JTextField s_guardian2;
 	private JTextField address;
 	private JTextField stu_num;
-	private JTextField s_guardian1_call;
+	private JTextField s_guardian1_call_;
 	private JTextField s_guardian2_call;
-	private JTextField s_guardian2_call_;
 	private JTextField s_school;
 	private JTextField s_grade;
 	private JTextField s_class;
@@ -82,9 +82,9 @@ public class addStudentPage extends JFrame {
 	 */
 	public addStudentPage() {
 		dao = new StudentDAO();
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
 		setTitle("\uC624!\uCD9C\uC11D - \uD559\uC0DD \uC815\uBCF4 \uB4F1\uB85D\uD558\uAE30");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 510, 820);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -107,16 +107,6 @@ public class addStudentPage extends JFrame {
 		backBtn.setBackground(new Color(128, 128, 128));
 		backBtn.setBounds(429, 0, 65, 58);
 		contentPane.add(backBtn);
-
-		// 성별 체크
-		JRadioButton s_boy_check = new JRadioButton("남");
-		s_boy_check.setFont(new Font("굴림", Font.PLAIN, 16));
-		s_boy_check.setBounds(367, 109, 45, 23);
-		contentPane.add(s_boy_check);
-		s_boy_check.setSelected(true); // 남자선택 기본값
-
-		// s_boy_check.setActionCommand("남");
-		s_boy_check.setActionCommand(s_boy_check.getText());
 
 		// 학생이름
 		s_name = new JTextField();
@@ -144,7 +134,15 @@ public class addStudentPage extends JFrame {
 		contentPane.add(s_name);
 		s_name.setColumns(10);
 
-		// 학생 성별선택
+		// 성별 체크
+		JRadioButton s_boy_check = new JRadioButton("남");
+		s_boy_check.setFont(new Font("굴림", Font.PLAIN, 16));
+		s_boy_check.setBounds(367, 109, 45, 23);
+		contentPane.add(s_boy_check);
+		s_boy_check.setSelected(true); // 남자선택 기본값
+
+		// s_boy_check.setActionCommand("남");
+		s_boy_check.setActionCommand(s_boy_check.getText());
 		JRadioButton s_girl_check = new JRadioButton("여");
 		s_girl_check.setFont(new Font("굴림", Font.PLAIN, 16));
 		s_girl_check.setBounds(415, 109, 45, 23);
@@ -156,14 +154,6 @@ public class addStudentPage extends JFrame {
 
 		gender_group.add(s_boy_check);
 		gender_group.add(s_girl_check);
-
-//      // 남자인지 여자인지 값가져오기
-//      JLabel gender = new JLabel();
-//      if (s_boy_check.isSelected()) {
-//         gender = new JLabel(s_boy_check.getText());
-//      } else if (s_girl_check.isSelected()) {
-//         gender = new JLabel(s_girl_check.getText());
-//      }
 
 		// 학교이름
 		s_school = new JTextField();
@@ -197,7 +187,7 @@ public class addStudentPage extends JFrame {
 		s_grade.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_grade.getText().equals(" * 학년 (숫자만 기입)")) {
+				if (s_grade.getText().equals(" * 학년 예) 초4, 고2")) {
 					s_grade.setText("");
 					s_grade.setForeground(new Color(153, 153, 153));
 				}
@@ -206,12 +196,12 @@ public class addStudentPage extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (s_grade.getText().equals("")) {
-					s_grade.setText(" * 학년 (숫자만 기입)");
+					s_grade.setText(" * 학년 예) 초4, 고2");
 					s_grade.setForeground(new Color(153, 153, 153));
 				}
 			}
 		});
-		s_grade.setText(" * 학년 (숫자만 기입)");
+		s_grade.setText(" * 학년 예) 초4, 고2");
 		s_grade.setColumns(10);
 		s_grade.setBounds(204, 242, 146, 29);
 		contentPane.add(s_grade);
@@ -481,57 +471,57 @@ public class addStudentPage extends JFrame {
 		contentPane.add(stu_num);
 
 		// 보호자1 전화번호
-		s_guardian1_call = new JTextField();
-		s_guardian1_call.setForeground(new Color(112, 128, 144));
-		s_guardian1_call.addFocusListener(new FocusAdapter() {
+		s_guardian1_call_ = new JTextField();
+		s_guardian1_call_.setForeground(new Color(112, 128, 144));
+		s_guardian1_call_.addFocusListener(new FocusAdapter() {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_guardian1_call.getText().equals(" * phone 예)010-0000-0000")) {
-					s_guardian1_call.setText("");
-					s_guardian1_call.setForeground(new Color(153, 153, 153));
+				if (s_guardian1_call_.getText().equals(" * phone 예)010-0000-0000")) {
+					s_guardian1_call_.setText("");
+					s_guardian1_call_.setForeground(new Color(153, 153, 153));
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (s_guardian1_call.getText().equals("")) {
-					s_guardian1_call.setText(" * phone 예)010-0000-0000");
-					s_guardian1_call.setForeground(new Color(153, 153, 153));
+				if (s_guardian1_call_.getText().equals("")) {
+					s_guardian1_call_.setText(" * phone 예)010-0000-0000");
+					s_guardian1_call_.setForeground(new Color(153, 153, 153));
 				}
 			}
 		});
-		s_guardian1_call.setFont(new Font("굴림", Font.PLAIN, 13));
-		s_guardian1_call.setText(" * phone 예)010-0000-0000");
-		s_guardian1_call.setColumns(10);
-		s_guardian1_call.setBounds(257, 610, 177, 29);
-		contentPane.add(s_guardian1_call);
+		s_guardian1_call_.setFont(new Font("굴림", Font.PLAIN, 13));
+		s_guardian1_call_.setText(" * phone 예)010-0000-0000");
+		s_guardian1_call_.setColumns(10);
+		s_guardian1_call_.setBounds(257, 610, 177, 29);
+		contentPane.add(s_guardian1_call_);
 
 		// 보호자2 전화번호
-		s_guardian2_call_ = new JTextField();
-		s_guardian2_call_.setForeground(new Color(112, 128, 144));
-		s_guardian2_call_.addFocusListener(new FocusAdapter() {
+		s_guardian2_call = new JTextField();
+		s_guardian2_call.setForeground(new Color(112, 128, 144));
+		s_guardian2_call.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_guardian2_call_.getText().equals(" * phone 예)010-0000-0000")) {
-					s_guardian2_call_.setText("");
-					s_guardian2_call_.setForeground(new Color(153, 153, 153));
+				if (s_guardian2_call.getText().equals(" * phone 예)010-0000-0000")) {
+					s_guardian2_call.setText("");
+					s_guardian2_call.setForeground(new Color(153, 153, 153));
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (s_guardian2_call_.getText().equals("")) {
-					s_guardian2_call_.setText(" * phone 예)010-0000-0000");
-					s_guardian2_call_.setForeground(new Color(153, 153, 153));
+				if (s_guardian2_call.getText().equals("")) {
+					s_guardian2_call.setText(" * phone 예)010-0000-0000");
+					s_guardian2_call.setForeground(new Color(153, 153, 153));
 				}
 			}
 		});
-		s_guardian2_call_.setFont(new Font("굴림", Font.PLAIN, 13));
-		s_guardian2_call_.setText(" * phone 예)010-0000-0000");
-		s_guardian2_call_.setColumns(10);
-		s_guardian2_call_.setBounds(257, 649, 177, 29);
-		contentPane.add(s_guardian2_call_);
+		s_guardian2_call.setFont(new Font("굴림", Font.PLAIN, 13));
+		s_guardian2_call.setText(" * phone 예)010-0000-0000");
+		s_guardian2_call.setColumns(10);
+		s_guardian2_call.setBounds(257, 649, 177, 29);
+		contentPane.add(s_guardian2_call);
 
 		// 맨 위 라벨
 		JLabel copyright_SYG_Label = new JLabel("오! 출석 - 학생 정보 추가");
@@ -691,6 +681,36 @@ public class addStudentPage extends JFrame {
 						+ birth_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(birth);
 
+				// 학년
+
+				switch (age_) {
+				case 8:
+					s_grade.setText("초1");
+				case 9:
+					s_grade.setText("초2");
+				case 10:
+					s_grade.setText("초3");
+				case 11:
+					s_grade.setText("초4");
+				case 12:
+					s_grade.setText("초5");
+				case 13:
+					s_grade.setText("초6");
+				case 14:
+					s_grade.setText("중1");
+				case 15:
+					s_grade.setText("중2");
+				case 16:
+					s_grade.setText("중3");
+				case 17:
+					s_grade.setText("고1");
+				case 18:
+					s_grade.setText("고2");
+				case 19:
+					s_grade.setText("고3");
+
+				}
+
 				// 등록일 셋팅
 
 				String enter_date = (enter_dateChooser.getJCalendar().getYearChooser().getYear() + "-"
@@ -728,13 +748,13 @@ public class addStudentPage extends JFrame {
 				if (s_guardian1.getText().equals(" * 보호자1 성함")) {
 					s_guardian1.setText("");
 				}
-				if (s_guardian1_call.getText().equals(" * phone 예)010-0000-0000")) {
-					s_guardian1_call.setText("");
+				if (s_guardian1_call_.getText().equals(" * phone 예)010-0000-0000")) {
+					s_guardian1_call_.setText("");
 				}
 				if (s_guardian2.getText().equals(" * 보호자2 성함")) {
 					s_guardian2.setText("");
 				}
-				if (s_guardian2_call.getText().equals("* phone 예)010-0000-0000")) {
+				if (s_guardian2_call.getText().equals(" * phone 예)010-0000-0000")) {
 					s_guardian2_call.setText("");
 				}
 
@@ -784,9 +804,6 @@ public class addStudentPage extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				} else if (s_name.getText().length() > 12) {
 					JOptionPane.showMessageDialog(null, "이름을 10글자 이하로 입력해주세요.", "저장 실패!", JOptionPane.ERROR_MESSAGE);
-				} else if (flag == false) {
-					JOptionPane.showMessageDialog(null, "학년은 '숫자'로만 입력해주세요. 예) 5 ");
-
 				} else {
 
 					// 라디오 체크박스 남자인지 여자인지 값가져오기 위한 작업
@@ -799,10 +816,10 @@ public class addStudentPage extends JFrame {
 
 					// 디비에 학생 정보 추가값넣기
 					StudentVo vo = new StudentVo(stu_num.getText(), s_name.getText(), gender.getText(), age,
-							s_school.getText(), grade, s_class.getText(), birth, when_daycome, address.getText(),
-							enter_date, s_call_num.getText(),
+							s_school.getText(), s_grade.getText(), s_class.getText(), birth, when_daycome,
+							address.getText(), enter_date, s_call_num.getText(),
 							s_guardian1.getText() + s_who_guardian1.getSelectedItem().toString(),
-							s_guardian1_call.getText(),
+							s_guardian1_call_.getText(),
 							s_guardian2.getText() + s_who_guardian2.getSelectedItem().toString(),
 							s_guardian2_call.getText(), s_memo.getText(), pic_path.getText());
 

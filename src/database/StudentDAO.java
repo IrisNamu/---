@@ -276,9 +276,9 @@ public class StudentDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT stunumber, stuname, age, when_day" + " FROM STUDENT" + " WHERE STUNUMBER LIKE '%" + word
-					+ "%' OR STUNAME LIKE '%" + word + "%' OR age LIKE '%" + word + "%' OR when_day LIKE '%" + word
-					+ "%' ORDER BY STUNAME";
+			String sql = "SELECT stunumber, stuname, age, when_day" + " FROM STUDENT" + " WHERE STUNUMBER LIKE '%"
+					+ word + "%' OR STUNAME LIKE '%" + word + "%' OR age LIKE '%" + word + "%' OR when_day LIKE '%"
+					+ word + "%' ORDER BY STUNAME";
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
@@ -447,23 +447,60 @@ public class StudentDAO {
 		return list;
 	}
 
-	// [원생관리] 원생 정보 삭제
-	public int student_Delete(String number) {
-		int result = 0;
+//[원생관리] 원생삭제
+	public boolean student_Delete(String number) {//
 		try {
-			ps = con.prepareStatement("delete student where stunumber ='" + number + "'");
-			ps.setString(1, number.trim());
-			result = ps.executeUpdate();
+			connDB();
 
-		} catch (SQLException e) {
-			System.out.println(e + "=> student_Delete fail");
-		} finally {
-			dbClose();
+			String query = "delete student where stunumber ='" + number + "'";
+			System.out.println("SQL : " + query);
+			rs = stmt.executeQuery(query);
+			System.out.println("rs.getRow() : " + rs.getRow()); // getRow 열과번호. a가 몇번재? 4번으로 출력
+			// 검색안되면 0이된다. 번호가 1부터 시작 ....
+			if (rs.getRow() == 0) {
+				System.out.println("0 row selected..."); // 0이면 없는걸로 취급돼서
+			} else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		return result;
-	}// userDelete()
+		return false;
+	}
 
+//[원생관리] 원생수정
+	public boolean student_update(String number) {//
+		try {
+			connDB();
+
+			String query = "delete student where stunumber ='" + number + "'";
+			System.out.println("SQL : " + query);
+			rs = stmt.executeQuery(query);
+			System.out.println("rs.getRow() : " + rs.getRow()); // getRow 열과번호. a가 몇번재? 4번으로 출력
+			// 검색안되면 0이된다. 번호가 1부터 시작 ....
+			if (rs.getRow() == 0) {
+				System.out.println("0 row selected..."); // 0이면 없는걸로 취급돼서
+			} else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+//	"SELECT * FROM STUDENT WHERE stuNumber LIKE '%" + word + "%'" + " or stuName LIKE '%" + word
+//	+ "%'" + " or sex LIKE '%" + word + "%'" + " or age LIKE '%" + word + "%'" + " or school LIKE '%"
+//	+ word + "%'" + " or grade LIKE '%" + word + "%'" + " or className LIKE '%" + word + "%'"
+//	+ " or birth LIKE '%" + word + "%'" + " or when_day LIKE '%" + word + "%'" + " or address LIKE '%"
+//	+ word + "%'" + " or enter_date LIKE '%" + word + "%'" + " or student_call LIKE '%" + word + "%'"
+//	+ " or guardian1 LIKE '%" + word + "%'" + " or guardian1_call LIKE '%" + word + "%'"
+//	+ " or guardian2 LIKE '%" + word + "%'" + " or guardian2_call LIKE '%" + word + "%'"
+//	+ " or stu_memo LIKE '%" + word + "%'"
 //	// [원생관리] 원생 정보 수정
 //	public int userUpdate() {
 //		int result = 0;
