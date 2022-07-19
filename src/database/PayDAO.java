@@ -140,31 +140,27 @@ public class PayDAO {
 	}
 
 	// 월별 수입 통계
-	public ArrayList<StudentVo> INCOME(String month) {
-		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
+	public String[][] Income(String month) {
+
 		try {
-			// 연결
 			connDB();
-			// SQL 문장 전송
-			String sql = "	SELECT sum(PAYMENT_AMOUNT)" + "	FROM PAYMENT p" + "	WHERE PAYMENT_DATE like '%" + month
-					+ "%'";
-			rs = stmt.executeQuery(sql);
 
-			while (rs.next()) {
-				StudentVo vo = new StudentVo();
-				vo.setStuName(rs.getString("PAYMENT_AMOUNT"));
-				list.add(vo);
+			String query = "SELECT sum(PAYMENT_AMOUNT) FROM PAYMENT WHERE PAYMENT_DATE like '%" + month + "%'";
+			PreparedStatement statement = con.prepareStatement("sum(payment_amount) FROM PAYMENT");
+			ResultSet results = statement.executeQuery(query);
 
+			ArrayList<String[]> list = new ArrayList<String[]>();
+			while (results.next()) {
+				list.add(new String[] { results.getString("sum(PAYMENT_AMOUNT)") });
 			}
-			;
+			String[][] arr = new String[list.size()][1];
+			return list.toArray(arr);
 
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-			ex.getStackTrace();
-		} finally {
-			dbClose();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("월별수입 조회 실패");
+			return null;
 		}
-		return list;
 	}
 
 	public void connDB() {

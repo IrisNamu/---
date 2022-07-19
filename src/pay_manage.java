@@ -15,12 +15,15 @@ import database.StudentDAO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -267,6 +270,9 @@ public class pay_manage extends JFrame {
 		new PayDAO().did_not_pay(day, last);
 		String[][] did_not_pay = new PayDAO().did_not_pay(day, last);
 		System.out.println(did_not_pay.length);
+
+		JLabel num = new JLabel();
+		JLabel name = new JLabel();
 
 		JButton Pay_X = new JButton("미납자 " + did_not_pay.length);
 		Pay_X.setBackground(new Color(211, 211, 211));

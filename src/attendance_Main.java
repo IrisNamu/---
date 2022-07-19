@@ -97,7 +97,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 
 		JPanel chooseDateCheck = new JPanel();
 		chooseDateCheck.setBackground(new Color(255, 224, 172));
-		chooseDateCheck.setBounds(0, 71, 454, 150);
+		chooseDateCheck.setBounds(0, 71, 454, 140);
 		who_early_leave.add(chooseDateCheck);
 		chooseDateCheck.setLayout(null);
 
@@ -672,13 +672,15 @@ public class attendance_Main extends JFrame implements MouseListener {
 				table_stuList.setModel(new DefaultTableModel(data, header));
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
+				table_stuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+				
 				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 				table_stuList.setRowHeight(80);
+				table_stuList.getColumn("이름").setPreferredWidth(70);
 				table_stuList.getColumn("출석번호").setPreferredWidth(100);
 				table_stuList.getColumn("결석날짜").setPreferredWidth(240);
-				table_stuList.getColumn("결석사유").setPreferredWidth(200);
+				table_stuList.getColumn("결석사유").setPreferredWidth(250);
 				table_stuList.setShowVerticalLines(false); // 수평 보더라인 지우기
-				// table_stuList.setEnabled(false); // 수정불가능
 				table_stuList.getTableHeader().setReorderingAllowed(false);
 				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -711,36 +713,9 @@ public class attendance_Main extends JFrame implements MouseListener {
 		date_panel.setBounds(12, 10, 430, 61);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 219, 454, 39);
+		panel.setBounds(0, 212, 454, 39);
 		who_early_leave.add(panel);
 		panel.setLayout(null);
-
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 129, 35);
-		menuBar.setBackground(Color.WHITE);
-		panel.add(menuBar);
-
-		JMenu sort_nenubar = new JMenu("  정렬방법   ∨  ");
-		sort_nenubar.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-		sort_nenubar.setBackground(new Color(192, 192, 192));
-		sort_nenubar.setHorizontalAlignment(SwingConstants.CENTER);
-		menuBar.add(sort_nenubar);
-
-		JRadioButtonMenuItem name_order = new JRadioButtonMenuItem("\uC774\uB984\uC21C");
-		name_order.setBackground(new Color(255, 255, 255));
-		sort_nenubar.add(name_order);
-
-		JRadioButtonMenuItem reverse_name = new JRadioButtonMenuItem("\uC774\uB984\uC5ED\uC21C");
-		reverse_name.setBackground(new Color(255, 255, 255));
-		sort_nenubar.add(reverse_name);
-
-		JRadioButtonMenuItem lower_grade = new JRadioButtonMenuItem("\uC800\uD559\uB144\uC21C");
-		lower_grade.setBackground(new Color(255, 255, 255));
-		sort_nenubar.add(lower_grade);
-
-		JRadioButtonMenuItem upper_grade = new JRadioButtonMenuItem("\uACE0\uD559\uB144\uC21C");
-		upper_grade.setBackground(new Color(255, 255, 255));
-		sort_nenubar.add(upper_grade);
 
 		JButton btnNewButton = new JButton("검색");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -767,7 +742,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		});
 		btnNewButton.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 		btnNewButton.setBackground(new Color(176, 196, 222));
-		btnNewButton.setBounds(372, 0, 70, 33);
+		btnNewButton.setBounds(239, 0, 70, 33);
 		panel.add(btnNewButton);
 
 		search_field = new JTextField();
@@ -789,7 +764,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 			}
 
 		});
-		search_field.setBounds(144, 0, 227, 33);
+		search_field.setBounds(0, 1, 227, 33);
 		panel.add(search_field);
 		search_field.setFont(new Font("굴림", Font.PLAIN, 15));
 		search_field.setForeground(new Color(105, 105, 105));

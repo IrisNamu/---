@@ -355,6 +355,7 @@ public class management_Student extends JFrame {
 						address.getText(), enter_date.getText(), stu_call.getText(), G1.getText(), G1_call.getText(),
 						G2.getText(), G2_call.getText(), memo.getText());
 				up.setVisible(true);
+				dispose();
 
 			}
 		});

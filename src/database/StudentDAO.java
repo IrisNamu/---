@@ -311,6 +311,8 @@ public class StudentDAO {
 					+ " FROM STUDENT S LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER) WHERE WHEN_DAY LIKE '%" + day + "%'"
 					+ " MINUS" + " SELECT stuNumber, stuname, AGE, when_day" + " FROM STUDENT s"
 					+ " LEFT OUTER JOIN  ATTENDANCE a" + " using(stuNumber)" + " WHERE" + " attendance_info LIKE '%출석%'"
+					+ " and today LIKE '%" + date + "%'" + " minus" + " SELECT stuNumber, stuname, AGE,when_day"
+					+ " FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(stuNumber)" + " WHERE attendance_info LIKE '%결석%'"
 					+ " and today LIKE '%" + date + "%'";
 
 			PreparedStatement statement = con.prepareStatement("stuNumber, stuName, age, when_day");
@@ -471,28 +473,6 @@ public class StudentDAO {
 	}
 
 //[원생관리] 원생수정
-	public boolean student_update(String number) {//
-		try {
-			connDB();
-
-			String query = "delete student where stunumber ='" + number + "'";
-			System.out.println("SQL : " + query);
-			rs = stmt.executeQuery(query);
-			System.out.println("rs.getRow() : " + rs.getRow()); // getRow 열과번호. a가 몇번재? 4번으로 출력
-			// 검색안되면 0이된다. 번호가 1부터 시작 ....
-			if (rs.getRow() == 0) {
-				System.out.println("0 row selected..."); // 0이면 없는걸로 취급돼서
-			} else {
-				return true;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
 //	"SELECT * FROM STUDENT WHERE stuNumber LIKE '%" + word + "%'" + " or stuName LIKE '%" + word
 //	+ "%'" + " or sex LIKE '%" + word + "%'" + " or age LIKE '%" + word + "%'" + " or school LIKE '%"
 //	+ word + "%'" + " or grade LIKE '%" + word + "%'" + " or className LIKE '%" + word + "%'"
@@ -502,17 +482,51 @@ public class StudentDAO {
 //	+ " or guardian2 LIKE '%" + word + "%'" + " or guardian2_call LIKE '%" + word + "%'"
 //	+ " or stu_memo LIKE '%" + word + "%'"
 //	// [원생관리] 원생 정보 수정
-//	public int userUpdate() {
+
+//	public int Update_stuInfo() {
 //		int result = 0;
-//		String sql = "UPDATE student SET NAME=?, age=? , addr=? WHERE id=?";
+//		String sql = "UPDATE student SET stuName=?, sex=?, age=?, school=?, grade=?, className=?,"
+//				+ " birth=?, when_day=?, address=?, enter_date=?, student_call=?, guardian1=?,"
+//				+ " guardian1_call=?, guardian2=?, guardian2_call=?, stu_memo=?,pic=?" + " WHERE stunumber =?";
 //
 //		try {
 //			ps = con.prepareStatement(sql);
-//			// ?의 순서대로 값 넣기
-//			ps.setString(1, user.name.getText());
-//			ps.setString(2, user.age.getText());
-//			ps.setString(3, user.addr.getText());
-//			ps.setString(4, user.id.getText().trim());
+//
+//			StudentVo vo = new StudentVo();
+//
+//			vo.setStuName(rs.getString("stuName"));
+//			vo.setSex(rs.getString("sex"));
+//			vo.setAge(rs.getString("age"));
+//			vo.setSchool(rs.getString("school"));
+//			vo.setGrade(rs.getString("grade"));
+//			vo.setClassName(rs.getString("className"));
+//			vo.setBirth(rs.getString("birth"));
+//			vo.setWhen_day(rs.getString("when_day"));
+//			vo.setAddress(rs.getString("address"));
+//			vo.setEnter_date(rs.getString("enter_date"));
+//			vo.setStudent_call(rs.getString("student_call"));
+//			vo.setGuardian1(rs.getString("guardian1"));
+//			vo.setGuardian1_call(rs.getString("guardian1_call"));
+//			vo.setGuardian2(rs.getString("guardian2"));
+//			vo.setGuardian2_call(rs.getString("guardian2_call"));
+//			vo.setPic(rs.getString("pic"));
+//			
+////			ps.setString(1, StudentDAO.stuName.getText());
+////			ps.setString(2, user.sex.getText());
+////			ps.setString(2, user.age.getText());
+////			ps.setString(3, user.school.getText());
+////			ps.setString(4, user.grade.getText());
+////			ps.setString(5, user.className.getText());
+////			ps.setString(6, user.birth.getText().trim());
+////			ps.setString(7, user.when_day.getText().trim());
+////			ps.setString(8, user.address.getText().trim());
+////			ps.setString(9, user.enter_date.getText().trim());
+////			ps.setString(10, user.student_call.getText().trim());
+////			ps.setString(11, user.guardian1.getText().trim());
+////			ps.setString(12, user.guardian1_call.getText().trim());
+////			ps.setString(13, user.guardian2.getText().trim());
+////			ps.setString(14, user.guardian2_call.getText().trim());
+////			ps.setString(15, user.pic.getText().trim());
 //
 //			// 실행하기
 //			result = ps.executeUpdate();
@@ -525,6 +539,59 @@ public class StudentDAO {
 //
 //		return result;
 //	}// userUpdate()
+
+	public boolean Update_stuInfo(StudentVo vo) {
+		try {
+			connDB();
+			String query = "UPDATE student SET stuName='" + vo.getStuName() + "', sex= '" + vo.getSex() + "', age='"
+					+ vo.getAge() + "', school='" + vo.getSchool() + "', grade='" + vo.getGrade() + "', className='"
+					+ vo.getClassName() + "', birth='" + vo.getBirth() + "', when_day='" + vo.getWhen_day() + "', address='"
+					+ vo.getAddress() + "', enter_date='" + vo.getEnter_date() + "', student_call='" + vo.getStudent_call()
+					+ "', guardian1='" + vo.getGuardian1() + "', guardian1_call='" + vo.getGuardian1_call() + "', guardian2='"
+					+ vo.getGuardian2() + "', guardian2_call='" + vo.getGuardian2_call() + "', stu_memo='"
+					+ vo.getStu_memo() + "', pic='" + vo.getPic() + "' WHERE stunumber =" + vo.getStuNumber();
+			rs = stmt.executeQuery(query);
+			//ps.executeUpdate();
+			if (rs.getRow() == 0) {
+				System.out.println("0 row selected...");
+			} else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	// [학생 수정] 사진 불러오는 기능
+	public ArrayList<StudentVo> stu_pic(String num) {
+		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
+		try {
+			// 연결
+			connDB();
+			// SQL 문장 전송
+			String sql = "SELECT pic FROM STUDENT WHERE STUNUMBER LIKE '%" + num + "%'";
+			System.out.println(sql);
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				StudentVo vo = new StudentVo();
+				vo.setPic(rs.getString("pic"));
+				list.add(vo);
+
+			}
+			;
+
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.getStackTrace();
+		} finally {
+			dbClose();
+		}
+		return list;
+	}
 
 	// 연결
 	public void connDB() {
@@ -560,5 +627,4 @@ public class StudentDAO {
 		StudentDAO sdao = new StudentDAO();
 		sdao.search_Info(null);
 	}
-
 }

@@ -4,10 +4,18 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Month;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+
+import database.PayDAO;
+
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
@@ -15,12 +23,17 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 public class Statistics_manage extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
-	private JTable table_1;
+	private JTable table_new;
+	private JTable table_Income;
+	private JTable table_Income_1;
+	private PayDAO daoP;
+//	private String month2022;
+	String[][] data;
 
 	/**
 	 * Launch the application.
@@ -42,6 +55,8 @@ public class Statistics_manage extends JFrame {
 	 * Create the frame.
 	 */
 	public Statistics_manage() {
+		PayDAO daoP = new PayDAO();
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setFont(new Font("배달의민족 주아", Font.PLAIN, 12));
 		setTitle("오! 출석 - 학생관리시스템 ");
@@ -127,44 +142,88 @@ public class Statistics_manage extends JFrame {
 		statistics_menubar.setBackground(new Color(19, 25, 53));
 		statistics_menubar.setBounds(360, 0, 90, 70);
 		Menubar.add(statistics_menubar);
-		
+
 		JLabel new_ = new JLabel("월별 신규생");
 		new_.setBounds(37, 234, 87, 29);
 		contentPane.add(new_);
-		
+
 		JButton new_btn = new JButton("자세히보기");
 		new_btn.setBounds(198, 237, 97, 23);
 		contentPane.add(new_btn);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(37, 298, 378, 78);
-		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		
+
+		JScrollPane scrollPane_new = new JScrollPane();
+		scrollPane_new.setBounds(37, 298, 378, 78);
+		contentPane.add(scrollPane_new);
+
+		table_new = new JTable();
+		scrollPane_new.setViewportView(table_new);
+
 		JLabel att = new JLabel("출석관련");
 		att.setBounds(37, 131, 87, 29);
 		contentPane.add(att);
-		
+
 		JButton att_btn = new JButton("자세히보기");
 		att_btn.setBounds(198, 134, 97, 23);
 		contentPane.add(att_btn);
-		
+
 		JLabel income = new JLabel("월별 수입");
 		income.setBounds(37, 450, 87, 29);
 		contentPane.add(income);
-		
+
 		JButton income_btn = new JButton("자세히보기");
 		income_btn.setBounds(198, 453, 97, 23);
 		contentPane.add(income_btn);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(37, 518, 379, 94);
-		contentPane.add(scrollPane_1);
-		
-		table_1 = new JTable();
-		scrollPane_1.setViewportView(table_1);
 
+		JScrollPane scrollPane_Income = new JScrollPane();
+		scrollPane_Income.setEnabled(false);
+		scrollPane_Income.setBounds(37, 518, 379, 94);
+		contentPane.add(scrollPane_Income);
+
+		scrollPane_Income.setViewportView(table_Income);
+
+		// 월별 수입 통계
+		String[] header = new String[] { "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" };
+	
+		String mon[] = { "2022-1", "2022-2", "2022-3", "2022-4", "2022-5", "2022-6", "2022-7", "2022-8", "2022-9",
+				"2022-10", "2022-11", "2022-12" };
+
+//		for (int i = 0; i < mon.length; i++) {
+//
+//			String[][] data = daoP.Income(mon[i]);
+//			System.out.println(data[0][0]);
+
+		for (int i = 0; i < mon.length; i++) {		
+			String[][] data = daoP.Income(mon[i]);
+			System.out.println(data[0][0]);
+			
+			
+			table_Income_1 = new JTable();
+			table_Income_1.setEnabled(false);
+			table_Income_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+			table_Income_1.repaint();
+			scrollPane_Income.setViewportView(table_Income_1);
+			table_Income_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			table_Income_1.setModel(new DefaultTableModel(data, header));			
+			table_Income_1.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+			
+			
+			// 테이블 높이 넓이 조정해주기
+			table_Income_1.setRowHeight(35);
+			table_Income_1.getTableHeader().setReorderingAllowed(false);
+
+			DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
+			dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+
+			TableColumnModel tcm = table_Income_1.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+
+			// 전체 열에 지정
+			for (int k = 0; k < tcm.getColumnCount(); k++) {
+				tcm.getColumn(k).setCellRenderer(dtcr);
+				// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
+				// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
+			}
+			
+		}
+//
 	}
 }

@@ -108,11 +108,9 @@ public class big_manage extends JFrame {
 		table_stuList.getColumn("보호자2").setPreferredWidth(90);
 		table_stuList.getColumn("보호자2 전화번호").setPreferredWidth(150);
 		table_stuList.getColumn("특이사항").setPreferredWidth(250);
-		table_stuList.setEnabled(false);
 		// 테이블 높이 넓이 조정해주기
 		table_stuList.setRowHeight(40);
 		table_stuList.getColumn("등원요일").setPreferredWidth(100);
-		table_stuList.setEnabled(false); // 수정불가능
 
 		search_field = new JTextField();
 		search_field.addFocusListener(new FocusAdapter() {
@@ -138,6 +136,80 @@ public class big_manage extends JFrame {
 		search_field.setColumns(10);
 		search_field.setBounds(411, 83, 237, 47);
 		contentPane.add(search_field);
+
+		// 테이블 클릭메서드
+		JLabel num = new JLabel();
+		JLabel name = new JLabel();
+		JLabel sex = new JLabel();
+		JLabel age = new JLabel();
+		JLabel school = new JLabel();
+		JLabel grade = new JLabel();
+		JLabel class_ = new JLabel();
+		JLabel birth = new JLabel();
+		JLabel when_come = new JLabel();
+		JLabel address = new JLabel();
+		JLabel enter_date = new JLabel();
+		JLabel stu_call = new JLabel();
+		JLabel G1 = new JLabel();
+		JLabel G1_call = new JLabel();
+		JLabel G2 = new JLabel();
+		JLabel G2_call = new JLabel();
+		JLabel memo = new JLabel();
+
+		table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table_stuList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				int row = table_stuList.getSelectedRow();
+				int col = table_stuList.getSelectedColumn();
+				for (int i = 0; i < table_stuList.getColumnCount(); i++) {
+				}
+				num.setText((String) table_stuList.getModel().getValueAt(row, 0));
+				name.setText((String) table_stuList.getModel().getValueAt(row, 1));
+				sex.setText((String) table_stuList.getModel().getValueAt(row, 2));
+				age.setText((String) table_stuList.getModel().getValueAt(row, 3));
+				school.setText((String) table_stuList.getModel().getValueAt(row, 4));
+				grade.setText((String) table_stuList.getModel().getValueAt(row, 5));
+				class_.setText((String) table_stuList.getModel().getValueAt(row, 6));
+				birth.setText((String) table_stuList.getModel().getValueAt(row, 7));
+				when_come.setText((String) table_stuList.getModel().getValueAt(row, 8));
+				address.setText((String) table_stuList.getModel().getValueAt(row, 9));
+				enter_date.setText((String) table_stuList.getModel().getValueAt(row, 10));
+				stu_call.setText((String) table_stuList.getModel().getValueAt(row, 11));
+				G1.setText((String) table_stuList.getModel().getValueAt(row, 12));
+				G1_call.setText((String) table_stuList.getModel().getValueAt(row, 13));
+				G2_call.setText((String) table_stuList.getModel().getValueAt(row, 14));
+				G2_call.setText((String) table_stuList.getModel().getValueAt(row, 15));
+				memo.setText((String) table_stuList.getModel().getValueAt(row, 16));
+				// System.out.println(num.getText());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 
 		JButton search = new JButton("검색");
 		search.addActionListener(new ActionListener() {
@@ -172,6 +244,17 @@ public class big_manage extends JFrame {
 		contentPane.add(search);
 
 		JButton bigger_btn_1 = new JButton("정보 수정");
+		bigger_btn_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Update_stuInfo up = new Update_stuInfo(num.getText(), name.getText(), sex.getText(), age.getText(),
+						school.getText(), grade.getText(), class_.getText(), birth.getText(), when_come.getText(),
+						address.getText(), enter_date.getText(), stu_call.getText(), G1.getText(), G1_call.getText(),
+						G2.getText(), G2_call.getText(), memo.getText());
+				up.setVisible(true);
+				dispose();
+
+			}
+		});
 		bigger_btn_1.setForeground(new Color(255, 250, 250));
 		bigger_btn_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
 		bigger_btn_1.setBackground(new Color(119, 136, 153));
@@ -202,47 +285,6 @@ public class big_manage extends JFrame {
 		add_student_btn.setBackground(new Color(102, 153, 204));
 		add_student_btn.setBounds(781, 84, 153, 46);
 		contentPane.add(add_student_btn);
-
-		// 선택한 행에
-		JLabel num = new JLabel();
-		table_stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table_stuList.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-				int row = table_stuList.getSelectedRow();
-				int col = table_stuList.getSelectedColumn();
-				for (int i = 0; i < table_stuList.getColumnCount(); i++) {
-				}
-				num.setText((String) table_stuList.getModel().getValueAt(row, 0));
-				// System.out.println(num.getText());
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
 
 		JButton bigger_btn_1_1 = new JButton("원생 삭제");
 		bigger_btn_1_1.addActionListener(new ActionListener() {

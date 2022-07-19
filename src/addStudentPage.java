@@ -217,7 +217,6 @@ public class addStudentPage extends JFrame {
 					s_class.setForeground(new Color(153, 153, 153));
 				}
 			}
-
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (s_class.getText().equals("")) {
