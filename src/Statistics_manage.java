@@ -1,10 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JFrame;
@@ -15,6 +19,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import database.PayDAO;
+import database.PayVo;
+import database.StudentDAO;
+import database.StudentVo;
 
 import java.awt.Color;
 
@@ -24,16 +31,72 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.JTabbedPane;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import java.awt.Dimension;
+import javax.swing.JTextField;
+import java.awt.SystemColor;
+import com.toedter.calendar.JDateChooser;
 
 public class Statistics_manage extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table_new;
 	private JTable table_Income;
 	private JTable table_Income_1;
 	private PayDAO daoP;
-//	private String month2022;
+	private StudentDAO daoS;
+
+	private int January22;
+	private int February22;
+	private int March22;
+	private int April22;
+	private int May22;
+	private int June22;
+	private int July22;
+	private int August22;
+	private int September22;
+	private int October22;
+	private int November22;
+	private int December22;
+
+	private int S_January22;
+	private int S_February22;
+	private int S_March22;
+	private int S_April22;
+	private int S_May22;
+	private int S_June22;
+	private int S_July22;
+	private int S_August22;
+	private int S_September22;
+	private int S_October22;
+	private int S_November22;
+	private int S_December22;
+
+	private String date_when;
+
+	private JTabbedPane tabbedPane;
+	private JPanel Income_menu;
+	private JPanel new_menu;
+	private JScrollPane scrollPane_Income;
+	private JScrollPane scrollPane_new;
+
+	// private String month2022;
 	String[][] data;
+	ArrayList<PayVo> value;
+	private JTable new_stu_table;
+	private JTable att_table;
 
 	/**
 	 * Launch the application.
@@ -56,6 +119,7 @@ public class Statistics_manage extends JFrame {
 	 */
 	public Statistics_manage() {
 		PayDAO daoP = new PayDAO();
+		StudentDAO daoS = new StudentDAO();
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setFont(new Font("배달의민족 주아", Font.PLAIN, 12));
@@ -72,8 +136,8 @@ public class Statistics_manage extends JFrame {
 		contentPane.setLayout(null);
 
 		JPanel Menubar = new JPanel();
-		Menubar.setBackground(new Color(19, 25, 53));
 		Menubar.setBounds(0, 0, 450, 70);
+		Menubar.setBackground(new Color(19, 25, 53));
 		contentPane.add(Menubar);
 		Menubar.setLayout(null);
 
@@ -143,87 +207,524 @@ public class Statistics_manage extends JFrame {
 		statistics_menubar.setBounds(360, 0, 90, 70);
 		Menubar.add(statistics_menubar);
 
-		JLabel new_ = new JLabel("월별 신규생");
-		new_.setBounds(37, 234, 87, 29);
-		contentPane.add(new_);
+		// 월별 수입 통계
+		String[] header = new String[] { "년/월", "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월",
+				"12월" };
 
-		JButton new_btn = new JButton("자세히보기");
-		new_btn.setBounds(198, 237, 97, 23);
-		contentPane.add(new_btn);
+		DecimalFormat decFormat = new DecimalFormat("###,###,###");
+		January22 = new PayDAO().sum_pay("2022-1");
+		February22 = new PayDAO().sum_pay("2022-2");
+		March22 = new PayDAO().sum_pay("2022-3");
+		April22 = new PayDAO().sum_pay("2022-4");
+		May22 = new PayDAO().sum_pay("2022-5");
+		June22 = new PayDAO().sum_pay("2022-6");
+		July22 = new PayDAO().sum_pay("2022-7");
+		August22 = new PayDAO().sum_pay("2022-8");
+		September22 = new PayDAO().sum_pay("2022-9");
+		October22 = new PayDAO().sum_pay("2022-10");
+		November22 = new PayDAO().sum_pay("2022-11");
+		December22 = new PayDAO().sum_pay("2022-12");
 
-		JScrollPane scrollPane_new = new JScrollPane();
-		scrollPane_new.setBounds(37, 298, 378, 78);
-		contentPane.add(scrollPane_new);
+		String[][] income_data = new String[3][13];
 
-		table_new = new JTable();
-		scrollPane_new.setViewportView(table_new);
+		// 2022년
+		income_data[0][0] = "2022년";
+		income_data[0][1] = decFormat.format(January22) + "원";
+		income_data[0][2] = decFormat.format(February22) + "원";
+		income_data[0][3] = decFormat.format(March22) + "원";
+		income_data[0][4] = decFormat.format(April22) + "원";
+		income_data[0][5] = decFormat.format(May22) + "원";
+		income_data[0][6] = decFormat.format(June22) + "원";
+		income_data[0][7] = decFormat.format(July22) + "원";
+		income_data[0][8] = decFormat.format(August22) + "원";
+		income_data[0][9] = decFormat.format(September22) + "원";
+		income_data[0][10] = decFormat.format(October22) + "원";
+		income_data[0][11] = decFormat.format(November22) + "원";
+		income_data[0][12] = decFormat.format(December22) + "원";
 
-		JLabel att = new JLabel("출석관련");
-		att.setBounds(37, 131, 87, 29);
-		contentPane.add(att);
+		// 2021년
+		income_data[1][0] = "2021년";
 
-		JButton att_btn = new JButton("자세히보기");
-		att_btn.setBounds(198, 134, 97, 23);
-		contentPane.add(att_btn);
+		// 2020년
+		income_data[2][0] = "2020년";
 
-		JLabel income = new JLabel("월별 수입");
-		income.setBounds(37, 450, 87, 29);
-		contentPane.add(income);
+		// 월별 신입생 통계
+		String[][] new_data = new String[3][13];
 
-		JButton income_btn = new JButton("자세히보기");
-		income_btn.setBounds(198, 453, 97, 23);
-		contentPane.add(income_btn);
+		S_January22 = new StudentDAO().count_new("2022-1");
+		S_February22 = new StudentDAO().count_new("2022-2");
+		S_March22 = new StudentDAO().count_new("2022-3");
+		S_April22 = new StudentDAO().count_new("2022-4");
+		S_May22 = new StudentDAO().count_new("2022-5");
+		S_June22 = new StudentDAO().count_new("2022-6");
+		S_July22 = new StudentDAO().count_new("2022-7");
+		S_August22 = new StudentDAO().count_new("2022-8");
+		S_September22 = new StudentDAO().count_new("2022-9");
+		S_October22 = new StudentDAO().count_new("2022-10");
+		S_November22 = new StudentDAO().count_new("2022-12");
+		S_December22 = new StudentDAO().count_new("2022-12");
 
-		JScrollPane scrollPane_Income = new JScrollPane();
+		// 2022년
+		new_data[0][0] = "2022년";
+		new_data[0][1] = S_January22 + "명";
+		new_data[0][2] = S_February22 + "명";
+		new_data[0][3] = S_March22 + "명";
+		new_data[0][4] = S_April22 + "명";
+		new_data[0][5] = S_May22 + "명";
+		new_data[0][6] = S_June22 + "명";
+		new_data[0][7] = S_July22 + "명";
+		new_data[0][8] = S_August22 + "명";
+		new_data[0][9] = S_September22 + "명";
+		new_data[0][10] = S_October22 + "명";
+		new_data[0][11] = S_November22 + "명";
+		new_data[0][12] = S_December22 + "명";
+
+		// 2021년
+		new_data[1][0] = "2021년";
+
+		// 2020년
+		new_data[2][0] = "2020년";
+
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setFont(new Font("배달의민족 주아", Font.PLAIN, 21));
+		tabbedPane.setForeground(new Color(0, 0, 128));
+		tabbedPane.setBounds(10, 80, 428, 623);
+		contentPane.add(tabbedPane);
+		new_menu = new JPanel();
+		new_menu.setBackground(new Color(255, 255, 255));
+		JPanel att_menu = new JPanel();
+		att_menu.setBackground(Color.WHITE);
+		Income_menu = new JPanel(); // JPanel 생성
+		Income_menu.setBackground(Color.WHITE);
+		tabbedPane.add(Income_menu, "월 수입");
+		Income_menu.setLayout(null);
+
+		scrollPane_Income = new JScrollPane();
+		scrollPane_Income.setBounds(12, 439, 399, 145);
+		Income_menu.add(scrollPane_Income);
 		scrollPane_Income.setEnabled(false);
-		scrollPane_Income.setBounds(37, 518, 379, 94);
-		contentPane.add(scrollPane_Income);
-
 		scrollPane_Income.setViewportView(table_Income);
 
-		// 월별 수입 통계
-		String[] header = new String[] { "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" };
-	
-		String mon[] = { "2022-1", "2022-2", "2022-3", "2022-4", "2022-5", "2022-6", "2022-7", "2022-8", "2022-9",
-				"2022-10", "2022-11", "2022-12" };
+		// 수입 그래프 붙여주기
+		final CategoryDataset dataset = createDataset();
+		final JFreeChart chart = createChart(dataset);
+		ChartPanel chartPanel = new ChartPanel((chart));
+		chartPanel.setBounds(0, 60, 423, 369);
+		Income_menu.add(chartPanel);
 
-//		for (int i = 0; i < mon.length; i++) {
-//
-//			String[][] data = daoP.Income(mon[i]);
-//			System.out.println(data[0][0]);
+		table_Income_1 = new JTable();
+		table_Income_1.setEnabled(false);
+		table_Income_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+		table_Income_1.repaint();
+		scrollPane_Income.setViewportView(table_Income_1);
+		table_Income_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table_Income_1.setModel(new DefaultTableModel(income_data, header));
+		table_Income_1.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 
-		for (int i = 0; i < mon.length; i++) {		
-			String[][] data = daoP.Income(mon[i]);
-			System.out.println(data[0][0]);
-			
-			
-			table_Income_1 = new JTable();
-			table_Income_1.setEnabled(false);
-			table_Income_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
-			table_Income_1.repaint();
-			scrollPane_Income.setViewportView(table_Income_1);
-			table_Income_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			table_Income_1.setModel(new DefaultTableModel(data, header));			
-			table_Income_1.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
-			
-			
-			// 테이블 높이 넓이 조정해주기
-			table_Income_1.setRowHeight(35);
-			table_Income_1.getTableHeader().setReorderingAllowed(false);
+		table_Income_1.setRowHeight(30);
+		table_Income_1.getColumn("1월").setPreferredWidth(160);
+		table_Income_1.getColumn("2월").setPreferredWidth(160);
+		table_Income_1.getColumn("3월").setPreferredWidth(160);
+		table_Income_1.getColumn("4월").setPreferredWidth(160);
+		table_Income_1.getColumn("5월").setPreferredWidth(160);
+		table_Income_1.getColumn("6월").setPreferredWidth(160);
+		table_Income_1.getColumn("7월").setPreferredWidth(160);
+		table_Income_1.getColumn("8월").setPreferredWidth(160);
+		table_Income_1.getColumn("9월").setPreferredWidth(160);
+		table_Income_1.getColumn("10월").setPreferredWidth(160);
+		table_Income_1.getColumn("11월").setPreferredWidth(160);
+		table_Income_1.getColumn("12월").setPreferredWidth(160);
 
-			DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
-			dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+		JLabel lblNewLabel = new JLabel(" 수입 통계");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel.setFont(new Font("배달의민족 주아", Font.PLAIN, 34));
+		lblNewLabel.setBounds(33, 4, 228, 55);
+		Income_menu.add(lblNewLabel);
 
-			TableColumnModel tcm = table_Income_1.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+		JButton more_income = new JButton("자세히 보기");
+		more_income.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Income_big inBig = new Income_big();
+				inBig.setVisible(rootPaneCheckingEnabled);
 
-			// 전체 열에 지정
-			for (int k = 0; k < tcm.getColumnCount(); k++) {
-				tcm.getColumn(k).setCellRenderer(dtcr);
-				// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
-				// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
 			}
-			
-		}
-//
+		});
+		more_income.setForeground(new Color(255, 250, 250));
+		more_income.setBackground(new Color(0, 0, 128));
+		more_income.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		more_income.setBounds(279, 10, 132, 49);
+		Income_menu.add(more_income);
+
+		TableColumnModel tcm = table_Income_1.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+		tabbedPane.add(new_menu, "월별 신규생");
+		new_menu.setLayout(null);
+
+		JLabel lblNewLabel_1 = new JLabel("신규생 통계");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 34));
+		lblNewLabel_1.setBounds(33, 4, 228, 55);
+		new_menu.add(lblNewLabel_1);
+
+		JButton more_income_1 = new JButton("자세히 보기");
+		more_income_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				New_big newbig = new New_big();
+				newbig.setVisible(true);
+
+			}
+		});
+		more_income_1.setForeground(new Color(255, 250, 250));
+		more_income_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		more_income_1.setBackground(new Color(0, 0, 128));
+		more_income_1.setBounds(279, 10, 132, 49);
+		new_menu.add(more_income_1);
+
+		// 월별 신규생
+		scrollPane_new = new JScrollPane();
+		scrollPane_new.setBounds(12, 439, 399, 145);
+		new_menu.add(scrollPane_new);
+
+		new_stu_table = new JTable();
+		scrollPane_new.setViewportView(new_stu_table);
+		tabbedPane.add(att_menu, "출석부");
+		att_menu.setLayout(null);
+
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(45, 37, 237, 39);
+		att_menu.add(dateChooser);
+
+
+
+		JScrollPane att_scrollPane = new JScrollPane();
+		att_scrollPane.setBounds(12, 102, 399, 475);
+		att_menu.add(att_scrollPane);
+
+		att_scrollPane.setViewportView(att_table);
+
+		JButton search_btn = new JButton("검색");
+		search_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				att_table = new JTable();
+				String[] headeratt = new String[] { "출석번호", "이름", "나이", "등원요일", "출석 정보", "출석 시간", "결석사유" };
+				String[][] dataatt = daoS.att_all("2022년 07월");
+
+				att_table = new JTable();
+				att_table.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
+				att_table.setModel(new DefaultTableModel(dataatt, headeratt));
+				att_table.repaint();
+				att_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+				att_table.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+				att_table.setRowHeight(80);
+				att_table.setShowVerticalLines(false); // 수평 보더라인 지우기
+				att_table.getTableHeader().setReorderingAllowed(false);
+				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
+				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+
+				// 전체 열에 지정
+				for (int i = 0; i < tcm.getColumnCount(); i++) {
+					tcm.getColumn(i).setCellRenderer(dtcr);
+					// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
+					// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
+				}
+			}
+		});
+		search_btn.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+		search_btn.setBackground(new Color(176, 196, 222));
+		search_btn.setBounds(304, 37, 83, 39);
+		att_menu.add(search_btn);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1)<10){
+					
+					 date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 0"
+							+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 "
+							+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일 ";
+				
+				} else if((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1)<10))
+						 &&((dateChooser.getJCalendar().getDayChooser().getDay())<10)){
+							
+							 date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 0"
+										+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 0"
+										+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일 ";
+				
+				} else {
+					 date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 "
+							+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 "
+							+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일 ";
+				}
+				
+				System.out.println(date_when);
+
+			}
+		});
+		btnNewButton.setBounds(0, 4, 97, 23);
+		att_menu.add(btnNewButton);
+
+		new_stu_table = new JTable();
+		new_stu_table.setEnabled(false);
+		new_stu_table.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+		new_stu_table.repaint();
+		scrollPane_new.setViewportView(new_stu_table);
+		new_stu_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		new_stu_table.setModel(new DefaultTableModel(new_data, header));
+		new_stu_table.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		new_stu_table.setRowHeight(30);
+
+		// 신규생 그래프 붙여주기
+		final CategoryDataset new_dataset = new_createDataset();
+		final JFreeChart new_chart = new_createChart(new_dataset);
+		ChartPanel new_chartPanel = new ChartPanel((new_chart));
+		new_chartPanel.setBounds(0, 60, 423, 369);
+		new_menu.add(new_chartPanel);
+	}
+
+	/**
+	 * 
+	 * 수입통계 붙여주기!
+	 *
+	 */
+
+	void income_chart(final String title) {
+
+		CategoryDataset dataset = createDataset();
+		JFreeChart chart = createChart(dataset);
+		ChartPanel chartPanel = new ChartPanel((chart));
+		chartPanel.setBounds(0, 60, 423, 323);
+		Income_menu.add(chartPanel);
+	}
+
+	private CategoryDataset createDataset() {
+
+		// row keys...
+		final String series1 = "2020";
+		final String series2 = "2021";
+		final String series3 = "2022";
+
+		// column keys...
+		final String category1 = "1";
+		final String category2 = "2";
+		final String category3 = "3";
+		final String category4 = "4";
+		final String category5 = "5";
+		final String category6 = "6";
+		final String category7 = "7";
+		final String category8 = "8";
+		final String category9 = "9";
+		final String category10 = "10";
+		final String category11 = "11";
+		final String category12 = "12";
+
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+		dataset.addValue(January22, series1, category1);
+		dataset.addValue(February22, series1, category2);
+		dataset.addValue(March22, series1, category3);
+		dataset.addValue(April22, series1, category4);
+		dataset.addValue(May22, series1, category5);
+		dataset.addValue(June22, series1, category6);
+		dataset.addValue(July22, series1, category7);
+		dataset.addValue(August22, series1, category8);
+		dataset.addValue(September22, series1, category9);
+		dataset.addValue(October22, series1, category10);
+		dataset.addValue(November22, series1, category11);
+		dataset.addValue(December22, series1, category12);
+
+		dataset.addValue(January22, series2, category1);
+		dataset.addValue(February22, series2, category2);
+		dataset.addValue(March22, series2, category3);
+		dataset.addValue(April22, series2, category4);
+		dataset.addValue(May22, series2, category5);
+		dataset.addValue(June22, series2, category6);
+		dataset.addValue(July22, series2, category7);
+		dataset.addValue(August22, series2, category8);
+		dataset.addValue(September22, series2, category9);
+		dataset.addValue(October22, series2, category10);
+		dataset.addValue(November22, series2, category11);
+		dataset.addValue(December22, series2, category12);
+
+		dataset.addValue(January22, series3, category1);
+		dataset.addValue(February22, series3, category2);
+		dataset.addValue(March22, series3, category3);
+		dataset.addValue(April22, series3, category4);
+		dataset.addValue(May22, series3, category5);
+		dataset.addValue(June22, series3, category6);
+		dataset.addValue(July22, series3, category7);
+		dataset.addValue(August22, series3, category8);
+		dataset.addValue(September22, series3, category9);
+		dataset.addValue(October22, series3, category10);
+		dataset.addValue(November22, series3, category11);
+		dataset.addValue(December22, series3, category12);
+
+		return dataset;
+
+	}
+
+	private JFreeChart createChart(final CategoryDataset dataset) {
+		// create the chart...
+		final JFreeChart chart = ChartFactory.createBarChart("", "Month", // domain axis label
+				"", // range axis label
+				dataset, // data
+				PlotOrientation.VERTICAL, // orientation
+				true, // include legend
+				true, // tooltips?
+				false // URLs?
+		);
+
+		chart.setBackgroundPaint(Color.white);
+
+		final CategoryPlot plot = chart.getCategoryPlot();
+		plot.setBackgroundPaint(Color.lightGray);
+		plot.setDomainGridlinePaint(Color.white);
+		plot.setRangeGridlinePaint(Color.white);
+
+		// set the range axis to display integers only...
+		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+		// disable bar outlines...
+		final BarRenderer renderer = (BarRenderer) plot.getRenderer();
+		renderer.setDrawBarOutline(false);
+
+		// set up gradient paints for series...
+		final GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.darkGray, 0.0f, 0.0f, Color.lightGray);
+		final GradientPaint gp1 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, Color.lightGray);
+		final GradientPaint gp2 = new GradientPaint(0.0f, 0.0f, Color.red, 0.0f, 0.0f, Color.lightGray);
+		renderer.setSeriesPaint(0, gp0);
+		renderer.setSeriesPaint(1, gp1);
+		renderer.setSeriesPaint(2, gp2);
+
+		final CategoryAxis domainAxis = plot.getDomainAxis();
+		domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+
+		return chart;
+
+	}
+
+	/**
+	 * 
+	 * 신입생통계 붙여주기!
+	 *
+	 */
+
+	void new_chart(final String title) {
+
+		final CategoryDataset new_dataset = new_createDataset();
+		final JFreeChart new_chart = new_createChart(new_dataset);
+		ChartPanel new_chartPanel = new ChartPanel((new_chart));
+		new_chartPanel.setBounds(0, 60, 423, 323);
+		new_menu.add(new_chartPanel);
+
+	}
+
+	private CategoryDataset new_createDataset() {
+
+		// row keys...
+		final String series1 = "2020";
+		final String series2 = "2021";
+		final String series3 = "2022";
+
+		// column keys...
+		final String category1 = "1";
+		final String category2 = "2";
+		final String category3 = "3";
+		final String category4 = "4";
+		final String category5 = "5";
+		final String category6 = "6";
+		final String category7 = "7";
+		final String category8 = "8";
+		final String category9 = "9";
+		final String category10 = "10";
+		final String category11 = "11";
+		final String category12 = "12";
+
+		final DefaultCategoryDataset new_dataset = new DefaultCategoryDataset();
+
+		new_dataset.addValue(S_January22, series1, category1);
+		new_dataset.addValue(S_February22, series1, category2);
+		new_dataset.addValue(S_March22, series1, category3);
+		new_dataset.addValue(S_April22, series1, category4);
+		new_dataset.addValue(S_May22, series1, category5);
+		new_dataset.addValue(S_June22, series1, category6);
+		new_dataset.addValue(S_July22, series1, category7);
+		new_dataset.addValue(S_August22, series1, category8);
+		new_dataset.addValue(S_September22, series1, category9);
+		new_dataset.addValue(S_October22, series1, category10);
+		new_dataset.addValue(S_November22, series1, category11);
+		new_dataset.addValue(S_December22, series1, category12);
+
+		new_dataset.addValue(S_January22, series2, category1);
+		new_dataset.addValue(S_February22, series2, category2);
+		new_dataset.addValue(S_March22, series2, category3);
+		new_dataset.addValue(S_April22, series2, category4);
+		new_dataset.addValue(S_May22, series2, category5);
+		new_dataset.addValue(S_June22, series2, category6);
+		new_dataset.addValue(S_July22, series2, category7);
+		new_dataset.addValue(S_August22, series2, category8);
+		new_dataset.addValue(S_September22, series2, category9);
+		new_dataset.addValue(S_October22, series2, category10);
+		new_dataset.addValue(S_November22, series2, category11);
+		new_dataset.addValue(S_December22, series2, category12);
+
+		new_dataset.addValue(S_January22, series3, category1);
+		new_dataset.addValue(S_February22, series3, category2);
+		new_dataset.addValue(S_March22, series3, category3);
+		new_dataset.addValue(S_April22, series3, category4);
+		new_dataset.addValue(S_May22, series3, category5);
+		new_dataset.addValue(S_June22, series3, category6);
+		new_dataset.addValue(S_July22, series3, category7);
+		new_dataset.addValue(S_August22, series3, category8);
+		new_dataset.addValue(S_September22, series3, category9);
+		new_dataset.addValue(S_October22, series3, category10);
+		new_dataset.addValue(S_November22, series3, category11);
+		new_dataset.addValue(S_December22, series3, category12);
+
+		return new_dataset;
+
+	}
+
+	private JFreeChart new_createChart(CategoryDataset new_dataset) {
+		final JFreeChart new_chart = ChartFactory.createBarChart("", "Month", // domain axis label
+				"", // range axis label
+				new_dataset, // data
+				PlotOrientation.VERTICAL, // orientation
+				true, // include legend
+				true, // tooltips?
+				false // URLs?
+		);
+
+		new_chart.setBackgroundPaint(Color.white);
+
+		// get a reference to the plot for further customisation...
+		final CategoryPlot new_plot = new_chart.getCategoryPlot();
+		new_plot.setBackgroundPaint(Color.lightGray);
+		new_plot.setDomainGridlinePaint(Color.white);
+		new_plot.setRangeGridlinePaint(Color.white);
+
+		// set the range axis to display integers only...
+		final NumberAxis new_rangeAxis = (NumberAxis) new_plot.getRangeAxis();
+		new_rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+		// disable bar outlines...
+		final BarRenderer new_renderer = (BarRenderer) new_plot.getRenderer();
+		new_renderer.setDrawBarOutline(false);
+
+		// set up gradient paints for series...
+		final GradientPaint new_gp0 = new GradientPaint(0.0f, 0.0f, Color.darkGray, 0.0f, 0.0f, Color.lightGray);
+		final GradientPaint new_gp1 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, Color.lightGray);
+		final GradientPaint new_gp2 = new GradientPaint(0.0f, 0.0f, Color.red, 0.0f, 0.0f, Color.lightGray);
+		new_renderer.setSeriesPaint(0, new_gp0);
+		new_renderer.setSeriesPaint(1, new_gp1);
+		new_renderer.setSeriesPaint(2, new_gp2);
+
+		final CategoryAxis new_domainAxis = new_plot.getDomainAxis();
+		new_domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+		// OPTIONAL CUSTOMISATION COMPLETED.
+
+		return new_chart;
+
 	}
 }

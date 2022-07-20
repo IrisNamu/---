@@ -74,6 +74,8 @@ public class PayDAO {
 		}
 	}
 
+	
+
 	// [결제관리] [미납자] 확인하기
 	public String[][] did_not_pay(String day, String last) {
 
@@ -84,10 +86,13 @@ public class PayDAO {
 					+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P" + " USING(STUNUMBER)" + " MINUS"
 					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
 					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
-					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'" + " MINUS"
-					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
-					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
-					+ " using(stuNumber) WHERE p.PAYMENT_DATE NOT LIKE '%" + last + "%'";
+					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'" + " or p.PAYMENT_DATE NOT LIKE '%"
+					+ last + "%'";
+			// + " MINUS"
+//					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
+//					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
+//					+ " using(stuNumber) WHERE p.PAYMENT_DATE NOT LIKE '%" + last + "%'" + " AND p.PAYMENT_DATE LIKE '%"
+//					+ day + "%'";
 
 			PreparedStatement statement = con.prepareStatement(
 					"stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
@@ -111,24 +116,20 @@ public class PayDAO {
 		}
 	}
 
-	// [출석번호로 학생이름 찾기]
-	public ArrayList<StudentVo> number_name(String month) {
-		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
+	// [통계] 월별 수입 통계
+	public int sum_pay(String month) {
+		ArrayList<PayVo> list = new ArrayList<PayVo>();
 		try {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT sum(PAYMENT_AMOUNT)" + "FROM PAYMENT p" + "WHERE PAYMENT_DATE like '%" + month + "%'";
+			String sql = "SELECT sum(PAYMENT_AMOUNT)" + "FROM PAYMENT p" + " WHERE PAYMENT_DATE like '%" + month + "%'";
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
-
-			while (rs.next()) {
-				StudentVo vo = new StudentVo();
-				vo.setStuName(rs.getString("PAYMENT_DATE"));
-				list.add(vo);
-
-			}
-			;
+			rs.next();
+			rs.getString(1);
+			System.out.println(rs.getString(1));
+			return rs.getInt(1); // 쿼리문 결과값을 반환해주면 간단하다.
 
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -136,33 +137,11 @@ public class PayDAO {
 		} finally {
 			dbClose();
 		}
-		return list;
+		return 0;
 	}
 
-	// 월별 수입 통계
-	public String[][] Income(String month) {
-
-		try {
-			connDB();
-
-			String query = "SELECT sum(PAYMENT_AMOUNT) FROM PAYMENT WHERE PAYMENT_DATE like '%" + month + "%'";
-			PreparedStatement statement = con.prepareStatement("sum(payment_amount) FROM PAYMENT");
-			ResultSet results = statement.executeQuery(query);
-
-			ArrayList<String[]> list = new ArrayList<String[]>();
-			while (results.next()) {
-				list.add(new String[] { results.getString("sum(PAYMENT_AMOUNT)") });
-			}
-			String[][] arr = new String[list.size()][1];
-			return list.toArray(arr);
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("월별수입 조회 실패");
-			return null;
-		}
-	}
-
+	
+		
 	public void connDB() {
 		try {
 			Class.forName(driver);
@@ -195,8 +174,8 @@ public class PayDAO {
 	}// dbClose() ---
 
 	public static void main(String[] args) {
-		StudentDAO sdao = new StudentDAO();
-		sdao.search_Info(null);
+		PayDAO dao = new PayDAO();
+		dao.sum_pay("2022-7");
 
 	}
 

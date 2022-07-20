@@ -27,6 +27,7 @@ import java.awt.Font;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 
+import database.PayDAO;
 import database.StudentDAO;
 import database.StudentVo;
 
@@ -673,7 +674,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 				table_stuList.repaint();
 				scrollPane.setViewportView(table_stuList);
 				table_stuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-				
+
 				table_stuList.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 				table_stuList.setRowHeight(80);
 				table_stuList.getColumn("이름").setPreferredWidth(70);
@@ -742,7 +743,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		});
 		btnNewButton.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 		btnNewButton.setBackground(new Color(176, 196, 222));
-		btnNewButton.setBounds(239, 0, 70, 33);
+		btnNewButton.setBounds(359, 0, 83, 35);
 		panel.add(btnNewButton);
 
 		search_field = new JTextField();
@@ -764,7 +765,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 			}
 
 		});
-		search_field.setBounds(0, 1, 227, 33);
+		search_field.setBounds(5, 1, 347, 35);
 		panel.add(search_field);
 		search_field.setFont(new Font("굴림", Font.PLAIN, 15));
 		search_field.setForeground(new Color(105, 105, 105));

@@ -217,6 +217,7 @@ public class addStudentPage extends JFrame {
 					s_class.setForeground(new Color(153, 153, 153));
 				}
 			}
+
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (s_class.getText().equals("")) {
@@ -676,7 +677,7 @@ public class addStudentPage extends JFrame {
 
 				// 생년월일 셋팅
 				String birth = (birth_dateChooser.getJCalendar().getYearChooser().getYear() + "-"
-						+ birth_dateChooser.getJCalendar().getMonthChooser().getMonth() + "-"
+						+ (birth_dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "-"
 						+ birth_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(birth);
 
@@ -713,7 +714,7 @@ public class addStudentPage extends JFrame {
 				// 등록일 셋팅
 
 				String enter_date = (enter_dateChooser.getJCalendar().getYearChooser().getYear() + "-"
-						+ enter_dateChooser.getJCalendar().getMonthChooser().getMonth() + "-"
+						+ (enter_dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "-"
 						+ enter_dateChooser.getJCalendar().getDayChooser().getDay());
 				System.out.println(enter_date);
 
@@ -837,8 +838,8 @@ public class addStudentPage extends JFrame {
 							addstudent.setVisible(true);
 							dispose();
 						} else {
-							attendance_Main attendance = new attendance_Main(); // 홈화면 호출
-							attendance.setVisible(true);
+							management_Student manage = new management_Student(); // 홈화면 호출
+							manage.setVisible(true);
 							dispose();
 						}
 					}

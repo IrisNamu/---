@@ -9,7 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -36,6 +40,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.toedter.calendar.JDateChooser;
 
+import database.PayDAO;
 import database.StudentDAO;
 import database.StudentVo;
 
@@ -70,6 +75,7 @@ public class Update_stuInfo extends JFrame {
 	private ImageIcon pic_btn;
 	private StudentVo vo1;
 
+	// private StudentVo vo1 : list;
 	public Update_stuInfo(String num, String name, String sex, String age, String school, String grade, String class_,
 			String birth, String when_come, String address, String enter_date, String stu_call, String G1,
 			String G1_call, String G2, String G2_call, String memo) {
@@ -528,20 +534,18 @@ public class Update_stuInfo extends JFrame {
 		// 수강생 사진을 넣을 버튼
 		// 사진 URL을 데이터베이스에서 불러온다음 사진으로 변환해주는 작업
 		StudentDAO dao = new StudentDAO();
-		ArrayList<StudentVo> list = dao.stu_pic(num);
+		String pic_path_ = "\"" + new StudentDAO().sum_pay(num) + "\"";
 
-		for (StudentVo vo1 : list) {
-			String[] pic_ = { vo1.getPic() };
-			System.out.println(vo1.getPic());
-			String path = "\"" + vo1.getPic() + "\"";
-			System.out.println(path);
+		File file = new File("C:\\Users\\Administrator.User -2022JLMXJ\\Desktop\\장원영.jpg");
+		BufferedImage bufferedImage = ImageIO.read(file);
+		ImageIcon imageIcon = new ImageIcon(bufferedImage);
 
-		}
-
-		JLabel pic_path = new JLabel();
+		JLabel pic_path = new JLabel("New label");
 		JFileChooser fileChooser = new JFileChooser();
 		JButton stu_pic = new JButton();
 		stu_pic.setText("사진 +");
+		stu_pic.setIcon(imageIcon);
+
 		stu_pic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -555,7 +559,6 @@ public class Update_stuInfo extends JFrame {
 
 					// 기본 Path의 경로 설정 (바탕화면)
 					fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "//" + "Desktop"));
-
 					// 필터링될 확장자
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg & png 파일", "png", "jpg");
 

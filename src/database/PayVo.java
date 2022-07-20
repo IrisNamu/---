@@ -14,6 +14,10 @@ public class PayVo {
 	private String address;//
 	private String GUARDIAN1;//
 	private String GUARDIAN1_CALL;
+	
+	public PayVo() {
+		
+	}
 
 	// 결제관련 정보
 	public PayVo(String stuNumber, String payment_date, int payment_amount) {
