@@ -147,7 +147,6 @@ public class New_big extends JFrame {
 
 				table_all.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_all.setModel(new DefaultTableModel(data, header));
-				scrollPane1.setViewportView(table_all);
 				table_all.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 				table_all.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));

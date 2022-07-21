@@ -535,16 +535,19 @@ public class Update_stuInfo extends JFrame {
 		// 사진 URL을 데이터베이스에서 불러온다음 사진으로 변환해주는 작업
 		StudentDAO dao = new StudentDAO();
 		String pic_path_ = "\"" + new StudentDAO().sum_pay(num) + "\"";
+		String pic_path_icon = pic_path_.replace("\"", "/"); // 절대경로는 \이 아니라 /로 해야 제대로 나온다!
 
-		File file = new File("C:\\Users\\Administrator.User -2022JLMXJ\\Desktop\\장원영.jpg");
-		BufferedImage bufferedImage = ImageIO.read(file);
-		ImageIcon imageIcon = new ImageIcon(bufferedImage);
+		// 가져온 사진 사이즈 맞춰주기
+		ImageIcon pic_stu = new ImageIcon(pic_path_icon);
+		Image img_stu_ = pic_stu.getImage();
+		Image changeImg = img_stu_.getScaledInstance(170, 180, Image.SCALE_SMOOTH);
+		ImageIcon changeIcon = new ImageIcon(changeImg);
 
 		JLabel pic_path = new JLabel("New label");
 		JFileChooser fileChooser = new JFileChooser();
 		JButton stu_pic = new JButton();
 		stu_pic.setText("사진 +");
-		stu_pic.setIcon(imageIcon);
+		stu_pic.setIcon(changeIcon);
 
 		stu_pic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

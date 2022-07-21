@@ -24,6 +24,7 @@ import database.StudentDAO;
 import database.StudentVo;
 
 import java.awt.Color;
+import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -49,6 +50,9 @@ import java.awt.Dimension;
 import javax.swing.JTextField;
 import java.awt.SystemColor;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JYearChooser;
+import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JDayChooser;
 
 public class Statistics_manage extends JFrame {
 
@@ -390,79 +394,72 @@ public class Statistics_manage extends JFrame {
 		att_menu.setLayout(null);
 
 		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(45, 37, 237, 39);
+		dateChooser.setBounds(58, 53, 237, 39);
 		att_menu.add(dateChooser);
 
+		if (((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) < 10)
+				&& (dateChooser.getJCalendar().getDayChooser().getDay() < 10)) {
 
+			date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 0"
+					+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 0"
+					+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일";
 
+		} else if (((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) < 10)
+				&& (dateChooser.getJCalendar().getDayChooser().getDay() > 10)) {
+
+			date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 0"
+					+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 "
+					+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일";
+
+		} else if (((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) > 10)
+				&& (dateChooser.getJCalendar().getDayChooser().getDay() < 10)) {
+
+			date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 "
+					+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 0"
+					+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일";
+
+		} else {
+			date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 "
+					+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 "
+					+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일";
+		}
+		System.out.println(date_when);
+
+		att_table = new JTable();
 		JScrollPane att_scrollPane = new JScrollPane();
 		att_scrollPane.setBounds(12, 102, 399, 475);
 		att_menu.add(att_scrollPane);
-
 		att_scrollPane.setViewportView(att_table);
 
 		JButton search_btn = new JButton("검색");
 		search_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				att_table = new JTable();
-				String[] headeratt = new String[] { "출석번호", "이름", "나이", "등원요일", "출석 정보", "출석 시간", "결석사유" };
-				String[][] dataatt = daoS.att_all("2022년 07월");
 
-				att_table = new JTable();
+				String[] headeratt = new String[] { "출석번호", "이름", "나이", "등원 요일", "출석 정보", "출석 시간", "결석 사유" };
+				String[][] dataatt = daoS.att_all(date_when);
+
 				att_table.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				att_table.setModel(new DefaultTableModel(dataatt, headeratt));
 				att_table.repaint();
 				att_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
+				att_table.getColumn("등원 요일").setPreferredWidth(130);
+				att_table.getColumn("출석 시간").setPreferredWidth(130);
+				att_table.getColumn("결석 사유").setPreferredWidth(150);
 				att_table.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
-				att_table.setRowHeight(80);
-				att_table.setShowVerticalLines(false); // 수평 보더라인 지우기
+				att_table.setRowHeight(40);
 				att_table.getTableHeader().setReorderingAllowed(false);
-				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
-				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
-
-				// 전체 열에 지정
-				for (int i = 0; i < tcm.getColumnCount(); i++) {
-					tcm.getColumn(i).setCellRenderer(dtcr);
-					// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
-					// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
-				}
 			}
 		});
 		search_btn.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
 		search_btn.setBackground(new Color(176, 196, 222));
-		search_btn.setBounds(304, 37, 83, 39);
+		search_btn.setBounds(307, 53, 83, 39);
 		att_menu.add(search_btn);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1)<10){
-					
-					 date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 0"
-							+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 "
-							+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일 ";
-				
-				} else if((dateChooser.getJCalendar().getMonthChooser().getMonth() + 1)<10))
-						 &&((dateChooser.getJCalendar().getDayChooser().getDay())<10)){
-							
-							 date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 0"
-										+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 0"
-										+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일 ";
-				
-				} else {
-					 date_when = (dateChooser.getJCalendar().getYearChooser().getYear() + "년 "
-							+ (dateChooser.getJCalendar().getMonthChooser().getMonth() + 1) + "월 "
-							+ dateChooser.getJCalendar().getDayChooser().getDay()) + "일 ";
-				}
-				
-				System.out.println(date_when);
-
-			}
-		});
-		btnNewButton.setBounds(0, 4, 97, 23);
-		att_menu.add(btnNewButton);
+		JLabel lblNewLabel_2 = new JLabel("* 조회를 원하는 날짜를 선택해주세요.");
+		lblNewLabel_2.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setBounds(0, 12, 423, 31);
+		att_menu.add(lblNewLabel_2);
 
 		new_stu_table = new JTable();
 		new_stu_table.setEnabled(false);

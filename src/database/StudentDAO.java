@@ -659,20 +659,19 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT stuNumber, stuname, AGE, when_day, attendance_info, today, attendance_time, "
+			String query = "SELECT stuNumber, stuname, AGE, when_day, attendance_info, attendance_time, "
 					+ "reason_for_absence FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER) "
-					+ "WHERE today LIKE '%" + date + "%'";
+					+ "WHERE today LIKE '%" + date + "%' ORDER BY attendance_info desc ";
 
 			PreparedStatement statement = con.prepareStatement(
-					"s.stuNumber, s.stuName, s.AGE,p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL FROM student s, PAYMENT p");
+					"stuNumber, stuname, AGE, when_day, attendance_info, attendance_time, reason_for_absence FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER)");
 			ResultSet results = statement.executeQuery(query); // 쿼리 실행 결과를 받아야하기때문에 데이터베이스에 접속, 그걸
 
 			ArrayList<String[]> list = new ArrayList<String[]>();
 			while (results.next()) {
 				list.add(new String[] { results.getString("stuNumber"), results.getString("stuName"),
 						results.getString("age"), results.getString("when_day"), results.getString("attendance_info"),
-						results.getString("today"), results.getString("attendance_time"),
-						results.getString("reason_for_absence") });
+						results.getString("attendance_time"), results.getString("reason_for_absence") });
 			}
 			String[][] arr = new String[list.size()][8];
 			return list.toArray(arr);
