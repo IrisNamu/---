@@ -1,3 +1,4 @@
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -38,29 +39,10 @@ public class AttendanceNumber extends JFrame {
 	private JTextField InputNumber;
 	private JTextField TFLabel;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AttendanceNumber frame = new AttendanceNumber();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public AttendanceNumber() {
 		dao = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
-		setTitle("");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -235,10 +217,6 @@ public class AttendanceNumber extends JFrame {
 					TFLabel.setForeground(new Color(165, 42, 42));
 					InputNumber.setText("");
 				} else if (user == true) {
-
-					// 온도체크
-					temperature tem = new temperature();
-					tem.setVisible(true);
 
 					String attendance_stuatus = "출석";
 

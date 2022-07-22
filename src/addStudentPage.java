@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -59,32 +60,13 @@ public class addStudentPage extends JFrame {
 	private String grade;
 	private String current_date;
 	private String when_daycome = "";
-	String filePath = "";
+	private String filePath = "";
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					addStudentPage frame = new addStudentPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public addStudentPage() {
 		dao = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
-		setTitle("\uC624!\uCD9C\uC11D - \uD559\uC0DD \uC815\uBCF4 \uB4F1\uB85D\uD558\uAE30");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setBounds(100, 100, 510, 820);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -450,7 +432,7 @@ public class addStudentPage extends JFrame {
 		stu_num.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (stu_num.getText().equals(" *중복확인 필수* 출석번호 4자리(숫자)")) {
+				if (stu_num.getText().equals("* 출석번호 4자리(숫자)")) {
 					stu_num.setText("");
 					stu_num.setForeground(new Color(153, 153, 153));
 				}
@@ -459,15 +441,15 @@ public class addStudentPage extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (stu_num.getText().equals("")) {
-					stu_num.setText(" *중복확인 필수* 출석번호 4자리(숫자)");
+					stu_num.setText("* 출석번호 4자리(숫자)");
 					stu_num.setForeground(new Color(153, 153, 153));
 				}
 			}
 		});
-		stu_num.setText(" *중복확인 필수* 출석번호 4자리(숫자)");
+		stu_num.setText("* 출석번호 4자리(숫자)");
 		stu_num.setFont(new Font("굴림", Font.PLAIN, 14));
 		stu_num.setColumns(10);
-		stu_num.setBounds(40, 331, 280, 29);
+		stu_num.setBounds(157, 331, 163, 29);
 		contentPane.add(stu_num);
 
 		// 보호자1 전화번호
@@ -595,15 +577,15 @@ public class addStudentPage extends JFrame {
 		stu_pic.setBounds(37, 96, 146, 175);
 		contentPane.add(stu_pic);
 
-		JLabel lblNewLabel = new JLabel("* 이름과 출석번호는 필수 입력사항입니다.");
+		JLabel lblNewLabel = new JLabel("* 이름과 출석번호는 필수 입력사항입니다. 그 외는 선택사항");
 		lblNewLabel.setForeground(new Color(255, 69, 0));
 		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel.setBounds(37, 62, 365, 26);
+		lblNewLabel.setBounds(37, 62, 445, 26);
 		contentPane.add(lblNewLabel);
 
 		JLabel day_label = new JLabel("등원요일");
 		day_label.setHorizontalAlignment(SwingConstants.CENTER);
-		day_label.setFont(new Font("굴림", Font.BOLD, 14));
+		day_label.setFont(new Font("배달의민족 주아", Font.BOLD, 16));
 		day_label.setBounds(37, 380, 75, 35);
 		contentPane.add(day_label);
 
@@ -729,7 +711,7 @@ public class addStudentPage extends JFrame {
 				if (s_school.getText().equals(" * 학교 입력란 예) OO초")) {
 					s_school.setText("");
 				}
-				if (s_grade.getText().equals(" * 학년 (숫자만 기입)")) {
+				if (s_grade.getText().equals(" * 학년 예) 초4, 고2")) {
 					s_grade.setText("");
 				}
 				if (s_class.getText().equals(" * OO반")) {
@@ -784,11 +766,13 @@ public class addStudentPage extends JFrame {
 				if (s_sun.isSelected() == true) {
 					when_daycome += "일 ";
 				}
-				when_daycome = when_daycome.substring(0, when_daycome.length());
 
-				// String when_daycome=?????.isSelected().getText();
-
-				// 입력받은 학 숫자가 아닐 경우 - 입력된 문자열이 숫자인지 문자가 섞여있는지 판단하는 코드를 작성
+				// 만약 체크박스 설정안되어있으면?
+				if ((s_mon.isSelected() == false) && (s_tue.isSelected() == false) && (s_wed.isSelected() == false)
+						&& (s_thur.isSelected() == false) && (s_fri.isSelected() == false)
+						&& (s_sat.isSelected() == false) && (s_sun.isSelected() == false)) {
+					when_daycome = " ";
+				}
 
 				char temp = 0;
 				boolean flag = true;
@@ -800,10 +784,12 @@ public class addStudentPage extends JFrame {
 					}
 				}
 				if (s_name.getText().equals(" * 이름을 입력해주세요.")) {
-					JOptionPane.showMessageDialog(null, "이름은 필수 항목입니다.\r\n이름을 입력해주세요.", "저장 실패!",
+					JOptionPane.showMessageDialog(null, "이름은 필수 입력 항목입니다.\r\n이름을 입력해주세요.", "저장 실패!",
 							JOptionPane.ERROR_MESSAGE);
 				} else if (s_name.getText().length() > 12) {
 					JOptionPane.showMessageDialog(null, "이름을 10글자 이하로 입력해주세요.", "저장 실패!", JOptionPane.ERROR_MESSAGE);
+				} else if (stu_num.getText().equals("* 출석번호 4자리(숫자)")) {
+					JOptionPane.showMessageDialog(null, "출석번호는 필수 입력 사항입니다.", "저장 실패!", JOptionPane.ERROR_MESSAGE);
 				} else {
 
 					// 라디오 체크박스 남자인지 여자인지 값가져오기 위한 작업
@@ -887,5 +873,17 @@ public class addStudentPage extends JFrame {
 			}
 		});
 		contentPane.add(StunumCheck);
+
+		JLabel lblNewLabel_1 = new JLabel("* 중복확인을 해야지만 학생 정보를 저장할 수 있습니다.");
+		lblNewLabel_1.setForeground(new Color(128, 0, 0));
+		lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 13));
+		lblNewLabel_1.setBounds(42, 365, 392, 15);
+		contentPane.add(lblNewLabel_1);
+
+		JLabel lblNewLabel_2 = new JLabel("출석번호 생성 : ");
+		lblNewLabel_2.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_2.setBounds(40, 331, 104, 29);
+		contentPane.add(lblNewLabel_2);
 	}
 }

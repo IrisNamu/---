@@ -1,9 +1,12 @@
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -71,28 +74,16 @@ public class New_big extends JFrame {
 	private int S_November22;
 	private int S_December22;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					New_big frame = new New_big();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private String current_year;
+	private Calendar cal;
+	private String format;
+	private SimpleDateFormat sdf;
+	private String date_when;
 
-	/**
-	 * Create the frame.
-	 */
 	public New_big() {
 		StudentDAO daoS = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
+		setTitle("오! 출석 - 학생관리프로그램");
 		setBounds(100, 100, 1300, 820);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -106,7 +97,7 @@ public class New_big extends JFrame {
 		panel2.setBackground(Color.WHITE);
 		panel2.setForeground(Color.BLACK);
 		panel2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel2.setBounds(613, 85, 686, 507);
+		panel2.setBounds(613, 85, 686, 586);
 		contentPane.add(panel2);
 		panel2.setLayout(null);
 
@@ -114,12 +105,12 @@ public class New_big extends JFrame {
 		panel1.setBackground(Color.WHITE);
 		panel1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel1.setForeground(new Color(0, 0, 0));
-		panel1.setBounds(0, 85, 611, 507);
+		panel1.setBounds(0, 85, 611, 586);
 		contentPane.add(panel1);
 		panel1.setLayout(null);
 
 		JScrollPane scrollPane1 = new JScrollPane();
-		scrollPane1.setBounds(12, 68, 587, 418);
+		scrollPane1.setBounds(12, 68, 587, 495);
 		panel1.add(scrollPane1);
 
 		table_all = new JTable();
@@ -147,7 +138,6 @@ public class New_big extends JFrame {
 
 				table_all.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
 				table_all.setModel(new DefaultTableModel(data, header));
-				scrollPane1.setViewportView(table_all);
 				table_all.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 				table_all.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
@@ -155,11 +145,11 @@ public class New_big extends JFrame {
 				table_all.getColumn("출석번호").setPreferredWidth(80);
 				table_all.getColumn("성별").setPreferredWidth(60);
 				table_all.getColumn("나이").setPreferredWidth(70);
-				table_all.getColumn("학교").setPreferredWidth(100);
+				table_all.getColumn("학교").setPreferredWidth(130);
 				table_all.getColumn("학년").setPreferredWidth(90);
 				table_all.getColumn("반").setPreferredWidth(110);
 				table_all.getColumn("생년월일").setPreferredWidth(120);
-				table_all.getColumn("등원요일").setPreferredWidth(120);
+				table_all.getColumn("등원요일").setPreferredWidth(140);
 				table_all.getColumn("주소").setPreferredWidth(200);
 				table_all.getColumn("등록일").setPreferredWidth(120);
 				table_all.getColumn("학생 전화번호").setPreferredWidth(170);
@@ -190,26 +180,30 @@ public class New_big extends JFrame {
 		lblNewLabel_2.setBounds(12, 10, 241, 58);
 		panel1.add(lblNewLabel_2);
 
+		// 현재 년도 받아주기
+		cal = Calendar.getInstance();
+		format = "yyyy";
+		sdf = new SimpleDateFormat(format);
+		current_year = sdf.format(cal.getTime());
+
 		// 월별 신입생 통계
+		String[][] new_data = new String[3][13];
 		String[] header = new String[] { "년/월", "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월",
 				"12월" };
-		String[][] new_data = new String[3][13];
-
-		S_January22 = new StudentDAO().count_new("2022-1");
-		S_February22 = new StudentDAO().count_new("2022-2");
-		S_March22 = new StudentDAO().count_new("2022-3");
-		S_April22 = new StudentDAO().count_new("2022-4");
-		S_May22 = new StudentDAO().count_new("2022-5");
-		S_June22 = new StudentDAO().count_new("2022-6");
-		S_July22 = new StudentDAO().count_new("2022-7");
-		S_August22 = new StudentDAO().count_new("2022-8");
-		S_September22 = new StudentDAO().count_new("2022-9");
+		S_January22 = new StudentDAO().count_new("2022-1-");
+		S_February22 = new StudentDAO().count_new("2022-2-");
+		S_March22 = new StudentDAO().count_new("2022-3-");
+		S_April22 = new StudentDAO().count_new("2022-4-");
+		S_May22 = new StudentDAO().count_new("2022-5-");
+		S_June22 = new StudentDAO().count_new("2022-6-");
+		S_July22 = new StudentDAO().count_new("2022-7-");
+		S_August22 = new StudentDAO().count_new("2022-8-");
+		S_September22 = new StudentDAO().count_new("2022-9-");
 		S_October22 = new StudentDAO().count_new("2022-10");
 		S_November22 = new StudentDAO().count_new("2022-12");
 		S_December22 = new StudentDAO().count_new("2022-12");
 
-		// 2022년
-		new_data[0][0] = "2022년";
+		new_data[0][0] = current_year;
 		new_data[0][1] = S_January22 + "명";
 		new_data[0][2] = S_February22 + "명";
 		new_data[0][3] = S_March22 + "명";
@@ -223,12 +217,6 @@ public class New_big extends JFrame {
 		new_data[0][11] = S_November22 + "명";
 		new_data[0][12] = S_December22 + "명";
 
-		// 2021년
-		new_data[1][0] = "2021년";
-
-		// 2020년
-		new_data[2][0] = "2020년";
-
 		JLabel lblNewLabel_1 = new JLabel("월별 신입생 추이 비교");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 33));
@@ -236,7 +224,7 @@ public class New_big extends JFrame {
 		panel2.add(lblNewLabel_1);
 
 		scrollPane2 = new JScrollPane();
-		scrollPane2.setBounds(10, 611, 1274, 160);
+		scrollPane2.setBounds(10, 681, 1274, 90);
 		contentPane.add(scrollPane2);
 
 		table_new_big = new JTable();
@@ -250,12 +238,6 @@ public class New_big extends JFrame {
 
 		table_new_big.setRowHeight(40);
 
-		JLabel lblNewLabel = new JLabel("신입생 조회 및 통계");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("배달의민족 주아", Font.PLAIN, 46));
-		lblNewLabel.setBounds(0, 0, 1284, 75);
-		contentPane.add(lblNewLabel);
-
 		JButton backBtn = new JButton("<");
 		backBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -268,7 +250,7 @@ public class New_big extends JFrame {
 		backBtn.setFont(new Font("배달의민족 주아", Font.BOLD, 34));
 		backBtn.setBorderPainted(false);
 		backBtn.setBackground(Color.GRAY);
-		backBtn.setBounds(1217, 0, 67, 47);
+		backBtn.setBounds(1217, 0, 67, 75);
 		contentPane.add(backBtn);
 		table_new_big.getColumn("1월").setPreferredWidth(160);
 		table_new_big.getColumn("2월").setPreferredWidth(160);
@@ -282,24 +264,32 @@ public class New_big extends JFrame {
 		table_new_big.getColumn("10월").setPreferredWidth(160);
 		table_new_big.getColumn("11월").setPreferredWidth(160);
 		table_new_big.getColumn("12월").setPreferredWidth(160);
-
-		TableColumnModel tcm = table_new_big.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
 		// 신규생 그래프 붙여주기
 		final CategoryDataset new_dataset = new_createDataset();
 		final JFreeChart new_chart = new_createChart(new_dataset);
 		ChartPanel new_chartPanel = new ChartPanel((new_chart));
-		new_chartPanel.setBounds(12, 69, 650, 428);
+		new_chartPanel.setForeground(Color.BLACK);
+		new_chartPanel.setBounds(12, 69, 650, 494);
 		panel2.add(new_chartPanel);
+		
+				JLabel lblNewLabel = new JLabel("신입생 조회 및 통계");
+				lblNewLabel.setOpaque(true);
+				lblNewLabel.setBackground(SystemColor.activeCaption);
+				lblNewLabel.setForeground(new Color(255, 255, 255));
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel.setFont(new Font("배달의민족 주아", Font.PLAIN, 46));
+				lblNewLabel.setBounds(0, 0, 1284, 75);
+				contentPane.add(lblNewLabel);
 
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
 
-		// 전체 열에 지정
-		for (int k = 0; k < tcm.getColumnCount(); k++) {
-			tcm.getColumn(k).setCellRenderer(dtcr);
-			// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
-			// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
-		}
+//		// 전체 열에 지정
+//		for (int k = 0; k < tcm.getColumnCount(); k++) {
+//			tcm.getColumn(k).setCellRenderer(dtcr);
+//			// 컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
+//			// 각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
+//		}
 	}
 
 	/**
@@ -321,9 +311,8 @@ public class New_big extends JFrame {
 	private CategoryDataset new_createDataset() {
 
 		// row keys...
-		final String series1 = "2020";
-		final String series2 = "2021";
-		final String series3 = "2022";
+		final String series1 = current_year;
+		;
 
 		// column keys...
 		final String category1 = "1";
@@ -353,32 +342,6 @@ public class New_big extends JFrame {
 		new_dataset.addValue(S_October22, series1, category10);
 		new_dataset.addValue(S_November22, series1, category11);
 		new_dataset.addValue(S_December22, series1, category12);
-
-		new_dataset.addValue(S_January22, series2, category1);
-		new_dataset.addValue(S_February22, series2, category2);
-		new_dataset.addValue(S_March22, series2, category3);
-		new_dataset.addValue(S_April22, series2, category4);
-		new_dataset.addValue(S_May22, series2, category5);
-		new_dataset.addValue(S_June22, series2, category6);
-		new_dataset.addValue(S_July22, series2, category7);
-		new_dataset.addValue(S_August22, series2, category8);
-		new_dataset.addValue(S_September22, series2, category9);
-		new_dataset.addValue(S_October22, series2, category10);
-		new_dataset.addValue(S_November22, series2, category11);
-		new_dataset.addValue(S_December22, series2, category12);
-
-		new_dataset.addValue(S_January22, series3, category1);
-		new_dataset.addValue(S_February22, series3, category2);
-		new_dataset.addValue(S_March22, series3, category3);
-		new_dataset.addValue(S_April22, series3, category4);
-		new_dataset.addValue(S_May22, series3, category5);
-		new_dataset.addValue(S_June22, series3, category6);
-		new_dataset.addValue(S_July22, series3, category7);
-		new_dataset.addValue(S_August22, series3, category8);
-		new_dataset.addValue(S_September22, series3, category9);
-		new_dataset.addValue(S_October22, series3, category10);
-		new_dataset.addValue(S_November22, series3, category11);
-		new_dataset.addValue(S_December22, series3, category12);
 
 		return new_dataset;
 
@@ -411,12 +374,9 @@ public class New_big extends JFrame {
 		new_renderer.setDrawBarOutline(false);
 
 		// set up gradient paints for series...
-		final GradientPaint new_gp0 = new GradientPaint(0.0f, 0.0f, Color.darkGray, 0.0f, 0.0f, Color.lightGray);
-		final GradientPaint new_gp1 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, Color.lightGray);
-		final GradientPaint new_gp2 = new GradientPaint(0.0f, 0.0f, Color.red, 0.0f, 0.0f, Color.lightGray);
+		final GradientPaint new_gp0 = new GradientPaint(0.0f, 0.0f, new Color(28, 108, 138), 0.0f, 0.0f,
+				Color.lightGray);
 		new_renderer.setSeriesPaint(0, new_gp0);
-		new_renderer.setSeriesPaint(1, new_gp1);
-		new_renderer.setSeriesPaint(2, new_gp2);
 
 		final CategoryAxis new_domainAxis = new_plot.getDomainAxis();
 		new_domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));

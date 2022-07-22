@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -46,28 +47,9 @@ public class pay_manage extends JFrame {
 	private JTable table_stuList;
 	private String last;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					pay_manage frame = new pay_manage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public pay_manage() {
 		dao = new PayDAO();
-		setTitle("오! 출석 - 학생관리시스템");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
@@ -152,7 +134,7 @@ public class pay_manage extends JFrame {
 		Menubar.add(statistics_menubar);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(36, 245, 379, 445);
+		scrollPane.setBounds(36, 234, 379, 427);
 		contentPane.add(scrollPane);
 
 		Date d = new Date();
@@ -209,9 +191,10 @@ public class pay_manage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				payment pay = new payment();
 				pay.setVisible(true);
+				dispose();
 			}
 		});
-		add_pay_info.setBounds(0, 71, 454, 55);
+		add_pay_info.setBounds(0, 69, 454, 55);
 		contentPane.add(add_pay_info);
 
 		SimpleDateFormat date_ = new SimpleDateFormat("yyyy년 MM월");
@@ -221,15 +204,16 @@ public class pay_manage extends JFrame {
 		JLabel lblNewLabel = new JLabel(date1.getText() + " 수납관리");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("배달의민족 주아", Font.BOLD, 31));
-		lblNewLabel.setBounds(0, 137, 454, 53);
+		lblNewLabel.setBounds(0, 126, 454, 53);
 		contentPane.add(lblNewLabel);
 
 		new PayDAO().pay_stulList(day);
 		String[][] pay_stulList = new PayDAO().pay_stulList(day);
 		System.out.println(pay_stulList.length);
 
-		JButton pay_O = new JButton("납부완료 " + pay_stulList.length);
-		pay_O.setBackground(new Color(211, 211, 211));
+		JButton pay_O = new JButton("이번 달 납부완료자 " + pay_stulList.length + "명");
+		pay_O.setForeground(new Color(255, 255, 255));
+		pay_O.setBackground(new Color(25, 25, 112));
 		pay_O.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 		pay_O.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -237,6 +221,7 @@ public class pay_manage extends JFrame {
 				String[] header = new String[] { "출석번호", "이름", "나이", "수납일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
 				String[][] data = dao.pay_stulList(day);
 
+				// 만약 7월달 리스트에 있다. 그러면 미납자 명단에서 빼주고 싶다.
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();
 				table_stuList.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
@@ -264,24 +249,21 @@ public class pay_manage extends JFrame {
 				}
 			}
 		});
-		pay_O.setBounds(99, 200, 117, 35);
+		pay_O.setBounds(107, 189, 231, 35);
 		contentPane.add(pay_O);
-
-		new PayDAO().did_not_pay(day, last);
-		String[][] did_not_pay = new PayDAO().did_not_pay(day, last);
-		System.out.println(did_not_pay.length);
 
 		JLabel num = new JLabel();
 		JLabel name = new JLabel();
 
-		JButton Pay_X = new JButton("미납자 " + did_not_pay.length);
+		JButton Pay_X = new JButton("지난 납부이력");
+		Pay_X.setForeground(new Color(0, 0, 0));
 		Pay_X.setBackground(new Color(211, 211, 211));
 		Pay_X.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 		Pay_X.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				String[] header = new String[] { "출석번호", "이름", "나이", "마지막 수납일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
-				String[][] data = dao.did_not_pay(day, last);
+				String[][] data = dao.did_not_pay(day);
 
 				contentPane.add(scrollPane);
 				table_stuList = new JTable();
@@ -310,7 +292,7 @@ public class pay_manage extends JFrame {
 				}
 			}
 		});
-		Pay_X.setBounds(228, 200, 117, 35);
+		Pay_X.setBounds(145, 668, 145, 35);
 		contentPane.add(Pay_X);
 
 	}

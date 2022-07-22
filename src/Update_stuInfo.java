@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -75,7 +76,6 @@ public class Update_stuInfo extends JFrame {
 	private ImageIcon pic_btn;
 	private StudentVo vo1;
 
-	// private StudentVo vo1 : list;
 	public Update_stuInfo(String num, String name, String sex, String age, String school, String grade, String class_,
 			String birth, String when_come, String address, String enter_date, String stu_call, String G1,
 			String G1_call, String G2, String G2_call, String memo) {
@@ -83,7 +83,7 @@ public class Update_stuInfo extends JFrame {
 		dao = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
-		setTitle("\uC624!\uCD9C\uC11D - \uD559\uC0DD \uC815\uBCF4 \uB4F1\uB85D\uD558\uAE30");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setBounds(100, 100, 510, 820);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -308,37 +308,40 @@ public class Update_stuInfo extends JFrame {
 			}
 		});
 
-		if (when_come.contains("월") == true) {
+		// 학원 등원요일 체크박스 선택해준채로 켜주기
+
+		if (when_come.contains("월")) {
 			s_mon.setSelected(true);
 		}
-		if (when_come.contains("화") == true) {
+
+		if (when_come.contains("화")) {
 			s_tue.setSelected(true);
 		}
-		if (when_come.contains("수") == true) {
+		if (when_come.contains("수")) {
 			s_wed.setSelected(true);
 		}
-		if (when_come.contains("목") == true) {
+		if (when_come.contains("목")) {
 			s_thur.setSelected(true);
 		}
-		if (when_come.contains("금") == true) {
+		if (when_come.contains("금")) {
 			s_fri.setSelected(true);
 		}
-		if (when_come.contains("토") == true) {
+		if (when_come.contains("토")) {
 			s_sat.setSelected(true);
 		}
-		if (when_come.contains("일") == true) {
+		if (when_come.contains("일")) {
 			s_sun.setSelected(true);
 		}
 
 		// 학생 전화번호
 		s_call_num = new JTextField(stu_call);
 		if (s_call_num.getText().equals("")) {
-			s_call_num.setText(" * 학생 전화번호");
+			s_call_num.setText(" * 학생 전화번호를 입력해주세요. 예) 010-0000-0000");
 		}
 		s_call_num.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_call_num.getText().equals(" * 학생 전화번호")) {
+				if (s_call_num.getText().equals(" * 학생 전화번호를 입력해주세요. 예) 010-0000-0000")) {
 					s_call_num.setText("");
 					s_call_num.setForeground(new Color(153, 153, 153));
 				}
@@ -347,7 +350,7 @@ public class Update_stuInfo extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (s_call_num.getText().equals("")) {
-					s_call_num.setText(" * 학생 전화번호");
+					s_call_num.setText(" * 학생 전화번호를 입력해주세요. 예) 010-0000-0000");
 					s_call_num.setForeground(new Color(153, 153, 153));
 				}
 			}
@@ -357,31 +360,6 @@ public class Update_stuInfo extends JFrame {
 		s_call_num.setBounds(40, 559, 394, 34);
 		contentPane.add(s_call_num);
 		s_call_num.setColumns(10);
-
-		// 보호자1 관계 콤보박스
-		JComboBox<String> s_who_guardian1 = new JComboBox<String>();
-		s_who_guardian1.setBounds(45, 610, 86, 29);
-		contentPane.add(s_who_guardian1);
-		s_who_guardian1.addItem(" 미선택 ");
-		s_who_guardian1.addItem(" (모)");
-		s_who_guardian1.addItem(" (부)");
-		s_who_guardian1.addItem(" (조모)");
-		s_who_guardian1.addItem(" (조부)");
-		s_who_guardian1.addItem(" (기타)");
-		s_who_guardian1.getSelectedItem();
-
-		// 보호자1 관계 콤보박스
-		JComboBox<String> s_who_guardian2 = new JComboBox<String>();
-		s_who_guardian2.setBounds(45, 649, 86, 29);
-		contentPane.add(s_who_guardian2);
-		s_who_guardian2.addItem(" 미선택 ");
-		s_who_guardian2.addItem(" (모)");
-		s_who_guardian2.addItem(" (부)");
-		s_who_guardian2.addItem(" (조모)");
-		s_who_guardian2.addItem(" (조부)");
-		s_who_guardian2.addItem(" (기타)");
-		s_who_guardian2.getSelectedItem();
-
 		// 보호자1 성함
 		s_guardian1 = new JTextField(G1);
 		if (s_guardian1.getText().equals("")) {
@@ -437,6 +415,103 @@ public class Update_stuInfo extends JFrame {
 		s_guardian2.setBounds(143, 649, 102, 29);
 		contentPane.add(s_guardian2);
 
+		// 보호자1 관계 콤보박스
+		JComboBox<String> s_who_guardian1 = new JComboBox<String>();
+		s_who_guardian1.setBounds(45, 610, 86, 29);
+		contentPane.add(s_who_guardian1);
+		s_who_guardian1.addItem(" 미선택 ");
+		s_who_guardian1.addItem(" (모)");
+		s_who_guardian1.addItem(" (부)");
+		s_who_guardian1.addItem(" (조모)");
+		s_who_guardian1.addItem(" (조부)");
+		s_who_guardian1.addItem(" (기타)");
+		s_who_guardian1.getSelectedItem();
+
+		// 보호자1 관계 콤보박스
+		JComboBox<String> s_who_guardian2 = new JComboBox<String>();
+		s_who_guardian2.setBounds(45, 649, 86, 29);
+		contentPane.add(s_who_guardian2);
+		s_who_guardian2.addItem(" 미선택 ");
+		s_who_guardian2.addItem(" (모)");
+		s_who_guardian2.addItem(" (부)");
+		s_who_guardian2.addItem(" (조모)");
+		s_who_guardian2.addItem(" (조부)");
+		s_who_guardian2.addItem(" (기타)");
+		s_who_guardian2.getSelectedItem();
+
+		// 보호자1 관계 미리 선택해주기, 값 받아올 때 관계 정보 삭제해주기
+		if (s_guardian1.getText().contains("미선택")) {
+			s_who_guardian1.setSelectedIndex(0);
+			String G1_name_change = s_guardian1.getText().replace("미선택", "");
+			s_guardian1.setText(G1_name_change);
+		}
+		
+		if (s_guardian1.getText().contains("모")) {
+			s_who_guardian1.setSelectedIndex(1);
+			String G1_name_change = s_guardian1.getText().replace(" (모)", "");
+			s_guardian1.setText(G1_name_change);
+		}
+
+		if (s_guardian1.getText().contains("부")) {
+			s_who_guardian1.setSelectedIndex(2);
+			String G1_name_change = s_guardian1.getText().replace(" (부)", "");
+			s_guardian1.setText(G1_name_change);
+		}
+
+		if (s_guardian1.getText().contains("조모")) {
+			s_who_guardian1.setSelectedIndex(3);
+			String G1_name_change = s_guardian1.getText().replace(" (조모)", "");
+			s_guardian1.setText(G1_name_change);
+		}
+
+		if (s_guardian1.getText().contains("조부")) {
+			s_who_guardian1.setSelectedIndex(4);
+			String G1_name_change = s_guardian1.getText().replace(" (조부)", "");
+			s_guardian1.setText(G1_name_change);
+		}
+
+		if (s_guardian1.getText().contains("기타")) {
+			s_who_guardian1.setSelectedIndex(5);
+			String G1_name_change = s_guardian1.getText().replace(" (기타)", "");
+			s_guardian1.setText(G1_name_change);
+		}
+
+		// 보호자2 관계 미리 선택해주기, 값 받아올 때 관계 정보 삭제해주기
+		if (s_guardian2.getText().contains("미선택")) {
+			s_who_guardian2.setSelectedIndex(0);
+			String G2_name_change = s_guardian2.getText().replace("미선택", "");
+			s_guardian2.setText(G2_name_change);
+		}
+		if (s_guardian2.getText().contains("모")) {
+			s_who_guardian2.setSelectedIndex(1);
+			String G2_name_change = s_guardian2.getText().replace(" (모)", "");
+			s_guardian1.setText(G2_name_change);
+		}
+
+		if (s_guardian2.getText().contains("부")) {
+			s_who_guardian2.setSelectedIndex(2);
+			String G2_name_change = s_guardian2.getText().replace(" (부)", "");
+			s_guardian2.setText(G2_name_change);
+		}
+
+		if (s_guardian2.getText().contains("조모")) {
+			s_who_guardian2.setSelectedIndex(3);
+			String G2_name_change = s_guardian2.getText().replace(" (조모)", "");
+			s_guardian2.setText(G2_name_change);
+		}
+
+		if (s_guardian2.getText().contains("조부")) {
+			s_who_guardian2.setSelectedIndex(4);
+			String G2_name_change = s_guardian2.getText().replace(" (조부)", "");
+			s_guardian2.setText(G2_name_change);
+		}
+
+		if (s_guardian2.getText().contains("기타")) {
+			s_who_guardian2.setSelectedIndex(4);
+			String G2_name_change = s_guardian2.getText().replace(" (기타)", "");
+			s_guardian2.setText(G2_name_change);
+		}
+
 		// 학생주소 입력필드
 		address_ = new JTextField(address);
 		if (address_.getText().equals("")) {
@@ -468,12 +543,12 @@ public class Update_stuInfo extends JFrame {
 		// 보호자1 전화번호
 		s_guardian1_call_ = new JTextField(G1_call);
 		if (s_guardian1_call_.getText().equals("")) {
-			s_guardian1_call_.setText(" * 보호자1 전화번호");
+			s_guardian1_call_.setText(" * phone 예)010-0000-0000");
 		}
 		s_guardian1_call_.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_guardian1_call_.getText().equals(" * 보호자1 전화번호")) {
+				if (s_guardian1_call_.getText().equals(" * phone 예)010-0000-0000")) {
 					s_guardian1_call_.setText("");
 					s_guardian1_call_.setForeground(new Color(153, 153, 153));
 				}
@@ -482,7 +557,7 @@ public class Update_stuInfo extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (s_guardian1_call_.getText().equals("")) {
-					s_guardian1_call_.setText(" * 보호자1 전화번호");
+					s_guardian1_call_.setText(" * phone 예)010-0000-0000");
 					s_guardian1_call_.setForeground(new Color(153, 153, 153));
 				}
 			}
@@ -496,12 +571,12 @@ public class Update_stuInfo extends JFrame {
 		// 보호자2 전화번호
 		s_guardian2_call = new JTextField(G2_call);
 		if (s_guardian2_call.getText().equals("")) {
-			s_guardian2_call.setText(" * 보호자1 전화번호");
+			s_guardian2_call.setText(" * phone 예)010-0000-0000");
 		}
 		s_guardian2_call.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (s_guardian2_call.getText().equals(" * 보호자1 전화번호")) {
+				if (s_guardian2_call.getText().equals(" * phone 예)010-0000-0000")) {
 					s_guardian2_call.setText("");
 					s_guardian2_call.setForeground(new Color(153, 153, 153));
 				}
@@ -510,7 +585,7 @@ public class Update_stuInfo extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (s_guardian2_call.getText().equals("")) {
-					s_guardian2_call.setText(" * 보호자1 전화번호");
+					s_guardian2_call.setText(" * phone 예)010-0000-0000");
 					s_guardian2_call.setForeground(new Color(153, 153, 153));
 				}
 			}
@@ -533,18 +608,24 @@ public class Update_stuInfo extends JFrame {
 
 		// 수강생 사진을 넣을 버튼
 		// 사진 URL을 데이터베이스에서 불러온다음 사진으로 변환해주는 작업
+
+		JLabel pic_path = new JLabel();// 라벨에 붙인걸 가져올 것이다.
+
 		StudentDAO dao = new StudentDAO();
 		String pic_path_ = "\"" + new StudentDAO().sum_pay(num) + "\"";
+		String pic_path_icon = pic_path_.replace("\"", "/"); // 절대경로는 \이 아니라 /로 해야 제대로 나온다!
+		pic_path.setText(pic_path_icon);
 
-		File file = new File("C:\\Users\\Administrator.User -2022JLMXJ\\Desktop\\장원영.jpg");
-		BufferedImage bufferedImage = ImageIO.read(file);
-		ImageIcon imageIcon = new ImageIcon(bufferedImage);
+		// 가져온 사진 사이즈 맞춰주기
+		ImageIcon pic_stu = new ImageIcon(pic_path_icon);
+		Image img_stu_ = pic_stu.getImage();
+		Image changeImg = img_stu_.getScaledInstance(170, 180, Image.SCALE_SMOOTH);
+		ImageIcon changeIcon = new ImageIcon(changeImg);
 
-		JLabel pic_path = new JLabel("New label");
 		JFileChooser fileChooser = new JFileChooser();
 		JButton stu_pic = new JButton();
 		stu_pic.setText("사진 +");
-		stu_pic.setIcon(imageIcon);
+		stu_pic.setIcon(changeIcon);
 
 		stu_pic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -644,8 +725,8 @@ public class Update_stuInfo extends JFrame {
 		s_save_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if (when_daycome == "") {
-					when_daycome = "";
+				if (when_come == "") {
+					when_daycome = " ";
 				}
 				// 만약 정보를 입력하지 않았다면 빈값으로 바꿔주는 작업
 				if (s_school.getText().equals(" * 학교 입력란 예) OO초")) {
@@ -677,6 +758,9 @@ public class Update_stuInfo extends JFrame {
 				}
 				if (s_guardian2_call.getText().equals(" * phone 예)010-0000-0000")) {
 					s_guardian2_call.setText("");
+				}
+				if (enter_field.getText().equals("")) {
+					enter_field.setText(" ");
 				}
 
 				if (s_mon.isSelected() == true) {
@@ -729,10 +813,9 @@ public class Update_stuInfo extends JFrame {
 					} else if (s_girl_check.isSelected()) {
 						gender = new JLabel(s_girl_check.getText());
 					}
-
 					StudentVo vo = new StudentVo(num, s_name.getText(), gender.getText(), age, s_school.getText(),
-							s_grade.getText(), s_class.getText(), birth_field.getText(), enter_field.getText(),
-							address_.getText(), enter_date, s_call_num.getText(),
+							s_grade.getText(), s_class.getText(), birth_field.getText(), when_daycome,
+							address_.getText(), enter_field.getText(), s_call_num.getText(),
 							s_guardian1.getText() + s_who_guardian1.getSelectedItem().toString(),
 							s_guardian1_call_.getText(),
 							s_guardian2.getText() + s_who_guardian2.getSelectedItem().toString(),

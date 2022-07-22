@@ -74,25 +74,17 @@ public class PayDAO {
 		}
 	}
 
-	
-
 	// [결제관리] [미납자] 확인하기
-	public String[][] did_not_pay(String day, String last) {
+	public String[][] did_not_pay(String day) {
 
 		try {
 			connDB();
-
 			String query = "SELECT stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
 					+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P" + " USING(STUNUMBER)" + " MINUS"
 					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
 					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
-					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'" + " or p.PAYMENT_DATE NOT LIKE '%"
-					+ last + "%'";
-			// + " MINUS"
-//					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
-//					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
-//					+ " using(stuNumber) WHERE p.PAYMENT_DATE NOT LIKE '%" + last + "%'" + " AND p.PAYMENT_DATE LIKE '%"
-//					+ day + "%'";
+					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'"
+							+ " ORDER BY payment_date DESC ";
 
 			PreparedStatement statement = con.prepareStatement(
 					"stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
@@ -140,8 +132,6 @@ public class PayDAO {
 		return 0;
 	}
 
-	
-		
 	public void connDB() {
 		try {
 			Class.forName(driver);

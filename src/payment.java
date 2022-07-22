@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -52,29 +53,11 @@ public class payment extends JFrame {
 	private JButton hundred_thousand;
 	private int sum;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					payment frame = new payment();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public payment() {
 		dao = new StudentDAO();
 		pay_dao = new PayDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
+		setTitle("오! 출석 - 학생관리프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -89,7 +72,7 @@ public class payment extends JFrame {
 		pay_input.setFont(new Font("배달의민족 주아", Font.PLAIN, 31));
 		pay_input.setHorizontalAlignment(SwingConstants.CENTER);
 		pay_input.setText("0원");
-		pay_input.setBounds(12, 346, 426, 155);
+		pay_input.setBounds(12, 377, 426, 155);
 		contentPane.add(pay_input);
 		pay_input.setColumns(10);
 
@@ -245,7 +228,7 @@ public class payment extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 250, 250));
-		panel.setBounds(0, 523, 450, 103);
+		panel.setBounds(0, 542, 450, 103);
 		contentPane.add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
@@ -272,17 +255,6 @@ public class payment extends JFrame {
 		});
 		panel.add(fifty_thousand);
 
-		JButton five_thousand = new JButton("오천원");
-		five_thousand.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				sum += 5000;
-				pay_input.setText(sum + "원");
-			}
-		});
-		five_thousand.setBackground(new Color(255, 255, 255));
-		five_thousand.setFont(new Font("배달의민족 주아", Font.BOLD, 20));
-		panel.add(five_thousand);
-
 		JButton ten_thousand = new JButton("1만원");
 		ten_thousand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -303,6 +275,17 @@ public class payment extends JFrame {
 				pay_input.setText(sum + "원");
 			}
 		});
+		
+				JButton five_thousand = new JButton("오천원");
+				five_thousand.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						sum += 5000;
+						pay_input.setText(sum + "원");
+					}
+				});
+				five_thousand.setBackground(new Color(255, 255, 255));
+				five_thousand.setFont(new Font("배달의민족 주아", Font.BOLD, 20));
+				panel.add(five_thousand);
 		thousand.setBackground(new Color(255, 255, 255));
 		thousand.setFont(new Font("배달의민족 주아", Font.BOLD, 20));
 		panel.add(thousand);
@@ -389,7 +372,7 @@ public class payment extends JFrame {
 				}
 			}
 		});
-		btnNewButton_2.setBounds(151, 638, 151, 39);
+		btnNewButton_2.setBounds(147, 649, 151, 39);
 		btnNewButton_2.setBackground(SystemColor.activeCaption);
 		contentPane.add(btnNewButton_2);
 
@@ -402,5 +385,11 @@ public class payment extends JFrame {
 		panel_1.setBackground(new Color(255, 255, 255));
 		panel_1.setBounds(0, 58, 450, 226);
 		contentPane.add(panel_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("* 결제일을 지정하지 않으면 오늘 날짜가 결제일이 됩니다.");
+		lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 14));
+		lblNewLabel_1.setForeground(new Color(165, 42, 42));
+		lblNewLabel_1.setBounds(34, 346, 377, 21);
+		contentPane.add(lblNewLabel_1);
 	}
 }

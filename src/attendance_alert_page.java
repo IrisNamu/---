@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -30,6 +31,7 @@ public class attendance_alert_page extends JFrame {
 	private StudentDAO dao;
 	private JPanel contentPane;
 	private JTextField X_reson;
+	protected JButton O;
 
 	/**
 	 * Create the frame.
@@ -42,7 +44,7 @@ public class attendance_alert_page extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
 		setBackground(new Color(105, 105, 105));
-		setTitle("오! 출석 - 출석체크");
+		setTitle("오! 출석 - 출석체 크");
 		setBounds(100, 100, 347, 224);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -62,7 +64,7 @@ public class attendance_alert_page extends JFrame {
 		SimpleDateFormat time = new SimpleDateFormat("a hh시 mm분");
 		timeLab.setText(time.format(d));
 
-		JButton O = new JButton("등원");
+		O = new JButton("등원");
 		O.setBackground(new Color(211, 211, 211));
 		O.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
 		O.addActionListener(new ActionListener() {
@@ -72,8 +74,7 @@ public class attendance_alert_page extends JFrame {
 				String reason = " ";
 				StudentVo vo = new StudentVo(stunum, dateLab.getText(), O, timeLab.getText(), reason);
 				boolean b = dao.att_btn(vo);
-	
-				dispose();
+
 				if (b == false) {
 					attendance_Main att = new attendance_Main();
 					att.setVisible(true);

@@ -1,3 +1,4 @@
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -41,30 +42,10 @@ public class SignUp extends JFrame {
 	private JTextField password_SignUp;
 	private JLabel lblNewLabel;
 
-	/**
-	 * Launch the application.
-	 */
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SignUp frame = new SignUp();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public SignUp() {
 		dao = new MemberDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
-		setTitle("\uC624! \uCD9C\uC11D - \uD559\uC0DD\uAD00\uB9AC\uC2DC\uC2A4\uD15C ");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -310,15 +291,15 @@ public class SignUp extends JFrame {
 					ID_duplicate_Msg.setText("중복된 아이디입니다.");
 					JOptionPane.showMessageDialog(null, "중복된 아이디입니다.", "회원가입 실패!", JOptionPane.ERROR_MESSAGE);
 
-				} else if (password_SignUp.getText().equals("")) {
+				} else if (password_SignUp.getText().equals("비밀번호를 입력해주세요.(4자리 이상 15자리 이하)")) {
 					tf_pwd_Msg.setText("비밀번호를 입력하세요.");
 					JOptionPane.showMessageDialog(null, "비밀번호를 입력하세요.", "회원가입 실패!", JOptionPane.ERROR_MESSAGE);
 
-				} else if (check_password.getText().equals("")) {
+				} else if (check_password.getText().equals("●●●●●●●●●●")) {
 					tf_pwd_double_check.setText("비밀번호를 한번 더 입력하세요.");
 					JOptionPane.showMessageDialog(null, "비밀번호를 한번 더 입력하세요.", "회원가입 실패!", JOptionPane.ERROR_MESSAGE);
 
-				} else if (mail.getText().equals("")) {
+				} else if (mail.getText().equals("메일주소를 입력해주세요.")) {
 					tf_mailInput.setText("메일주소를 입력하세요.");
 					JOptionPane.showMessageDialog(null, "메일주소를 입력하세요.", "회원가입 실패!", JOptionPane.ERROR_MESSAGE);
 
@@ -346,7 +327,8 @@ public class SignUp extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				} else {
 					// 디비값넣기
-					MemberVo vo = new MemberVo(name_field.getText(), id_SignUP.getText(), password_SignUp.getText(),
+					MemberVo vo = new MemberVo
+							(id_SignUP.getText(), name_field.getText(), password_SignUp.getText(),
 							mail.getText());
 					boolean b = dao.SignUp(vo);
 

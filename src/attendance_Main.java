@@ -1,3 +1,4 @@
+
 import java.awt.EventQueue;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -52,35 +53,15 @@ public class attendance_Main extends JFrame implements MouseListener {
 	private JButton who_attendance;
 	private JButton who_Did_Not_attend;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
+	protected Object getContentPane_;
 
-		java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					attendance_Main frame = new attendance_Main();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public attendance_Main() {
+
 		dao = new StudentDAO();
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
-		setTitle("오! 출석 - 학생관리시스템");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -177,7 +158,6 @@ public class attendance_Main extends JFrame implements MouseListener {
 
 				attendance_alert_page a = new attendance_alert_page(num.getText(), name.getText(), age.getText());
 				a.setVisible(true);
-
 			}
 
 			@Override
@@ -426,8 +406,8 @@ public class attendance_Main extends JFrame implements MouseListener {
 		});
 		all_student.setBackground(Color.DARK_GRAY);
 		all_student.setForeground(Color.WHITE);
-		all_student.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
-		all_student.setBounds(332, 86, 89, 38);
+		all_student.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
+		all_student.setBounds(332, 86, 99, 38);
 		chooseDateCheck.add(all_student);
 
 		/*
@@ -503,7 +483,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		});
 		who_attendance.setBackground(new Color(51, 153, 204));
 		who_attendance.setForeground(new Color(255, 255, 255));
-		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
+		who_attendance.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 		who_attendance.setBounds(130, 86, 89, 38);
 		chooseDateCheck.add(who_attendance);
 
@@ -624,7 +604,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		});
 		who_Did_Not_attend.setBackground(new Color(51, 204, 204));
 		who_Did_Not_attend.setForeground(new Color(255, 255, 255));
-		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 18));
+		who_Did_Not_attend.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 		who_Did_Not_attend.setBounds(29, 86, 89, 38);
 		chooseDateCheck.add(who_Did_Not_attend);
 
@@ -700,7 +680,7 @@ public class attendance_Main extends JFrame implements MouseListener {
 		});
 		who_absent.setBackground(new Color(255, 0, 0));
 		who_absent.setForeground(new Color(255, 255, 255));
-		who_absent.setFont(new Font("배달의민족 주아", Font.PLAIN, 20));
+		who_absent.setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 		who_absent.setBounds(231, 85, 89, 38);
 		chooseDateCheck.add(who_absent);
 
@@ -775,6 +755,11 @@ public class attendance_Main extends JFrame implements MouseListener {
 
 	}
 
+	public JPanel getContentPane_() {
+		return contentPane_;
+	}
+
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub

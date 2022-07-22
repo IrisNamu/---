@@ -147,10 +147,6 @@ public class StudentDAO {
 
 	// [원생관리]수강생 리스트 보여주는 테이블(이름순)
 	public String[][] getStudent() {
-
-//		rs.last();
-//		int rowCount = rs.getRow();
-//		Connection con = getConnection();
 		try {
 			connDB();
 
@@ -168,9 +164,8 @@ public class StudentDAO {
 						results.getString("grade"), results.getString("className"), results.getString("Birth"),
 						results.getString("when_day"), results.getString("ADDRESS"), results.getString("ENTER_DATE"),
 						results.getString("student_call"), results.getString("guardian1"),
-						results.getString("guardian1_call"), results.getString("guardian1"),
-						results.getString("guardian2"), results.getString("guardian2_call"),
-						results.getString("stu_memo")
+						results.getString("guardian1_call"), results.getString("guardian2"),
+						results.getString("guardian2_call"), results.getString("stu_memo")
 
 				});
 			}
@@ -496,7 +491,7 @@ public class StudentDAO {
 		return 0;
 	}
 
-	// 원생
+	// 원생 수정
 	public boolean Update_stuInfo(StudentVo vo) {
 		try {
 			connDB();
@@ -523,34 +518,7 @@ public class StudentDAO {
 		return false;
 	}
 
-//	// [학생 수정] 사진 불러오는 기능
-//	public ArrayList<StudentVo> (String num) {
-//		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
-//		try {
-//			// 연결
-//			connDB();
-//			// SQL 문장 전송
-//			String sql = "SELECT pic FROM STUDENT WHERE STUNUMBER LIKE '%" + num + "%'";
-//			System.out.println(sql);
-//			rs = stmt.executeQuery(sql);
-//
-//			while (rs.next()) {
-//				StudentVo vo = new StudentVo();
-//				vo.setPic(rs.getString("pic"));
-//				list.add(vo);
-//
-//			}
-//			;
-//
-//		} catch (Exception ex) {
-//			System.out.println(ex.getMessage());
-//			ex.getStackTrace();
-//		} finally {
-//			dbClose();
-//		}
-//		return list;
-//	}
-
+//	
 	// 사진 불러오기
 	public String sum_pay(String num) {
 		ArrayList<PayVo> list = new ArrayList<PayVo>();
@@ -573,20 +541,6 @@ public class StudentDAO {
 			dbClose();
 		}
 		return "실패";
-	}
-
-	// 연결
-	public void connDB() {
-		try {
-			Class.forName(driver);
-			System.out.println("jdbc driver loading success.");
-			con = DriverManager.getConnection(url, user, password);
-			System.out.println("oracle connection success.\n");
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			System.out.println("statement create success.\n");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	// [통계 크게 보기] - 월별 수입
@@ -659,20 +613,19 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT stuNumber, stuname, AGE, when_day, attendance_info, today, attendance_time, "
+			String query = "SELECT stuNumber, stuname, AGE, when_day, attendance_info, attendance_time, "
 					+ "reason_for_absence FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER) "
-					+ "WHERE today LIKE '%" + date + "%'";
+					+ "WHERE today LIKE '%" + date + "%' ORDER BY attendance_info desc ";
 
 			PreparedStatement statement = con.prepareStatement(
-					"s.stuNumber, s.stuName, s.AGE,p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL FROM student s, PAYMENT p");
+					"stuNumber, stuname, AGE, when_day, attendance_info, attendance_time, reason_for_absence FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER)");
 			ResultSet results = statement.executeQuery(query); // 쿼리 실행 결과를 받아야하기때문에 데이터베이스에 접속, 그걸
 
 			ArrayList<String[]> list = new ArrayList<String[]>();
 			while (results.next()) {
 				list.add(new String[] { results.getString("stuNumber"), results.getString("stuName"),
 						results.getString("age"), results.getString("when_day"), results.getString("attendance_info"),
-						results.getString("today"), results.getString("attendance_time"),
-						results.getString("reason_for_absence") });
+						results.getString("attendance_time"), results.getString("reason_for_absence") });
 			}
 			String[][] arr = new String[list.size()][8];
 			return list.toArray(arr);
@@ -680,6 +633,20 @@ public class StudentDAO {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+	}
+
+	// 연결
+	public void connDB() {
+		try {
+			Class.forName(driver);
+			System.out.println("jdbc driver loading success.");
+			con = DriverManager.getConnection(url, user, password);
+			System.out.println("oracle connection success.\n");
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			System.out.println("statement create success.\n");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -46,26 +47,27 @@ public class big_manage extends JFrame {
 	private JTable table_stuList;
 	private JTextField search_field;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					big_manage frame = new big_manage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	/**
+//	 * Launch the application.
+//	 */
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					big_manage frame = new big_manage();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
 	public big_manage() {
+		setTitle("오! 출석 - 학생관리프로그램");
 		dao = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 		setBounds(100, 100, 1300, 820);
@@ -264,7 +266,7 @@ public class big_manage extends JFrame {
 		JLabel lblNewLabel = new JLabel("현재 수강생 총 : 17명");
 		lblNewLabel.setFont(new Font("배달의민족 주아", Font.BOLD, 40));
 		lblNewLabel.setBackground(Color.WHITE);
-		lblNewLabel.setBounds(38, 7, 364, 123);
+		lblNewLabel.setBounds(35, 10, 364, 123);
 		contentPane.add(lblNewLabel);
 
 		JButton add_student_btn = new JButton("+ 수강생 추가");

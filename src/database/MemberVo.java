@@ -10,6 +10,10 @@ public class MemberVo {
 	private String user_name;
 	private String mail;
 
+	public MemberVo(String id) {
+
+		this.id = id;
+	}
 
 //로그인
 	public MemberVo(String id, String password) {
@@ -19,9 +23,9 @@ public class MemberVo {
 	}
 
 //회원가입
-	public MemberVo(String user_name, String id, String password, String mail) {
-		this.user_name = user_name;
+	public MemberVo(String id, String user_name,  String password, String mail) {
 		this.id = id;
+		this.user_name = user_name;
 		this.password = password;
 		this.mail = mail;
 

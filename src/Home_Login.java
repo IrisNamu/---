@@ -1,3 +1,4 @@
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -7,6 +8,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Frame;
 
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -15,6 +17,7 @@ import javax.swing.SwingConstants;
 //import Login.MemberDA;
 import database.MemberDAO;
 import database.MemberVo;
+import database.PayDAO;
 
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -30,45 +33,38 @@ public class Home_Login extends JFrame {
 	private JButton moreBtn;
 	private JPasswordField password_Field;
 	private JTextField tfMsg;
-	private JTextField ID_field;
+	private JTextField iD_field;
 	private JLabel backgroud;
 	private JPanel more_Aboutme;
 	private JLabel more_aboutMe_img;
 
+	public static String getId_check() {
+		return id_check;
+	}
+
+	public static void setId_check(String id_check) {
+		Home_Login.id_check = id_check;
+	}
+
 	private final String correct_id = "green";
 	private final String correct_pwd = "green1234";
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
+	static String id_check;
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Home_Login frame = new Home_Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public Home_Login() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
 
 		dao = new MemberDAO();
 
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
+		setVisible(true);
+
 		setFont(new Font("배달의민족 주아", Font.PLAIN, 12));
-		setTitle("오! 출석 - 학생관리시스템 ");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
 		setResizable(false);
+		setVisible(true);
 		getContentPane().setLayout(null);
 
 		JPanel Main_home = new JPanel();
@@ -93,6 +89,8 @@ public class Home_Login extends JFrame {
 		moreBtn = new JButton("\uC790\uC138\uD788...");
 		moreBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				AboutMe a = new AboutMe();
+				a.setVisible(true);
 				dispose();
 			}
 		});
@@ -103,12 +101,12 @@ public class Home_Login extends JFrame {
 		Main_home.add(moreBtn);
 
 		// 아이디입력
-		ID_field = new JTextField(10); // 10글자 제한
-		ID_field.setForeground(Color.WHITE);
-		ID_field.setBackground(Color.DARK_GRAY);
-		ID_field.setBounds(77, 530, 214, 21);
-		Main_home.add(ID_field);
-		ID_field.setColumns(10);
+		iD_field = new JTextField(10); // 10글자 제한
+		iD_field.setForeground(Color.WHITE);
+		iD_field.setBackground(Color.DARK_GRAY);
+		iD_field.setBounds(77, 530, 214, 21);
+		Main_home.add(iD_field);
+		iD_field.setColumns(10);
 
 		// 패스워드입력
 		password_Field = new JPasswordField(10); // 10글자 제한
@@ -124,19 +122,18 @@ public class Home_Login extends JFrame {
 			// 아이디 입력했는지? 비밀번호 입력했는지? 확인하는 문구
 			public void actionPerformed(ActionEvent e) {
 
-				if (ID_field.getText().equals("")) {
+				if (iD_field.getText().equals("")) {
 					tfMsg.setText("ID를 입력하세요.");
 				} else if (password_Field.equals("")) {
 					tfMsg.setText("Password를 입력하세요.");
 				} else {
-					System.out.println(ID_field.getText());
-					System.out.println(password_Field);
-
-					MemberVo vo = new MemberVo(ID_field.getText(), password_Field.getText());
+					MemberVo vo = new MemberVo(iD_field.getText(), password_Field.getText());
 
 					// 로그인에 성공하면 화면으로 넘어가고 아니라면 다시 입력하라고하기
 					boolean b = dao.list(vo);
 					if (b == true) {
+
+						id_check = iD_field.getText();
 						tfMsg.setText("로그인 되었습니다.");
 						dispose();
 						attendance_Main attendance = new attendance_Main(); // 홈화면 호출
@@ -177,8 +174,8 @@ public class Home_Login extends JFrame {
 		Main_home.add(copyright_SYG_Label);
 
 		backgroud = new JLabel("");
-		backgroud.setIcon(new ImageIcon(Home_Login.class.getResource("/img/login_backImg.png")));
-		backgroud.setBounds(0, 0, 450, 713);
+		backgroud.setIcon(new ImageIcon(Home_Login.class.getResource("/img/Home_Login_back.png")));
+		backgroud.setBounds(-12, 0, 462, 713);
 		Main_home.add(backgroud);
 
 		more_Aboutme = new JPanel();

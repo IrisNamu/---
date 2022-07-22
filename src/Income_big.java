@@ -1,9 +1,12 @@
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -73,28 +76,16 @@ public class Income_big extends JFrame {
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Income_big frame = new Income_big();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private String current_year;
+	private Calendar cal;
+	private String format;
+	private SimpleDateFormat sdf;
+	private String date_when;
 
-	/**
-	 * Create the frame.
-	 */
 	public Income_big() {
 		StudentDAO daoS = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
+		setTitle("오! 출석 - 학생관리프로그램");
 		setBounds(100, 100, 1300, 820);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -108,7 +99,7 @@ public class Income_big extends JFrame {
 		panel2.setBackground(Color.WHITE);
 		panel2.setForeground(Color.BLACK);
 		panel2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel2.setBounds(613, 85, 686, 507);
+		panel2.setBounds(613, 85, 686, 575);
 		contentPane.add(panel2);
 		panel2.setLayout(null);
 
@@ -116,110 +107,118 @@ public class Income_big extends JFrame {
 		panel1.setBackground(Color.WHITE);
 		panel1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel1.setForeground(new Color(0, 0, 0));
-		panel1.setBounds(0, 85, 611, 507);
+		panel1.setBounds(0, 85, 611, 575);
 		contentPane.add(panel1);
 		panel1.setLayout(null);
 
 		JScrollPane scrollPane1 = new JScrollPane();
-		scrollPane1.setBounds(12, 68, 587, 418);
+		scrollPane1.setBounds(12, 68, 587, 485);
 		panel1.add(scrollPane1);
 
 		table_all = new JTable();
 		scrollPane1.setViewportView(table_all);
-		
-				search = new JTextField();
-				search.setBounds(214, 21, 270, 37);
-				panel1.add(search);
-				search.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						if (search.getText().equals("이름을 입력해주세요.")) {
-							search.setText("");
-							search.setForeground(new Color(153, 153, 153));
-						}
-					}
 
-					@Override
-					public void focusLost(FocusEvent e) {
-						if (search.getText().equals("")) {
-							search.setText("이름을 입력해주세요.");
-							search.setForeground(new Color(153, 153, 153));
-						}
-					}
+		search = new JTextField();
+		search.setBounds(214, 21, 270, 37);
+		panel1.add(search);
+		search.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (search.getText().equals("이름을 입력해주세요.")) {
+					search.setText("");
+					search.setForeground(new Color(153, 153, 153));
+				}
+			}
 
-				});
-				search.setText("이름을 입력해주세요.");
-				search.setForeground(SystemColor.controlDkShadow);
-				search.setFont(new Font("굴림", Font.PLAIN, 18));
-				search.setColumns(10);
-				search.setBackground(new Color(255, 250, 250));
-				
-						search_btn = new JButton("검색");
-						search_btn.setBounds(496, 21, 83, 37);
-						panel1.add(search_btn);
-						search_btn.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								// DB연동 수강생 리스트 불러오기
-								String[] header = new String[] { "출석번호", "이름", "나이", "결제일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
-								String[][] data = daoS.big_income(search.getText());
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (search.getText().equals("")) {
+					search.setText("이름을 입력해주세요.");
+					search.setForeground(new Color(153, 153, 153));
+				}
+			}
 
-								table_all.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
-								table_all.setModel(new DefaultTableModel(data, header));
-								scrollPane1.setViewportView(table_all);
-								table_all.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		});
+		search.setText("이름을 입력해주세요.");
+		search.setForeground(SystemColor.controlDkShadow);
+		search.setFont(new Font("굴림", Font.PLAIN, 18));
+		search.setColumns(10);
+		search.setBackground(new Color(255, 250, 250));
 
-								table_all.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
-								table_all.setRowHeight(35);
-								table_all.getColumn("결제일").setPreferredWidth(180);
-								table_all.getColumn("수납액").setPreferredWidth(150);
-								table_all.getColumn("주소").setPreferredWidth(250);
-								table_all.getColumn("보호자1").setPreferredWidth(130);
-								table_all.getColumn("보호자1 전화번호").setPreferredWidth(150);
-								table_all.getTableHeader().setReorderingAllowed(false);
-								table_all.setShowVerticalLines(false); // 수평 보더라인 지우기
-								table_all.getTableHeader().setReorderingAllowed(false);
-								DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
-								dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+		search_btn = new JButton("검색");
+		search_btn.setBounds(496, 21, 83, 37);
+		panel1.add(search_btn);
+		search_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// DB연동 수강생 리스트 불러오기
+				String[] header = new String[] { "출석번호", "이름", "나이", "결제일", "수납액", "주소", "보호자1", "보호자1 전화번호" };
+				String[][] data = daoS.big_income(search.getText());
 
-								TableColumnModel tcm = table_all.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+				table_all.setFont(new Font("배달의민족 주아", Font.PLAIN, 19));
+				table_all.setModel(new DefaultTableModel(data, header));
+				scrollPane1.setViewportView(table_all);
+				table_all.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-								// 전체 열에 지정
-								for (int i = 0; i < tcm.getColumnCount(); i++) {
-									tcm.getColumn(i).setCellRenderer(dtcr);
-								}
-							}
-						});
-						search_btn.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
-						search_btn.setBackground(new Color(176, 196, 222));
-						
-						lblNewLabel_2 = new JLabel("수강생 납부 조회");
-						lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-						lblNewLabel_2.setFont(new Font("배달의민족 주아", Font.PLAIN, 26));
-						lblNewLabel_2.setBounds(12, 10, 201, 58);
-						panel1.add(lblNewLabel_2);
+				table_all.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+				table_all.setRowHeight(35);
+				table_all.getColumn("결제일").setPreferredWidth(180);
+				table_all.getColumn("수납액").setPreferredWidth(150);
+				table_all.getColumn("주소").setPreferredWidth(250);
+				table_all.getColumn("보호자1").setPreferredWidth(130);
+				table_all.getColumn("보호자1 전화번호").setPreferredWidth(150);
+				table_all.getTableHeader().setReorderingAllowed(false);
+				table_all.setShowVerticalLines(false); // 수평 보더라인 지우기
+				table_all.getTableHeader().setReorderingAllowed(false);
+				DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
+				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+
+				TableColumnModel tcm = table_all.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
+
+				// 전체 열에 지정
+				for (int i = 0; i < tcm.getColumnCount(); i++) {
+					tcm.getColumn(i).setCellRenderer(dtcr);
+				}
+			}
+		});
+		search_btn.setFont(new Font("배달의민족 주아", Font.PLAIN, 16));
+		search_btn.setBackground(new Color(176, 196, 222));
+
+		lblNewLabel_2 = new JLabel("수강생 납부 조회");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setFont(new Font("배달의민족 주아", Font.PLAIN, 26));
+		lblNewLabel_2.setBounds(12, 10, 201, 58);
+		panel1.add(lblNewLabel_2);
+
+		// 현재 년도 받아주기
+		cal = Calendar.getInstance();
+		format = "yyyy";
+		sdf = new SimpleDateFormat(format);
+		current_year = sdf.format(cal.getTime());
 
 		// 월별 수입 통계
 		String[] header = new String[] { "년/월", "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월",
 				"12월" };
 
 		DecimalFormat decFormat = new DecimalFormat("###,###,###");
-		January22 = new PayDAO().sum_pay("2022-1");
-		February22 = new PayDAO().sum_pay("2022-2");
-		March22 = new PayDAO().sum_pay("2022-3");
-		April22 = new PayDAO().sum_pay("2022-4");
-		May22 = new PayDAO().sum_pay("2022-5");
-		June22 = new PayDAO().sum_pay("2022-6");
-		July22 = new PayDAO().sum_pay("2022-7");
-		August22 = new PayDAO().sum_pay("2022-8");
-		September22 = new PayDAO().sum_pay("2022-9");
+		January22 = new PayDAO().sum_pay("2022-1-");
+		February22 = new PayDAO().sum_pay("2022-2-");
+		March22 = new PayDAO().sum_pay("2022-3-");
+		April22 = new PayDAO().sum_pay("2022-4-");
+		May22 = new PayDAO().sum_pay("2022-5-");
+		June22 = new PayDAO().sum_pay("2022-6-");
+		July22 = new PayDAO().sum_pay("2022-7-");
+		August22 = new PayDAO().sum_pay("2022-8-");
+		September22 = new PayDAO().sum_pay("2022-9-");
 		October22 = new PayDAO().sum_pay("2022-10");
 		November22 = new PayDAO().sum_pay("2022-11");
 		December22 = new PayDAO().sum_pay("2022-12");
 
 		String[][] income_data = new String[3][13];
-
+		for(int i=0; i<income_data.length; i++)
+			
+		
 		// 2022년
-		income_data[0][0] = "2022년";
+		income_data[0][0] = current_year;
 		income_data[0][1] = decFormat.format(January22) + "원";
 		income_data[0][2] = decFormat.format(February22) + "원";
 		income_data[0][3] = decFormat.format(March22) + "원";
@@ -244,9 +243,9 @@ public class Income_big extends JFrame {
 		final JFreeChart chart = createChart(dataset);
 
 		ChartPanel chartPanel = new ChartPanel((chart));
-		chartPanel.setBounds(12, 65, 650, 420);
+		chartPanel.setBounds(12, 65, 650, 489);
 		panel2.add(chartPanel);
-		
+
 		lblNewLabel_1 = new JLabel("월별 총 수강액 비교");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("배달의민족 주아", Font.PLAIN, 33));
@@ -255,8 +254,9 @@ public class Income_big extends JFrame {
 
 		//
 		scrollPane2 = new JScrollPane();
-		scrollPane2.setBounds(10, 611, 1274, 160);
+		scrollPane2.setBounds(10, 670, 1274, 101);
 		contentPane.add(scrollPane2);
+
 
 		table_Income_big = new JTable();
 		scrollPane2.setViewportView(table_Income_big);
@@ -268,12 +268,6 @@ public class Income_big extends JFrame {
 		table_Income_big.getTableHeader().setFont(new Font("배달의민족 주아", Font.PLAIN, 17));
 
 		table_Income_big.setRowHeight(40);
-
-		JLabel lblNewLabel = new JLabel("수강생 납부 조회 및 통계");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("배달의민족 주아", Font.PLAIN, 46));
-		lblNewLabel.setBounds(0, 0, 1284, 75);
-		contentPane.add(lblNewLabel);
 
 		JButton backBtn = new JButton("<");
 		backBtn.addActionListener(new ActionListener() {
@@ -287,8 +281,17 @@ public class Income_big extends JFrame {
 		backBtn.setFont(new Font("배달의민족 주아", Font.BOLD, 34));
 		backBtn.setBorderPainted(false);
 		backBtn.setBackground(Color.GRAY);
-		backBtn.setBounds(1217, 0, 67, 47);
+		backBtn.setBounds(1210, 0, 74, 75);
 		contentPane.add(backBtn);
+		
+				JLabel lblNewLabel = new JLabel("수강생 납부 조회 및 통계");
+				lblNewLabel.setOpaque(true);
+				lblNewLabel.setForeground(Color.WHITE);
+				lblNewLabel.setBackground(SystemColor.activeCaption);
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel.setFont(new Font("배달의민족 주아", Font.PLAIN, 46));
+				lblNewLabel.setBounds(0, 0, 1284, 75);
+				contentPane.add(lblNewLabel);
 		table_Income_big.getColumn("1월").setPreferredWidth(160);
 		table_Income_big.getColumn("2월").setPreferredWidth(160);
 		table_Income_big.getColumn("3월").setPreferredWidth(160);
@@ -301,8 +304,6 @@ public class Income_big extends JFrame {
 		table_Income_big.getColumn("10월").setPreferredWidth(160);
 		table_Income_big.getColumn("11월").setPreferredWidth(160);
 		table_Income_big.getColumn("12월").setPreferredWidth(160);
-
-		TableColumnModel tcm = table_Income_big.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
 	}
 
 	/**
@@ -323,9 +324,7 @@ public class Income_big extends JFrame {
 	private CategoryDataset createDataset() {
 
 		// row keys...
-		final String series1 = "2020";
-		final String series2 = "2021";
-		final String series3 = "2022";
+		final String series1 = current_year;
 
 		// column keys...
 		final String category1 = "1";
@@ -355,32 +354,6 @@ public class Income_big extends JFrame {
 		dataset.addValue(October22, series1, category10);
 		dataset.addValue(November22, series1, category11);
 		dataset.addValue(December22, series1, category12);
-
-		dataset.addValue(January22, series2, category1);
-		dataset.addValue(February22, series2, category2);
-		dataset.addValue(March22, series2, category3);
-		dataset.addValue(April22, series2, category4);
-		dataset.addValue(May22, series2, category5);
-		dataset.addValue(June22, series2, category6);
-		dataset.addValue(July22, series2, category7);
-		dataset.addValue(August22, series2, category8);
-		dataset.addValue(September22, series2, category9);
-		dataset.addValue(October22, series2, category10);
-		dataset.addValue(November22, series2, category11);
-		dataset.addValue(December22, series2, category12);
-
-		dataset.addValue(January22, series3, category1);
-		dataset.addValue(February22, series3, category2);
-		dataset.addValue(March22, series3, category3);
-		dataset.addValue(April22, series3, category4);
-		dataset.addValue(May22, series3, category5);
-		dataset.addValue(June22, series3, category6);
-		dataset.addValue(July22, series3, category7);
-		dataset.addValue(August22, series3, category8);
-		dataset.addValue(September22, series3, category9);
-		dataset.addValue(October22, series3, category10);
-		dataset.addValue(November22, series3, category11);
-		dataset.addValue(December22, series3, category12);
 
 		return dataset;
 
@@ -413,12 +386,8 @@ public class Income_big extends JFrame {
 		renderer.setDrawBarOutline(false);
 
 		// set up gradient paints for series...
-		final GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.darkGray, 0.0f, 0.0f, Color.lightGray);
-		final GradientPaint gp1 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, Color.lightGray);
-		final GradientPaint gp2 = new GradientPaint(0.0f, 0.0f, Color.red, 0.0f, 0.0f, Color.lightGray);
+		final GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, new Color(230, 67, 34), 0.0f, 0.0f, Color.lightGray);
 		renderer.setSeriesPaint(0, gp0);
-		renderer.setSeriesPaint(1, gp1);
-		renderer.setSeriesPaint(2, gp2);
 
 		final CategoryAxis domainAxis = plot.getDomainAxis();
 		domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));

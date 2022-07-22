@@ -1,3 +1,4 @@
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -42,32 +43,11 @@ public class management_Student extends JFrame {
 	private JTable table_stuList;
 	private StudentDAO dao;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
 
-		StudentDAO dao = new StudentDAO(); // 로드와 연결
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					management_Student frame = new management_Student();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public management_Student() {
 		dao = new StudentDAO();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home_Login.class.getResource("/img/app_icon.png")));
-		setTitle("오!출석");
+		setTitle("오! 출석 - 학생관리프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 752);
 		setLocationRelativeTo(null);
@@ -154,7 +134,7 @@ public class management_Student extends JFrame {
 		String[][] all = new StudentDAO().getStudent();
 		System.out.println(all.length);
 
-		String[] header = new String[] { "출석번호", "이름", "성별", "나이", "학교명", "학년", "반", "생년월일", "등원요일", "주소", "등록일",
+		String[] header = new String[] { "출석번호", "이름", "성별", "나이", "학교", "학년", "반", "생년월일", "등원요일", "주소", "등록일",
 				"학생 전화번호", "보호자1 성함", "보호자1 전화번호", "보호자2 성함", "보호자2 전화번호", "특이사항" };
 		String[][] data = dao.getStudent();
 
@@ -260,10 +240,11 @@ public class management_Student extends JFrame {
 		table_stuList.getColumn("출석번호").setPreferredWidth(60);
 		table_stuList.getColumn("성별").setPreferredWidth(50);
 		table_stuList.getColumn("나이").setPreferredWidth(50);
+		table_stuList.getColumn("학교").setPreferredWidth(130);
 		table_stuList.getColumn("학년").setPreferredWidth(60);
 		table_stuList.getColumn("반").setPreferredWidth(90);
 		table_stuList.getColumn("생년월일").setPreferredWidth(100);
-		table_stuList.getColumn("등원요일").setPreferredWidth(100);
+		table_stuList.getColumn("등원요일").setPreferredWidth(130);
 		table_stuList.getColumn("주소").setPreferredWidth(180);
 		table_stuList.getColumn("등록일").setPreferredWidth(100);
 		table_stuList.getColumn("학생 전화번호").setPreferredWidth(150);
@@ -315,7 +296,7 @@ public class management_Student extends JFrame {
 				stu_call.setText((String) table_stuList.getModel().getValueAt(row, 11));
 				G1.setText((String) table_stuList.getModel().getValueAt(row, 12));
 				G1_call.setText((String) table_stuList.getModel().getValueAt(row, 13));
-				G2_call.setText((String) table_stuList.getModel().getValueAt(row, 14));
+				G2.setText((String) table_stuList.getModel().getValueAt(row, 14));
 				G2_call.setText((String) table_stuList.getModel().getValueAt(row, 15));
 				memo.setText((String) table_stuList.getModel().getValueAt(row, 16));
 				// System.out.println(num.getText());
