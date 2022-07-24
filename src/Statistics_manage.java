@@ -280,7 +280,7 @@ public class Statistics_manage extends JFrame {
 		att_menu.setBackground(Color.WHITE);
 		Income_menu = new JPanel(); // JPanel 생성
 		Income_menu.setBackground(Color.WHITE);
-		tabbedPane.add(Income_menu, "월 수입");
+		tabbedPane.add(Income_menu, "월별 수입");
 		Income_menu.setLayout(null);
 
 		scrollPane_Income = new JScrollPane();
