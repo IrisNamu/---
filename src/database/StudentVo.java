@@ -6,6 +6,8 @@ public class StudentVo {
 
 	// 학생 정보 추가
 	// 학생이름만 필수이고, 나머지는 비워져도 괜찮게, null로 나오게하기
+	private String userID; // 학생번호
+
 	private String stuNumber; // 학생번호
 	private String stuName; // 이름
 	private String sex; // 성별
@@ -34,8 +36,9 @@ public class StudentVo {
 	private String Reason_for_absence; // 결석사유
 
 	// 출석 정보 관리
-	public StudentVo(String pic, String stuNumber, String stuName, String age, String school, String grade,
+	public StudentVo(String userID, String pic, String stuNumber, String stuName, String age, String school, String grade,
 			String className, String when_day, String attendance_info) {
+		this.setUserID(userID);
 		this.pic = pic;
 		this.stuNumber = stuNumber;
 		this.stuName = stuName;
@@ -47,8 +50,9 @@ public class StudentVo {
 	}
 
 	// 버튼에 나타날 정보
-	public StudentVo(String pic, String stuNumber, String stuName, String age, String school, String grade,
+	public StudentVo(String userID, String pic, String stuNumber, String stuName, String age, String school, String grade,
 			String className, String when_day) {
+		this.setUserID(userID);
 		this.pic = pic;
 		this.stuNumber = stuNumber;
 		this.stuName = stuName;
@@ -60,11 +64,12 @@ public class StudentVo {
 	}
 
 	// 학생추가
-	public StudentVo(String stuNumber, String stuName, String sex, String age, String school, String grade,
+	public StudentVo(String userID,String stuNumber, String stuName, String sex, String age, String school, String grade,
 			String className, String birth, String days, String address, String enter_date, String student_call,
 			String guardian1, String guardian1_call, String guardian2, String guardian2_call, String stu_memo,
 			String pic) {
 
+		this.setUserID(userID);
 		this.stuNumber = stuNumber;
 		this.stuName = stuName;
 		this.sex = sex;
@@ -87,7 +92,8 @@ public class StudentVo {
 	}
 
 	// 학생이 출석할때 출석관련 정보
-	public StudentVo(String stuNumber, String today, String attendance_info,  String attendance_time) {
+	public StudentVo(String userID, String stuNumber, String today, String attendance_info,  String attendance_time) {
+		this.setUserID(userID);
 		this.stuNumber = stuNumber;
 		this.today = today;
 		this.attendance_info = attendance_info;
@@ -95,8 +101,9 @@ public class StudentVo {
 	}
 	
 	// 선생님이 출석할때 출석관련 정보
-	public StudentVo(String stuNumber, String today, String attendance_info,  String attendance_time,
+	public StudentVo(String userID, String stuNumber, String today, String attendance_info,  String attendance_time,
 			String Reason_for_absence) {
+		this.setUserID(userID);
 		this.stuNumber = stuNumber;
 		this.today = today;
 		this.attendance_info = attendance_info;
@@ -282,6 +289,14 @@ public class StudentVo {
 
 	public void setWhen_day(String when_day) {
 		this.when_day = when_day;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String user_id) {
+		this.userID = user_id;
 	}
 
 }

@@ -3,6 +3,9 @@ package database;
 public class PayVo {
 
 	// 결제 수납관련 (달마다 보여줄 것임)
+
+	private String userID;
+
 	private String stuNumber;// 학생번호
 	private String stuName;// 학생이름
 
@@ -14,21 +17,22 @@ public class PayVo {
 	private String address;//
 	private String GUARDIAN1;//
 	private String GUARDIAN1_CALL;
-	
+
 	public PayVo() {
-		
+
 	}
 
 	// 결제관련 정보
-	public PayVo(String stuNumber, String payment_date, int payment_amount) {
-
+	public PayVo(String userID, String stuNumber, String payment_date, int payment_amount) {
+		this.setUserID(userID);
 		this.stuNumber = stuNumber;
 		this.payment_amount = payment_amount;
 		this.payment_date = payment_date;
 	}
 
-	public PayVo(String stuNumber, String stuname, String AGE, String payment_date, int payment_amount, String address,
-			String GUARDIAN1, String GUARDIAN1_CALL) {
+	public PayVo(String userID, String stuNumber, String stuname, String AGE, String payment_date, int payment_amount,
+			String address, String GUARDIAN1, String GUARDIAN1_CALL) {
+		this.setUserID(userID);
 		this.stuNumber = stuNumber;
 		this.stuname = stuname;
 		this.AGE = AGE;
@@ -90,5 +94,13 @@ public class PayVo {
 
 	public String getGUARDIAN1_CALL() {
 		return GUARDIAN1_CALL;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 }

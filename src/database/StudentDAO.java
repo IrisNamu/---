@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 
+import main.HomeLogin;
+
 public class StudentDAO {
 	String driver = "oracle.jdbc.driver.OracleDriver";
 	String url = "jdbc:oracle:thin:@localhost:1521:xe";
@@ -23,13 +25,14 @@ public class StudentDAO {
 	private Statement st;
 
 	// [출석번호로 학생이름 찾기]
-	public ArrayList<StudentVo> number_name(String num) {
+	public ArrayList<StudentVo> number_name(String userID, String num ) {
 		ArrayList<StudentVo> list = new ArrayList<StudentVo>();
 		try {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT stuname FROM STUDENT WHERE STUNUMBER LIKE '%" + num + "%'";
+			String sql = "SELECT stuname FROM STUDENT WHERE userID= '"
+					+ HomeLogin.getUserID() +"' and STUNUMBER = '" + num + "'";
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 
@@ -42,8 +45,9 @@ public class StudentDAO {
 			;
 
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
 			ex.getStackTrace();
+			System.out.println("number_name 실패");
+			
 		} finally {
 			dbClose();
 		}
@@ -54,14 +58,13 @@ public class StudentDAO {
 	public boolean add_stu_info(StudentVo s) {
 		try {
 			connDB();
-
-			String query = "INSERT INTO STUDENT(stuNumber, stuName, sex, age, school, grade, className, birth, when_day, address, enter_date, student_call, guardian1, guardian1_call, guardian2, guardian2_call, stu_memo, pic) "
-					+ "values('" + s.getStuNumber() + "','" + s.getStuName() + "','" + s.getSex() + "','" + s.getAge()
-					+ "','" + s.getSchool() + "','" + s.getGrade() + "','" + s.getClassName() + "','" + s.getBirth()
-					+ "','" + s.getWhen_day() + "','" + s.getAddress() + "','" + s.getEnter_date() + "','"
-					+ s.getStudent_call() + "','" + s.getGuardian1() + "','" + s.getGuardian1_call() + "','"
-					+ s.getGuardian2() + "','" + s.getGuardian2_call() + "','" + s.getStu_memo() + "','" + s.getPic()
-					+ "')";
+			String query = "INSERT INTO STUDENT(userID, stuNumber, stuName, sex, age, school, grade, className, birth, when_day, address, enter_date, student_call, guardian1, guardian1_call, guardian2, guardian2_call, stu_memo, pic) "
+					+ "values('" + s.getUserID() + "','" + s.getStuNumber() + "','" + s.getStuName() + "','"
+					+ s.getSex() + "','" + s.getAge() + "','" + s.getSchool() + "','" + s.getGrade() + "','"
+					+ s.getClassName() + "','" + s.getBirth() + "','" + s.getWhen_day() + "','" + s.getAddress() + "','"
+					+ s.getEnter_date() + "','" + s.getStudent_call() + "','" + s.getGuardian1() + "','"
+					+ s.getGuardian1_call() + "','" + s.getGuardian2() + "','" + s.getGuardian2_call() + "','"
+					+ s.getStu_memo() + "','" + s.getPic() + "')";
 			rs = stmt.executeQuery(query);
 
 			if (rs.getRow() == 0) {
@@ -71,7 +74,9 @@ public class StudentDAO {
 			}
 
 		} catch (Exception e) {
+			System.out.println("add_stu_info 실패");
 			e.printStackTrace();
+			
 		}
 
 		return false;
@@ -85,7 +90,8 @@ public class StudentDAO {
 			// SELECT * FROM LOGIN
 			// WHERE id='a';
 
-			String query = "SELECT * FROM STUDENT WHERE stuNumber='" + stuNumber + "'";
+			String query = "SELECT * FROM STUDENT S, LOGIN WHERE stuNumber='" + stuNumber + "' and s.userID='"
+					+ HomeLogin.getUserID() + "'";
 			rs = stmt.executeQuery(query);
 			rs.last();
 			// 검색안되면 0이된다. 번호가 1부터 시작 ....
@@ -97,6 +103,7 @@ public class StudentDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("StuNumCheck 실패");
 		}
 
 		return false;
@@ -106,9 +113,9 @@ public class StudentDAO {
 	public boolean Insert_attendance_Info(StudentVo s) {
 		try {
 			connDB();
-			String query = "INSERT INTO attendance(stuNumber, today, attendance_info,  attendance_time) " + "values('"
-					+ s.getStuNumber() + "','" + s.getToday() + "','" + s.getAttendance_info() + "','"
-					+ s.getAttendance_time() + "')";
+			String query = "INSERT INTO attendance(userID, stuNumber, today, attendance_info,  attendance_time) "
+					+ "values('" + s.getUserID() + "','" + s.getStuNumber() + "','" + s.getToday() + "','"
+					+ s.getAttendance_info() + "','" + s.getAttendance_time() + "')";
 			rs = stmt.executeQuery(query);
 
 			if (rs.getRow() == 0) {
@@ -119,6 +126,7 @@ public class StudentDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("Insert_attendance_Info 실패");
 		}
 
 		return false;
@@ -128,9 +136,10 @@ public class StudentDAO {
 	public boolean att_btn(StudentVo s) {
 		try {
 			connDB();
-			String query = "INSERT INTO attendance(stuNumber, today, attendance_info, attendance_time, Reason_for_absence) "
-					+ "values('" + s.getStuNumber() + "','" + s.getToday() + "','" + s.getAttendance_info() + "','"
-					+ s.getAttendance_time() + "','" + s.getReason_for_absence() + "')";
+			String query = "INSERT INTO attendance(userID, stuNumber, today, attendance_info, attendance_time, Reason_for_absence) "
+					+ "values('" + s.getUserID() + "','" + s.getStuNumber() + "','" + s.getToday() + "','"
+					+ s.getAttendance_info() + "','" + s.getAttendance_time() + "','" + s.getReason_for_absence()
+					+ "')";
 			rs = stmt.executeQuery(query);
 
 			if (rs.getRow() == 0) {
@@ -140,6 +149,7 @@ public class StudentDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("att_btn 실패");
 		}
 
 		return false;
@@ -150,7 +160,7 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT * FROM STUDENT ORDER BY stuname";
+			String query = "SELECT * FROM STUDENT WHERE userID = '" + HomeLogin.getUserID() + "' ORDER BY stuname ";
 
 			PreparedStatement statement = con.prepareStatement(
 					"stuNumber, stuName, sex, age, school, grade, className, Birth, when_day, ADDRESS, ENTER_DATE, student_call, "
@@ -173,7 +183,7 @@ public class StudentDAO {
 			return list.toArray(arr);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("getStudent 실패");
 			return null;
 		}
 	}
@@ -184,7 +194,7 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT * FROM STUDENT ORDER BY stuname";
+			String query = "SELECT * FROM STUDENT WHERE userID = '" + HomeLogin.getUserID() + "' ORDER BY stuname ";
 
 			PreparedStatement statement = con.prepareStatement(
 					"s.stuNumber, s.stuName, a.attendance_info, a.attendance_time FROM student s, attendance a");
@@ -213,8 +223,8 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT STUNUMBER, stuname, age, WHEN_day" + "	FROM STUDENT" + "	WHERE WHEN_DAY LIKE '%"
-					+ day + "%' ORDER BY stuname";
+			String query = "SELECT STUNUMBER, stuname, age, WHEN_day" + " FROM STUDENT" + "	WHERE WHEN_DAY LIKE '%"
+					+ day + "%' and userID = '" + HomeLogin.getUserID() + "' ORDER BY stuname";
 
 			PreparedStatement statement = con.prepareStatement(" STUNUMBER, stuname, age, WHEN_day");
 			ResultSet results = statement.executeQuery(query);
@@ -229,6 +239,7 @@ public class StudentDAO {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			System.out.println("attendance_table_all 실패");
 			return null;
 		}
 	}
@@ -242,7 +253,8 @@ public class StudentDAO {
 			String query = "SELECT s.stunumber, s.stuname, s.age, a.attendance_info, a.attendance_time"
 					+ " FROM STUDENT s" + " LEFT OUTER" + " JOIN ATTENDANCE a" + " ON s.STUNUMBER =a.STUNUMBER"
 					+ " WHERE WHEN_DAY LIKE '%" + day + "%' AND TODAY LIKE '%" + date
-					+ "%' AND attendance_info LIKE '%출석%' ORDER BY stuname";
+					+ "%' AND attendance_info LIKE '%출석%' and s.userID = '" + HomeLogin.getUserID()
+					+ "' ORDER BY stuname";
 
 			PreparedStatement statement = con
 					.prepareStatement("stuNumber, stuName, age, attendance_info, attendance_time");
@@ -260,6 +272,7 @@ public class StudentDAO {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			System.out.println("attendance_student 실패");
 			return null;
 		}
 	}
@@ -271,9 +284,9 @@ public class StudentDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT stunumber, stuname, age, when_day" + " FROM STUDENT" + " WHERE STUNUMBER LIKE '%"
-					+ word + "%' OR STUNAME LIKE '%" + word + "%' OR age LIKE '%" + word + "%' OR when_day LIKE '%"
-					+ word + "%' ORDER BY STUNAME";
+			String sql = "SELECT stunumber, stuname, age, when_day" + " FROM STUDENT" + " WHERE  userID = '"
+					+ HomeLogin.getUserID() + "' STUNUMBER LIKE '%" + word + "%' OR STUNAME LIKE '%" + word
+					+ "%' OR age LIKE '%" + word + "%' OR when_day LIKE '%" + word + "%' ORDER BY STUNAME";
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
@@ -290,12 +303,16 @@ public class StudentDAO {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.getStackTrace();
+			System.out.println("search 실패");
+			
 		} finally {
 			dbClose();
 		}
 		return list;
 	}
 
+
+//////////////////여기부터 수정이요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// [출석화면][미등원버튼] 미등원한 친구들 테이블(이름순)
 	public String[][] will_come(String day, String date) {
 
@@ -303,11 +320,11 @@ public class StudentDAO {
 			connDB();
 
 			String query = " SELECT stuNumber, stuname, AGE,when_day"
-					+ " FROM STUDENT S LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER) WHERE WHEN_DAY LIKE '%" + day + "%'"
+					+ " FROM STUDENT S LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER) WHERE s.userID = '"+HomeLogin.getUserID()+"' and WHEN_DAY LIKE '%" + day + "%'"
 					+ " MINUS" + " SELECT stuNumber, stuname, AGE, when_day" + " FROM STUDENT s"
-					+ " LEFT OUTER JOIN  ATTENDANCE a" + " using(stuNumber)" + " WHERE" + " attendance_info LIKE '%출석%'"
+					+ " LEFT OUTER JOIN  ATTENDANCE a" + " using(stuNumber)" + " WHERE s.userID = '"+HomeLogin.getUserID()+"' and attendance_info LIKE '%출석%'"
 					+ " and today LIKE '%" + date + "%'" + " minus" + " SELECT stuNumber, stuname, AGE,when_day"
-					+ " FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(stuNumber)" + " WHERE attendance_info LIKE '%결석%'"
+					+ " FROM STUDENT S LEFT OUTER JOIN ATTENDANCE USING(stuNumber) WHERE s.userID = '"+HomeLogin.getUserID()+"' and attendance_info LIKE '%결석%'"
 					+ " and today LIKE '%" + date + "%'";
 
 			PreparedStatement statement = con.prepareStatement("stuNumber, stuName, age, when_day");
@@ -323,7 +340,7 @@ public class StudentDAO {
 			return list.toArray(arr);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage() +"will_come ");
 			return null;
 		}
 	}
@@ -335,7 +352,7 @@ public class StudentDAO {
 			connDB();
 
 			String query = "SELECT stunumber, stuname, age, today, Reason_for_absence"
-					+ " FROM STUDENT s LEFT OUTER JOIN ATTENDANCE" + " USING (stunumber)" + " WHERE WHEN_DAY LIKE '%"
+					+ " FROM STUDENT s LEFT OUTER JOIN ATTENDANCE" + " USING (stunumber)" + " WHERE s.userID = '"+HomeLogin.getUserID()+"' and WHEN_DAY LIKE '%"
 					+ day + "%'" + " AND TODAY LIKE '%" + date + "%'"
 					+ " and attendance_info LIKE '%결석%' order by stuname";
 
@@ -366,7 +383,7 @@ public class StudentDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT * FROM STUDENT WHERE stuNumber LIKE '%" + word + "%'" + " or stuName LIKE '%" + word
+			String sql = "SELECT * FROM STUDENT WHERE userID = '"+HomeLogin.getUserID()+"' and stuNumber LIKE '%" + word + "%'" + " or stuName LIKE '%" + word
 					+ "%'" + " or sex LIKE '%" + word + "%'" + " or age LIKE '%" + word + "%'" + " or school LIKE '%"
 					+ word + "%'" + " or grade LIKE '%" + word + "%'" + " or className LIKE '%" + word + "%'"
 					+ " or birth LIKE '%" + word + "%'" + " or when_day LIKE '%" + word + "%'" + " or address LIKE '%"
@@ -419,7 +436,7 @@ public class StudentDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT * FROM STUDENT WHERE STUNUMBER LIKE '%" + word + "%'" + "	OR STUNAME LIKE '%" + word
+			String sql = "SELECT * FROM STUDENT WHERE userID = '"+HomeLogin.getUserID()+"' and STUNUMBER LIKE '%" + word + "%'" + "	OR STUNAME LIKE '%" + word
 					+ "%'" + "	OR age LIKE '%" + word + "%'" + " ORDER BY STUNAME";
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
@@ -449,7 +466,7 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "delete student where stunumber ='" + number + "'";
+			String query = "delete student where userID = '"+HomeLogin.getUserID()+"' and stunumber ='" + number + "'";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
 			System.out.println("rs.getRow() : " + rs.getRow()); // getRow 열과번호. a가 몇번재? 4번으로 출력
@@ -474,7 +491,7 @@ public class StudentDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT count(*)" + "FROM STUDENT" + " WHERE ENTER_DATE like '%" + month + "%'";
+			String sql = "SELECT count(*)" + "FROM STUDENT" + " WHERE userID = '"+HomeLogin.getUserID()+"' and ENTER_DATE like '%" + month + "%'";
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 			rs.next();
@@ -502,7 +519,7 @@ public class StudentDAO {
 					+ vo.getStudent_call() + "', guardian1='" + vo.getGuardian1() + "', guardian1_call='"
 					+ vo.getGuardian1_call() + "', guardian2='" + vo.getGuardian2() + "', guardian2_call='"
 					+ vo.getGuardian2_call() + "', stu_memo='" + vo.getStu_memo() + "', pic='" + vo.getPic()
-					+ "' WHERE stunumber =" + vo.getStuNumber();
+					+ "' WHERE userID = '"+HomeLogin.getUserID()+"' and stunumber =" + vo.getStuNumber();
 			rs = stmt.executeQuery(query);
 			// ps.executeUpdate();
 			if (rs.getRow() == 0) {
@@ -526,7 +543,7 @@ public class StudentDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT pic FROM STUDENT WHERE STUNUMBER LIKE '%" + num + "%'";
+			String sql = "SELECT pic FROM STUDENT WHERE userID = '"+HomeLogin.getUserID()+"' and STUNUMBER LIKE '%" + num + "%'";
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 			rs.next();
@@ -550,7 +567,7 @@ public class StudentDAO {
 			connDB();
 
 			String query = "SELECT stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 ,"
-					+ "GUARDIAN1_CALL FROM STUDENT S LEFT OUTER JOIN PAYMENT P USING(STUNUMBER) WHERE STUNAME LIKE '%"
+					+ "GUARDIAN1_CALL FROM STUDENT S LEFT OUTER JOIN PAYMENT P USING(STUNUMBER) WHERE s.userID = '"+HomeLogin.getUserID()+"' and STUNAME LIKE '%"
 					+ name + "%'" + "	ORDER BY PAYMENT_date desc";
 
 			PreparedStatement statement = con.prepareStatement(
@@ -580,7 +597,7 @@ public class StudentDAO {
 		try {
 			connDB();
 
-			String query = "SELECT *FROM STUDENT s WHERE ENTER_DATE LIKE '%" + date + "%'";
+			String query = "SELECT *FROM STUDENT s WHERE userID = '"+HomeLogin.getUserID()+"' and ENTER_DATE LIKE '%" + date + "%'";
 
 			PreparedStatement statement = con.prepareStatement(
 					"s.stuNumber, s.stuName, s.AGE,p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL FROM student s, PAYMENT p");
@@ -615,7 +632,7 @@ public class StudentDAO {
 
 			String query = "SELECT stuNumber, stuname, AGE, when_day, attendance_info, attendance_time, "
 					+ "reason_for_absence FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER) "
-					+ "WHERE today LIKE '%" + date + "%' ORDER BY attendance_info desc ";
+					+ "WHERE s.userID = '"+HomeLogin.getUserID()+"' and today LIKE '%" + date + "%' ORDER BY attendance_info desc ";
 
 			PreparedStatement statement = con.prepareStatement(
 					"stuNumber, stuname, AGE, when_day, attendance_info, attendance_time, reason_for_absence FROM STUDENT LEFT OUTER JOIN ATTENDANCE USING(STUNUMBER)");

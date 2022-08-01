@@ -20,7 +20,7 @@ public class MemberDAO {
 		try {
 			connDB();
 
-			String query = "SELECT * FROM login WHERE id='" + p.getId() + "' AND password='" + p.getPassword() + "'";
+			String query = "SELECT * FROM login WHERE userID='" + p.getId() + "' AND password='" + p.getPassword() + "'";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
 			rs.last();
@@ -34,6 +34,7 @@ public class MemberDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("list실패");
 		}
 
 		return false;
@@ -46,7 +47,7 @@ public class MemberDAO {
 		try {
 			connDB(); // 디비랑 연결을 해준다.
 
-			String query = "SELECT * FROM login WHERE id='" + id + "'";
+			String query = "SELECT * FROM login WHERE userID='" + id + "'";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
 			rs.last();
@@ -70,7 +71,7 @@ public class MemberDAO {
 		try {
 			connDB();
 
-			String query = "INSERT INTO login( id, user_name, password, mail) " + "values('" + p.getId() + "','"
+			String query = "INSERT INTO login( userID, user_name, password, mail) " + "values('" + p.getId() + "','"
 					+ p.getUser_name() + "','" + p.getPassword() + "','" + p.getMail() + "')";
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
@@ -84,6 +85,7 @@ public class MemberDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("SignUp 실패");
 		}
 
 		return false;

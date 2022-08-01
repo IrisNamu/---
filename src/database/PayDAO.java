@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import main.HomeLogin;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -26,8 +27,9 @@ public class PayDAO {
 	public boolean pay(PayVo p) {
 		try {
 			connDB();
-			String query = "INSERT INTO PAYMENT(stuNumber, payment_date, payment_amount) " + "values('"
-					+ p.getStuNumber() + "','" + p.getPayment_date() + "','" + p.getPayment_amount() + "')";
+			String query = "INSERT INTO PAYMENT(userID, stuNumber, payment_date, payment_amount) " + "values('"
+					+ p.getUserID() + "','" + p.getStuNumber() + "','" + p.getPayment_date() + "','"
+					+ p.getPayment_amount() + "')";
 			rs = stmt.executeQuery(query);
 
 			if (rs.getRow() == 0) {
@@ -51,7 +53,8 @@ public class PayDAO {
 
 			String query = "SELECT  s.stuNumber, s.stuname, s.AGE, p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL"
 					+ "	FROM STUDENT s" + "	LEFT OUTER JOIN  PAYMENT p" + "	ON s.STUNUMBER = p.STUNUMBER"
-					+ " WHERE payment_date LIKE '%" + day + "%' ORDER BY STUNAME";
+					+ " WHERE s.userID = '" + HomeLogin.getUserID() + "' and payment_date LIKE '%" + day
+					+ "%' ORDER BY STUNAME";
 
 			PreparedStatement statement = con.prepareStatement(
 					"s.stuNumber, s.stuName, s.AGE,p.payment_date, p.payment_amount, s.address,s.GUARDIAN1 ,s.GUARDIAN1_CALL FROM student s, PAYMENT p");
@@ -80,11 +83,12 @@ public class PayDAO {
 		try {
 			connDB();
 			String query = "SELECT stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
-					+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P" + " USING(STUNUMBER)" + " MINUS"
+					+ " FROM STUDENT S LEFT OUTER JOIN PAYMENT P where s.userId = '" + HomeLogin.getUserID()
+					+ "' USING(STUNUMBER)" + " MINUS"
 					+ " SELECT  stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
-					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p"
-					+ " using(stuNumber) WHERE p.PAYMENT_DATE LIKE '%" + day + "%'"
-							+ " ORDER BY payment_date DESC ";
+					+ " FROM STUDENT s" + " LEFT OUTER JOIN  PAYMENT p" + " using(stuNumber) WHERE s.userID = '"
+					+ HomeLogin.getUserID() + "' and p.PAYMENT_DATE LIKE '%" + day + "%'"
+					+ " ORDER BY payment_date DESC ";
 
 			PreparedStatement statement = con.prepareStatement(
 					"stuNumber, stuname, AGE, payment_date, payment_amount, address, GUARDIAN1 , GUARDIAN1_CALL"
@@ -115,7 +119,8 @@ public class PayDAO {
 			// 연결
 			connDB();
 			// SQL 문장 전송
-			String sql = "SELECT sum(PAYMENT_AMOUNT)" + "FROM PAYMENT p" + " WHERE PAYMENT_DATE like '%" + month + "%'";
+			String sql = "SELECT sum(PAYMENT_AMOUNT)" + "FROM PAYMENT p" + " WHERE userID = '" + HomeLogin.getUserID()
+					+ "' and PAYMENT_DATE like '%" + month + "%'";
 			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 			rs.next();
